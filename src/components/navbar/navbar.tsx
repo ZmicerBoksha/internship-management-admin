@@ -38,6 +38,14 @@ const Navbar: React.FC = () => {
                             Staff
                         </Link>
                     </li>
+                    <li className="menu__item">
+                        <Link
+                            className="menu__item-link"
+                            to="/candidates"
+                        >
+                            Candidates
+                        </Link>
+                    </li>
                 </ul>
             </nav>
         </aside>
