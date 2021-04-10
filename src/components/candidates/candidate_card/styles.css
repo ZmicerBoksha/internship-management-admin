@@ -1,0 +1,29 @@
+.card {
+  display: flex;
+  justify-content: center;
+}
+.card__container {
+  background-color: #fafbfd;
+  border: 1px solid #dfdfe2;
+  width: 1000px;
+  padding: 20px 40px;
+}
+.card__title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.card__form {
+  margin-bottom: 30px;
+}
+.card__review {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.card__review-field {
+  width: 400px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+/*# sourceMappingURL=styles.css.map */

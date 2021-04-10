@@ -4,14 +4,13 @@
       "id": 1,
       "first_name": "John",
       "last_name": "Doe",
-      "patronymic": "jjj",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -21,20 +20,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 2,
       "first_name": "Elise",
       "last_name": "Gram",
-      "patronymic": "kkk",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -44,20 +42,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 3,
       "first_name": "Jane",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -67,20 +64,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 4,
       "first_name": "Black",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -90,20 +86,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 5,
       "first_name": "Curd",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -113,20 +108,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 6,
       "first_name": "Ashly",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -136,20 +130,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 7,
       "first_name": "Mike",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -159,20 +152,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 8,
       "first_name": "Mile",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -182,20 +174,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 9,
       "first_name": "Jason",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -205,20 +196,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 10,
       "first_name": "Ashly",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -228,20 +218,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 11,
       "first_name": "Mike",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -251,20 +240,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 12,
       "first_name": "Mile",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -274,20 +262,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 13,
       "first_name": "Jason",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -297,20 +284,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 14,
       "first_name": "Ashly",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -320,20 +306,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 15,
       "first_name": "Mike",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -343,20 +328,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 16,
       "first_name": "Mile",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -366,20 +350,19 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     },
     {
       "id": 17,
       "first_name": "Jason",
       "last_name": "Dor",
-      "patronymic": "lll",
       "phone": "+375291111111",
       "email": "jo@do.com",
       "skype": "skypeName",
       "english_level": "B1",
       "country": "Belarus",
       "city": "Minsk",
-      "primary_skills": "JS",
+      "primary_skills": "JavaScript",
       "other_technologies": ["css","js","html"],
       "education": {
         "educational_institution": "BSEU",
@@ -389,7 +372,7 @@
       "graduation_date": "2019",
       "cv": "pdf",
       "date": "01.01.2021",
-      "time": "10.00 - 13.00"
+      "time": "From 10.00 to 13.00"
     }
   ]
 }

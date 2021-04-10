@@ -8,7 +8,7 @@ import Error from './components/path_error/error';
 import Events from './components/Events/Events';
 import EventForm from './components/Events/EventForm/EventForm';
 import CandidatesPage from './components/candidates/candidates_page';
-import CandidateCard from './components/candidates/candidate_card';
+import CandidateCard from './components/candidates/candidate_card/candidate_card';
 
 const App: FunctionComponent = () => {
     return (
