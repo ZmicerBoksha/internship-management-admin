@@ -1,24 +1,24 @@
-import { createStyles, makeStyles, TablePagination as MyTablePagination } from '@material-ui/core';
-import { FunctionComponent, MouseEvent, useCallback } from 'react';
-import { TableInstance } from 'react-table';
+import { createStyles, makeStyles, TablePagination as MyTablePagination } from "@material-ui/core";
+import { FunctionComponent, useCallback } from "react";
+import { TableInstance } from "react-table";
 
 const useStyles = makeStyles(() => {
   return createStyles({
     custom_pagination: {
-      background: '#fff',
+      background: "#fff",
       border: '1px solid rgba(224, 224, 224, 1)',
       borderBottomRightRadius: 10,
-      borderBottomLeftRadius: 10,
-    },
-  });
-});
+      borderBottomLeftRadius: 10
+    }
+  })
+})  
 
 type TablePaginationProps = {
-  instance: TableInstance;
-};
+  instance: TableInstance
+}
 
 const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) => {
-  const classes = useStyles();
+  const classes = useStyles({});
 
   const {
     state: { pageIndex, pageSize },
@@ -26,27 +26,27 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) 
     nextPage,
     previousPage,
     setPageSize,
-  } = instance;
+  } = instance
 
   const handleChangePage = useCallback(
-    (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
       if (newPage === pageIndex + 1) {
-        nextPage();
+        nextPage()
       } else if (newPage === pageIndex - 1) {
-        previousPage();
+        previousPage()
       } else {
-        gotoPage(newPage);
+        gotoPage(newPage)
       }
     },
-    [gotoPage, nextPage, pageIndex, previousPage],
+    [gotoPage, nextPage, pageIndex, previousPage]
   );
 
   const handleChangeRowsPerPage = useCallback(
-    event => {
-      setPageSize(Number(event.target.value));
+    (event) => {
+      setPageSize(Number(event.target.value))
     },
-    [setPageSize],
-  );
+    [setPageSize]
+  )
 
   return (
     <MyTablePagination
@@ -57,13 +57,13 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) 
       rowsPerPage={pageSize}
       page={pageIndex}
       SelectProps={{
-        inputProps: { 'aria-label': 'rows per page' },
+        inputProps: {'aria-label': 'rows per page'},
         native: true,
       }}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
     />
-  );
+  )
 };
 
 export default TablePagination;

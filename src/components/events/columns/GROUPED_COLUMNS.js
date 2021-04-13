@@ -1,10 +1,10 @@
-import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
+import { SelectColumnFilter } from "../../common/Table/filters/SelectColumnFilter";
 
 export const GROUPED_COLUMNS = [
   {
     Header: 'Id',
     accessor: 'id',
-    disableFilters: true,
+    disableFilters: true
   },
   {
     Header: 'Event custom info',
@@ -21,41 +21,41 @@ export const GROUPED_COLUMNS = [
         Filter: SelectColumnFilter,
         filter: 'includes',
       },
-    ],
+    ]
   },
   {
     Header: 'Name and description',
-    columns: [
+    columns: [    
       {
         Header: 'Title',
-        accessor: 'title',
+        accessor: 'title'
       },
       {
         Header: 'Body',
-        accessor: 'body',
-      },
-    ],
+        accessor: 'body'
+      }
+    ]
   },
   {
     Header: 'Dates info',
     columns: [
       {
         Header: 'Event start',
-        accessor: 'dateInfo.eventStart',
+        accessor: 'dateInfo.eventStart'
       },
       {
         Header: 'Event finish',
-        accessor: 'dateInfo.eventFinish',
+        accessor: 'dateInfo.eventFinish'
       },
       {
         Header: 'Date end of acceptin',
-        accessor: 'dateInfo.datefEndAcceptin',
+        accessor: 'dateInfo.datefEndAcceptin'
       },
       {
         Header: 'Event duration',
         accessor: 'dateInfo.duration',
-      },
-    ],
+      }
+    ]
   },
   {
     Header: 'Image info',
@@ -64,20 +64,20 @@ export const GROUPED_COLUMNS = [
         Header: 'Src',
         accessor: 'imagenfo.src',
         disableFilters: true,
-        Cell: props => {
+        Cell: (props) => {
           return (
             <>
               <img src={props.cell.value} />
             </>
-          );
-        },
+          )
+        }
       },
       {
         Header: 'Alt text',
         accessor: 'imagenfo.alt',
-        disableFilters: true,
-      },
-    ],
+        disableFilters: true
+      }
+    ]
   },
   {
     Header: 'Requirements',
@@ -90,9 +90,9 @@ export const GROUPED_COLUMNS = [
       },
       {
         Header: 'Technologies',
-        accessor: 'requirements.technologies',
-      },
-    ],
+        accessor: 'requirements.technologies'
+      }
+    ]
   },
   {
     Header: 'Location',
@@ -105,9 +105,9 @@ export const GROUPED_COLUMNS = [
       },
       {
         Header: 'City',
-        accessor: 'location.city',
-      },
-    ],
+        accessor: 'location.city'
+      }
+    ]
   },
   {
     Header: 'Info create',
@@ -118,8 +118,8 @@ export const GROUPED_COLUMNS = [
       },
       {
         Header: 'Event published at',
-        accessor: 'publishedAt',
+        accessor: 'publishedAt'
       },
-    ],
-  },
-];
+    ]
+  }
+]

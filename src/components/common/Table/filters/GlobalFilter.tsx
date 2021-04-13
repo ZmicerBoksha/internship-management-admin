@@ -46,22 +46,26 @@ const useStyles = makeStyles((theme: Theme) => {
         },
       },
     },
-  });
-});
+  })
+})
 
 type GlobalFilterProps = {
-  instance: TableInstance;
-};
+  instance: TableInstance
+}
 
 const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
-  const classes = useStyles();
+  const classes = useStyles({});
 
-  const { globalFilter, setGlobalFilter } = instance;
+  const {
+    globalFilter,
+    setGlobalFilter
+  } = instance;
 
   const [value, setValue] = useState(globalFilter);
   const onChangeInput = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
+    setGlobalFilter(value || undefined)
   }, 1000);
+
 
   return (
     <div className={classes.search}>
@@ -82,7 +86,7 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
         inputProps={{ 'aria-label': 'search' }}
       />
     </div>
-  );
+  )
 };
 
 export default GlobalFilter;

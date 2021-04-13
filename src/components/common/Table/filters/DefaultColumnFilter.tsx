@@ -1,37 +1,37 @@
-import { TextField } from '@material-ui/core';
-import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
+import { TextField } from "@material-ui/core";
+import { FunctionComponent, useEffect, useState } from "react"
 
 interface DefaultColumnFilterProps {
-  columns: any;
-  column: any;
-}
+  columns: any,
+  column: any
+};
 
-const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ columns, column }) => {
-  const { filterValue, setFilter, render } = column;
+const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ columns, column }) => { 
+  const { filterValue, setFilter, render } = column
   const [value, setValue] = useState(filterValue || '');
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(event.target.value)
   };
 
   // ensure that reset loads the new value
   useEffect(() => {
-    setValue(filterValue || '');
-  }, [filterValue]);
+    setValue(filterValue || '')
+  }, [filterValue])
 
   return (
     <>
-      <TextField
+      <TextField 
         value={value}
         onChange={handleChange}
-        onBlur={e => {
-          setFilter(e.target.value || undefined);
+        onBlur={(e) => {
+          setFilter(e.target.value || undefined)
         }}
         label={render('Header')}
-        type="search"
+        type="search"  
       />
     </>
-  );
-};
+  )
+}
 
-export default DefaultColumnFilter;
+export default DefaultColumnFilter

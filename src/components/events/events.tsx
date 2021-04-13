@@ -5,50 +5,47 @@ import dataJson from './data.json';
 import { createStyles, CssBaseline, makeStyles } from '@material-ui/core';
 import Table from '../common/Table/Table';
 import { TableInstance } from 'react-table';
-import { useHistory } from 'react-router';
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles( () => {
   return createStyles({
-    pageWrap: {
+    pageWrap : {
       position: 'relative',
       paddingLeft: 25,
       paddingRight: 25,
       marginTop: 35,
-      marginBottom: 35,
-    },
-  });
-});
-
-interface IEvent {
-  id?: string;
-}
+      marginBottom: 35
+    }
+  })
+})
 
 const Events: FunctionComponent = () => {
-  const classes = useStyles();
+  const classes = useStyles({});
 
   const columns = useMemo(() => GROUPED_COLUMNS, []);
   const data = useMemo(() => dataJson.events, []);
 
-  const history = useHistory();
-
-  const tempFuncCallback = useCallback((instance: TableInstance<IEvent>) => {
-    const eventID = instance.selectedFlatRows[0].original!.id;
-    history.push(`/event-form/${eventID}`);
-
-    console.log(
-      'Template out text',
-      //hasOwnProperty('id')
-      eventID,
-    );
-  }, []);
+  const tempFuncCallback = useCallback(
+    (instance: TableInstance) => {
+      console.log(
+        'Template out text',
+        instance
+      )
+    },
+    []
+  )
 
   return (
-    <div>
-      <CssBaseline />
-      <Table name={'Events table'} columns={columns} data={data} onAdd={tempFuncCallback} onEdit={tempFuncCallback} />
+    <div className={classes.pageWrap}>
+      <CssBaseline />  
+      <Table
+        name={'Events table'}
+        columns={columns}
+        data={data}
+        onAdd={tempFuncCallback}
+        onEdit={tempFuncCallback}
+      />
     </div>
-  );
+  )
 };
 
 export default Events;
-
