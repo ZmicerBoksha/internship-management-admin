@@ -3,7 +3,7 @@ import { GROUPED_COLUMNS } from './columns/GROUPED_COLUMNS';
 
 import dataJson from './data.json';
 import { createStyles, CssBaseline, makeStyles } from '@material-ui/core';
-import Table from '../common/Table/Table';
+import Table from '../common/table/Table';
 import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles( () => {

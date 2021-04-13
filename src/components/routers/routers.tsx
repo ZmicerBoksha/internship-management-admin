@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Dashboard from '../dashboard/dashboard';
 import Events from '../events/events';
-import EventForm from '../events/EventForm/EventForm';
+import EventForm from '../events/eventForm/EventForm';
 import Authorization from '../authorization/authorization';
 import CandidatesPage from '../candidates/candidates_page';
 import CandidateCard from '../candidates/candidate_card/candidate_card';

@@ -1,4 +1,4 @@
-import { SelectColumnFilter } from "../../common/Table/filters/SelectColumnFilter";
+import { SelectColumnFilter } from "../../common/table/filters/SelectColumnFilter"
 
 export const GROUPED_COLUMNS = [
   {
