@@ -1,19 +1,41 @@
 import React from 'react';
 import CandidateSkills from '../candidate_skills/candidate_skills';
-import TextField from '@material-ui/core/TextField';
 import { TSelect } from '../candidate_info/candidate_info';
-import MenuItem from '@material-ui/core/MenuItem';
+import { Paper, TextField, MenuItem } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 type TCandidateReview = {
     englishLevels: Array<TSelect>
 }
 
-const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels}) => {
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            '& > *': {
+                margin: theme.spacing(1),
+                width: theme.spacing(16),
+                height: theme.spacing(16),
+            },
+        },
+        paper: {
+            minWidth: '500px',
+            padding: '30px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
+        }
+    }),
+);
 
+const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels}) => {
+    const classes = useStyles();
     return (
-        <div>
-            <div className="card__review">
-                <h2 className="card__review-title">Review about soft skills</h2>
+        <div className={classes.root}>
+            <Paper className={classes.paper}>
+                <h2 className="card__review-title">Soft skills review</h2>
                 <CandidateSkills
                     field={
                         <TextField
@@ -37,11 +59,11 @@ const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels}) => {
                 {/**
                  * here should be GET request to get reviews from BD
                  **/}
-            </div>
-            <div className="card__review">
-                <h2 className="card__review-title">Review about technical skills</h2>
-                <CandidateSkills skill={'hard'} />
-            </div>
+            </Paper>
+            <Paper className={classes.paper}>
+                <h2 className="card__review-title">Technical skills review</h2>
+                <CandidateSkills skill={'hard'}/>
+            </Paper>
         </div>
     );
 };

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import CandidatesList from './candidate_list/candidates_list';
+import ColumnFilter from './candidate_list/columnFilter';
 
 const CandidatesPage: React.FC = () => {
     const columns = React.useMemo(
@@ -23,14 +24,17 @@ const CandidatesPage: React.FC = () => {
                     {
                         Header: 'Phone',
                         accessor: 'phone',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Email',
                         accessor: 'email',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Skype',
                         accessor: 'skype',
+                        disableFilters: true,
                     },
                 ],
             },
@@ -40,6 +44,7 @@ const CandidatesPage: React.FC = () => {
                     {
                         Header: 'Country',
                         accessor: 'country',
+                        disableFilters: true,
                     },
                     {
                         Header: 'City',
@@ -53,6 +58,7 @@ const CandidatesPage: React.FC = () => {
                     {
                         Header: 'Main skill',
                         accessor: 'primary_skills',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Other technologies',
@@ -66,14 +72,17 @@ const CandidatesPage: React.FC = () => {
                     {
                         Header: 'Institute',
                         accessor: 'education.educational_institution',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Faculty',
                         accessor: 'education.faculty',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Speciality',
                         accessor: 'education.speciality',
+                        disableFilters: true,
                     },
                 ],
             },
@@ -82,15 +91,18 @@ const CandidatesPage: React.FC = () => {
                 columns: [
                     {
                         Header: 'English level',
-                        accessor: 'english_level'
+                        accessor: 'english_level',
+                        disableFilters: true,
                     },
                     {
                         Header: 'CV',
-                        accessor: 'cv'
+                        accessor: 'cv',
+                        disableFilters: true,
                     },
                     {
                         Header: 'Preferred time for interview',
-                        accessor: 'time'
+                        accessor: 'time',
+                        disableFilters: true,
                     },
                 ]
             }
@@ -98,9 +110,15 @@ const CandidatesPage: React.FC = () => {
         []
     )
 
+    const defaultColumn = useMemo(() => {
+        return {
+            Filter: ColumnFilter
+        }
+    }, [])
+
     return (
         <div>
-            <CandidatesList columns={columns} />
+            <CandidatesList columns={columns} defaultColumn={defaultColumn}/>
         </div>
     );
 };

@@ -1,7 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Column, useTable } from 'react-table';
+import React, { useMemo } from 'react';
+import {
+    useTable,
+    useGlobalFilter,
+    useFilters,
+    Column,
+} from 'react-table';
 import { useHistory } from 'react-router-dom';
 import './styles.css';
+import GlobalFilter from './globalFilter';
+import useAxios from 'axios-hooks';
 
 type TEducation = {
     educational_institution: string,
@@ -30,32 +37,21 @@ export type TCandidate = {
 
 type TCandidateListProps = {
     columns: Column<TCandidate>[]
+    defaultColumn: any
 }
 
-const CandidatesList: React.FC<TCandidateListProps> = ({ columns }) => {
-    const [candidatesList, setCandidatesList] = useState<Array<TCandidate>>([]);
+const CandidatesList: React.FC<TCandidateListProps> = ({columns, defaultColumn}) => {
     let history = useHistory();
+
+    const [{ data: candidatesList, loading: getLoading, error: getError }] = useAxios(
+        '/candidates'
+    )
 
     const handleClick = (id: number) => {
         history.push(`/candidates/${id}`);
     }
 
-    let fetchCandidates = () => {
-        fetch('http://localhost:3000/candidates')
-        .then((response) => {
-            return response.json();
-        })
-        .then((data: Array<TCandidate>) => {
-            setCandidatesList(data);
-        })
-        .catch(error => console.log(error));
-    }
-
-    useEffect(() => {
-        fetchCandidates();
-    }, []);
-
-    const data = React.useMemo(() => candidatesList,
+    const data = useMemo(() => candidatesList ? candidatesList : [],
         [candidatesList]);
 
     const {
@@ -63,42 +59,58 @@ const CandidatesList: React.FC<TCandidateListProps> = ({ columns }) => {
         getTableBodyProps,
         headerGroups,
         rows,
-        prepareRow
-    } = useTable({
-        columns, data
-    })
+        prepareRow,
+        state,
+        setGlobalFilter,
+    }: any = useTable(
+        {
+            columns,
+            data,
+            defaultColumn
+        },
+        useFilters,
+        useGlobalFilter
+    )
+
+    const {globalFilter}: any = state;
 
     return (
-        <div className="candidates">
-            <table {...getTableProps()}>
-                <thead>
-                {headerGroups.map(headerGroup => (
-                    <tr {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                        ))}
-                    </tr>
-                ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                {rows.map((row) => {
-                    prepareRow(row)
-                    return (
-                        <tr {...row.getRowProps()}>
-                            {row.cells.map(cell => {
-                                return <td
-                                    onClick={() => handleClick(row.original.id)}
-                                    {...cell.getCellProps()}
-                                >
-                                    {cell.render('Cell')}
-                                </td>
-                            })}
+        <>
+            <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter}/>
+            <div className="candidates">
+                <table {...getTableProps()}>
+                    <thead>
+                    {headerGroups.map((headerGroup: any) => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column: any) => (
+                                <th {...column.getHeaderProps()}>
+                                    {column.render('Header')}
+                                    <div>{column.canFilter ? column.render('Filter') : null}</div>
+                                </th>
+                            ))}
                         </tr>
-                    )
-                })}
-                </tbody>
-            </table>
-        </div>
+                    ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                    {rows.map((row: any) => {
+                        prepareRow(row)
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map((cell: any) => {
+                                    return <td
+                                        onClick={() => handleClick(row.original.id)}
+                                        {...cell.getCellProps()}
+                                    >
+                                        {cell.render('Cell')}
+                                    </td>
+                                })}
+                            </tr>
+                        )
+                    })}
+                    </tbody>
+                </table>
+            </div>
+        </>
     );
 };
 

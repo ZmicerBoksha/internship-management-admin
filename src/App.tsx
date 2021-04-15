@@ -9,6 +9,16 @@ import Events from './components/Events/Events';
 import EventForm from './components/Events/EventForm/EventForm';
 import CandidatesPage from './components/candidates/candidates_page';
 import CandidateCard from './components/candidates/candidate_card/candidate_card';
+import Axios from 'axios';
+import LRU from 'lru-cache';
+import { configure } from 'axios-hooks';
+
+const axios = Axios.create({
+    baseURL: 'http://localhost:3000',
+})
+const cache = new LRU({ max: 10 })
+
+configure({ axios, cache })
 
 const App: FunctionComponent = () => {
     return (

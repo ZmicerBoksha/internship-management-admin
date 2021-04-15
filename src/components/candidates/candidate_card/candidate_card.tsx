@@ -1,9 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useRouteMatch } from 'react-router-dom';
-import { TCandidate } from '../candidate_list/candidates_list';
 import './styles.css';
 import CandidateInfo from './candidate_info/candidate_info';
 import CandidateReview from './candidate_review/candidate_review';
+import useAxios from 'axios-hooks';
+import CandidateProgress from './candidate_progress/candidate_progress';
+import { makeStyles, Typography } from '@material-ui/core';
+
+const useStyles = makeStyles({
+    root: {
+        width: '100%',
+        maxWidth: 500,
+    },
+    typography: {
+        display: 'flex',
+        justifyContent: 'center',
+        fontSize: '40px',
+        margin: '20px 0'
+    }
+});
 
 const ENGLISH_LEVELS = [
     {
@@ -110,28 +125,22 @@ const PREFERRED_TIME = [
 ];
 
 const CandidateCard: React.FC = () => {
+    const classes = useStyles();
     let {url} = useRouteMatch();
-    let [candidateInfo, setCandidateInfo] = useState<TCandidate>();
-
-    useEffect(() => {
-        fetch(`http://localhost:3000${url}`)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data: TCandidate) => {
-                setCandidateInfo(data);
-            });
-    }, [url]);
+    const [{ data: candidateInfo, loading: getLoading, error: getError }] = useAxios(
+        `${url}`
+    );
 
     return candidateInfo ? (
         <div className="wrapper">
             <div className="card">
                 <div className="card__container">
-                    <h1 className="card__title">
+                    <Typography variant="subtitle2">{candidateInfo.date}</Typography>
+                    <Typography variant="h2" className={classes.typography}>
                         {`${candidateInfo.first_name}
                           ${candidateInfo.last_name}`}
-                    </h1>
-                    <span>{candidateInfo.date}</span>
+                    </Typography>
+                    <CandidateProgress/>
                     <CandidateInfo
                         candidateInfo={candidateInfo}
                         englishLevel={ENGLISH_LEVELS}
