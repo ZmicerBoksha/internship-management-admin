@@ -24,7 +24,7 @@ const areEqual = (prevProps: any, nextProps: any) => {
 // })
 
 // const HeaderCheckboxComponent: FunctionComponent<Partial<TableToggleAllRowsSelectedProps> | undefined> = () => {  
-//   const classes = useStyles({});
+//   const classes = useStyles();
 
 //   return (
 //     <Checkbox 
@@ -41,7 +41,7 @@ const areEqual = (prevProps: any, nextProps: any) => {
 
 
 // const RowCheckboxComponent: FunctionComponent<Partial<TableToggleRowsSelectedProps> | undefined> = () => {  
-//   const classes = useStyles({});
+//   const classes = useStyles();
 
 //   return (
 //     <Checkbox 

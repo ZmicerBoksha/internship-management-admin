@@ -23,7 +23,7 @@ type EventFormProps = {
 const EventForm: FunctionComponent<EventFormProps> = ({ id, title }) => {
   const { eventId } = useParams<{ eventId: string | undefined }>();
 
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const [tab, setTab] = useState('');
   const tabChange = (event: ChangeEvent<{ value: unknown }>) => {

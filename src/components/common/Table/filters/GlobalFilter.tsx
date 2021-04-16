@@ -54,7 +54,7 @@ type GlobalFilterProps = {
 }
 
 const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const {
     globalFilter,

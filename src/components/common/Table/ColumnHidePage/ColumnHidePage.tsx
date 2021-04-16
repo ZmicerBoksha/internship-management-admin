@@ -33,7 +33,7 @@ type ColumnHidePageProps = {
 const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) => {
   const { allColumns, toggleHideColumn } = instance;
 
-  const classes = useStyle({});
+  const classes = useStyle();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);  

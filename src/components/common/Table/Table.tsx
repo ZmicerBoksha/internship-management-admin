@@ -108,7 +108,7 @@ type TableProps = {
 };
 
 const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit }) => {
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const filterTypes = {
 

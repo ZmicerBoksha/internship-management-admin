@@ -1,5 +1,5 @@
 import { createStyles, makeStyles, TablePagination as MyTablePagination } from "@material-ui/core";
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent, MouseEvent, useCallback } from "react";
 import { TableInstance } from "react-table";
 
 const useStyles = makeStyles(() => {
@@ -18,7 +18,7 @@ type TablePaginationProps = {
 }
 
 const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) => {
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const {
     state: { pageIndex, pageSize },
@@ -29,7 +29,7 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) 
   } = instance
 
   const handleChangePage = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
+    (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
       if (newPage === pageIndex + 1) {
         nextPage()
       } else if (newPage === pageIndex - 1) {

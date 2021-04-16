@@ -24,7 +24,7 @@ interface IEvent {
 }
 
 const Events: FunctionComponent = () => {
-  const classes = useStyles({});
+  const classes = useStyles();
 
   const columns = useMemo(() => GROUPED_COLUMNS, []);
   const data = useMemo(() => dataJson.events, []);
