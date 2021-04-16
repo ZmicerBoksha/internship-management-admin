@@ -38,7 +38,7 @@ type TableToolbarProps = {
 }
 
 const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, onEdit }) => {
-  const classes = useStyles({});
+  const classes = useStyles();
   const {state} = instance;
 
   return (
