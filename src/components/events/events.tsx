@@ -5,6 +5,7 @@ import dataJson from './data.json';
 import { createStyles, CssBaseline, makeStyles } from '@material-ui/core';
 import Table from '../common/Table/Table';
 import { TableInstance } from 'react-table';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles( () => {
   return createStyles({
@@ -18,17 +19,27 @@ const useStyles = makeStyles( () => {
   })
 })
 
+interface IEvent {
+  id?: string
+}
+
 const Events: FunctionComponent = () => {
   const classes = useStyles({});
 
   const columns = useMemo(() => GROUPED_COLUMNS, []);
   const data = useMemo(() => dataJson.events, []);
 
+  const history = useHistory();
+
   const tempFuncCallback = useCallback(
-    (instance: TableInstance) => {
+    (instance: TableInstance<IEvent>) => {
+      const eventID = instance.selectedFlatRows[0].original!.id;
+      history.push(`/event-form/${eventID}`)
+
       console.log(
         'Template out text',
-        instance
+          //hasOwnProperty('id')
+          eventID
       )
     },
     []
