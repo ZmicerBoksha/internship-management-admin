@@ -1,0 +1,45 @@
+.row {
+  background-color: #E8E3E9;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.switchLabel{
+  color: #757575;
+}
+
+.title {
+  text-transform: uppercase;
+  background-color: #E8E3E9;
+  color: #757575;
+  border-radius: 5px;
+  padding: 10px 30px 10px 20px;
+}
+
+.subtitle {
+  background-color: #1976D2;
+  color: white;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  border-radius: 5px;
+}
+
+.subtitle--notRevived {
+  text-align: center;
+  background-color: #EF9588;
+  text-transform: uppercase;
+
+}
+
+.subtitle--revived {
+  text-align: center;
+  background-color: #A6CE39;
+  text-transform: uppercase;
+}
+
+
+.columnName {
+  padding-right: 20px;
+  color: #757575;
+}

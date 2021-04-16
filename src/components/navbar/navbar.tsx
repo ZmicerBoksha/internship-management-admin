@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './navBarStyle.scss';
 
 const Navbar: React.FC = () => {
     return (
@@ -33,9 +34,17 @@ const Navbar: React.FC = () => {
                     <li className="menu__item">
                         <Link
                             className="menu__item-link"
-                            to="/staff"
+                            to="/ts"
                         >
-                            Staff
+                            TS
+                        </Link>
+                    </li>
+                    <li className="menu__item">
+                        <Link
+                            className="menu__item-link"
+                            to="/hrs"
+                        >
+                            HR
                         </Link>
                     </li>
                 </ul>
