@@ -1,5 +1,5 @@
 import { Checkbox, createStyles, FormControlLabel, IconButton, makeStyles, Popover, Theme, Tooltip, Typography } from "@material-ui/core";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, MouseEvent, useState } from "react";
 import { TableInstance } from "react-table";
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
@@ -38,7 +38,7 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [columnsOpen, setColumnsOpen] = useState(false);  
 
-  const handleColumnsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleColumnsClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setColumnsOpen(true);
   };
@@ -82,7 +82,7 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
                 key={column.id}
                 control={
                   <Checkbox
-                    value={`${column.id}`}
+                    value={column.id}
                     disabled={column.isVisible && onlyOneOptionLeft}
                     color="primary"
                   />

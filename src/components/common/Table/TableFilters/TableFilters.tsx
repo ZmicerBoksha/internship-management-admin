@@ -1,5 +1,5 @@
 import { Button, createStyles, IconButton, makeStyles, Popover, Theme, Tooltip, Typography } from "@material-ui/core";
-import { FormEvent, FunctionComponent, useCallback, useState } from "react";
+import { FormEvent, FunctionComponent, MouseEvent, useCallback, useState } from "react";
 import { TableInstance } from "react-table";
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -51,7 +51,7 @@ const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const handleFiltersClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleFiltersClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setFiltersOpen(true);
   };

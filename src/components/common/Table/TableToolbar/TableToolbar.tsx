@@ -50,7 +50,7 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
               <IconButton 
                 onClick={() => onAdd(instance)} 
                 aria-label="Add new event"
-                disabled={!(Object.keys(state.selectedRowIds).length === 0)}
+                disabled={Object.keys(state.selectedRowIds).length !== 0}
               >
                 <AddIcon />
               </IconButton>

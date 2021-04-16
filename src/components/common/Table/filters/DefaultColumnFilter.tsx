@@ -1,5 +1,5 @@
 import { TextField } from "@material-ui/core";
-import { FunctionComponent, useEffect, useState } from "react"
+import { ChangeEvent, FunctionComponent, useEffect, useState } from "react"
 
 interface DefaultColumnFilterProps {
   columns: any,
@@ -10,7 +10,7 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
   const { filterValue, setFilter, render } = column
   const [value, setValue] = useState(filterValue || '');
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value)
   };
 
