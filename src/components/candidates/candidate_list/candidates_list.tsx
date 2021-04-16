@@ -43,15 +43,17 @@ type TCandidateListProps = {
 const CandidatesList: React.FC<TCandidateListProps> = ({columns, defaultColumn}) => {
     let history = useHistory();
 
-    const [{ data: candidatesList, loading: getLoading, error: getError }] = useAxios(
-        '/candidates'
+    const [{ data: candidatesList, loading: candidatesListLoading, error: candidatesListError }] = useAxios(
+        '/candidate'
     )
 
+    console.log(candidatesList)
+
     const handleClick = (id: number) => {
-        history.push(`/candidates/${id}`);
+        history.push(`/candidate/${id}`);
     }
 
-    const data = useMemo(() => candidatesList ? candidatesList : [],
+    const data = useMemo(() => candidatesList || [],
         [candidatesList]);
 
     const {
