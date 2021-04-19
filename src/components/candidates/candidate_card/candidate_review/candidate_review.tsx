@@ -5,7 +5,7 @@ import { Paper, TextField, MenuItem } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 type TCandidateReview = {
-    englishLevels: Array<TSelect>
+    englishLevels: TSelect[]
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -54,7 +54,7 @@ const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels}) => {
                             ))}
                         </TextField>
                     }
-                    skill={'soft'}
+                    skill='soft'
                 />
                 {/**
                  * here should be GET request to get reviews from BD
@@ -62,7 +62,7 @@ const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels}) => {
             </Paper>
             <Paper className={classes.paper}>
                 <h2 className="card__review-title">Technical skills review</h2>
-                <CandidateSkills skill={'hard'}/>
+                <CandidateSkills skill='hard'/>
             </Paper>
         </div>
     );

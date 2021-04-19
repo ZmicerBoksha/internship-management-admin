@@ -126,9 +126,9 @@ const PREFERRED_TIME = [
 
 const CandidateCard: React.FC = () => {
     const classes = useStyles();
-    let {url} = useRouteMatch();
+    const {url} = useRouteMatch();
     const [{ data: candidateInfo, loading: getLoading, error: getError }] = useAxios(
-        `${url}`
+        url
     );
 
     return candidateInfo ? (

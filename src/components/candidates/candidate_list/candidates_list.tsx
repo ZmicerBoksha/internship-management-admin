@@ -27,7 +27,7 @@ export type TCandidate = {
     country: string,
     city: string,
     primary_skills: string,
-    other_technologies: Array<string>,
+    other_technologies: string[],
     education: TEducation,
     graduation_date: string,
     cv: string,
@@ -41,7 +41,7 @@ type TCandidateListProps = {
 }
 
 const CandidatesList: React.FC<TCandidateListProps> = ({columns, defaultColumn}) => {
-    let history = useHistory();
+    const history = useHistory();
 
     const [{ data: candidatesList, loading: candidatesListLoading, error: candidatesListError }] = useAxios(
         '/candidate'

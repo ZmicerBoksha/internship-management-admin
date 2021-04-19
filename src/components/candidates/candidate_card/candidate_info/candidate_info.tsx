@@ -41,10 +41,10 @@ export type TSelect = {
 
 type TCandidateInfoProps = {
     candidateInfo: TCandidate,
-    englishLevel: Array<TSelect>,
-    countriesList: Array<TSelect>,
-    mainSkill: Array<TSelect>,
-    preferredTime: Array<TSelect>
+    englishLevel: TSelect[],
+    countriesList: TSelect[],
+    mainSkill: TSelect[],
+    preferredTime: TSelect[]
 }
 
 const CandidateInfo: React.FC<TCandidateInfoProps> = ({
