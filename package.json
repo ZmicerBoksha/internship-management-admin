@@ -56,6 +56,7 @@
     "@types/lru-cache": "^5.1.0",
     "@types/react-table": "^7.0.29",
     "axios-hooks": "^2.6.1",
-    "lru-cache": "^6.0.0"
+    "lru-cache": "^6.0.0",
+    "prettier": "2.2.1"
   }
 }

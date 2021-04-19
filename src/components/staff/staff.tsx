@@ -1,11 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const Staff: React.FC = () => {
-    return (
-        <div>
-            staff component works!
-        </div>
-    );
+  return <div>staff component works!</div>;
 };
 
 export default Staff;
