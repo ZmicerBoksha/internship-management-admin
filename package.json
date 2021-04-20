@@ -52,11 +52,18 @@
       "last 1 safari version"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
     "@types/react-table": "^7.0.29",
     "axios-hooks": "^2.6.1",
+    "husky": "^6.0.0",
     "lru-cache": "^6.0.0",
-    "prettier": "2.2.1"
+    "prettier": "2.2.1",
+    "pretty-quick": "^3.1.0"
   }
 }
