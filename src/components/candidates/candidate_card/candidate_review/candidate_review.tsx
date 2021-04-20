@@ -3,8 +3,11 @@ import CandidateSkills from '../candidate_skills/candidate_skills';
 import { TSelect } from '../candidate_info/candidate_info';
 import { Paper, TextField, MenuItem } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import useAxios from 'axios-hooks';
+import { TCandidate } from '../../candidate_list/candidates_list';
 
-type TCandidateReview = {
+type TCandidateReviewProps = {
+  getCandidateInfo: TCandidate;
   englishLevels: TSelect[];
 };
 
@@ -30,8 +33,30 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels }) => {
+const CandidateReview: React.FC<TCandidateReviewProps> = ({ englishLevels, getCandidateInfo }) => {
   const classes = useStyles();
+
+  const [{ data: postReview, loading: postLoading, error: postError }, executePost] = useAxios(
+    {
+      url: '/interview-feedback',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+    { manual: true },
+  );
+
+  const addReviewFromHR = (data: any) => {
+    executePost({
+      data: {
+        ...data,
+      },
+    });
+  };
+
+  console.log(postReview);
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -46,6 +71,8 @@ const CandidateReview: React.FC<TCandidateReview> = ({ englishLevels }) => {
               ))}
             </TextField>
           }
+          addReview={addReviewFromHR}
+          getCandidateInfo={getCandidateInfo}
           skill="soft"
         />
         {/**

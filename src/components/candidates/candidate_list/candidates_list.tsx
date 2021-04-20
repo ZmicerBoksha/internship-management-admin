@@ -1,9 +1,11 @@
 import React, { useMemo } from 'react';
-import { useTable, useGlobalFilter, useFilters, Column } from 'react-table';
 import { useHistory } from 'react-router-dom';
 import './styles.css';
-import GlobalFilter from './globalFilter';
 import useAxios from 'axios-hooks';
+import Table from '../../common/Table/Table';
+import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
+import { TableInstance } from 'react-table';
+//import { IEvent } from '../../events/events';
 
 type TEducation = {
   educational_institution: string;
@@ -12,91 +14,143 @@ type TEducation = {
 };
 
 export type TCandidate = {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone: string;
+  education: string;
   email: string;
+  englishLevel: string;
+  experience: string;
+  expertise: string;
+  firstName: string;
+  id: number;
+  lastName: string;
+  location: string;
+  phone: string;
+  rsmId: number;
   skype: string;
-  english_level: string;
-  country: string;
-  city: string;
-  primary_skills: string;
-  other_technologies: string[];
-  education: TEducation;
-  graduation_date: string;
-  cv: string;
-  date: Date;
-  time: string;
 };
 
-type TCandidateListProps = {
-  columns: Column<TCandidate>[];
-  defaultColumn: any;
-};
-
-const CandidatesList: React.FC<TCandidateListProps> = ({ columns, defaultColumn }) => {
+const CandidatesList: React.FC = () => {
   const history = useHistory();
 
   const [{ data: candidatesList, loading: candidatesListLoading, error: candidatesListError }] = useAxios('/candidate');
 
   console.log(candidatesList);
 
-  const handleClick = (id: number) => {
-    history.push(`/candidate/${id}`);
+  const handleClick = (instance: any) => {
+    const candidateID = instance.selectedFlatRows[0].original!.id;
+    history.push(`/candidate/${candidateID}`);
   };
 
   const data = useMemo(() => candidatesList || [], [candidatesList]);
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, state, setGlobalFilter }: any = useTable(
-    {
-      columns,
-      data,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter,
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Candidate',
+        columns: [
+          {
+            Header: 'First Name',
+            accessor: 'firstName',
+          },
+          {
+            Header: 'Last Name',
+            accessor: 'lastName',
+          },
+        ],
+      },
+      {
+        Header: 'Contacts',
+        columns: [
+          {
+            Header: 'Phone',
+            accessor: 'phone',
+          },
+          {
+            Header: 'Email',
+            accessor: 'email',
+          },
+          {
+            Header: 'Skype',
+            accessor: 'skype',
+          },
+        ],
+      },
+      {
+        Header: 'Location',
+        columns: [
+          {
+            Header: 'Country',
+            accessor: 'location',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
+          },
+          {
+            Header: 'City',
+            accessor: 'city',
+          },
+        ],
+      },
+      {
+        Header: 'Technical skills',
+        columns: [
+          {
+            Header: 'Main skill',
+            accessor: 'expertise',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
+          },
+          {
+            Header: 'Other technologies',
+            accessor: 'experience',
+          },
+        ],
+      },
+      {
+        Header: 'Education',
+        columns: [
+          {
+            Header: 'Institute',
+            accessor: 'education',
+            disableFilters: true,
+          },
+          {
+            Header: 'Faculty',
+            accessor: 'education.faculty',
+            disableFilters: true,
+          },
+          {
+            Header: 'Speciality',
+            accessor: 'education.speciality',
+            disableFilters: true,
+          },
+        ],
+      },
+      {
+        Header: 'Other information',
+        columns: [
+          {
+            Header: 'English level',
+            accessor: 'englishLevel',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
+          },
+          {
+            Header: 'CV',
+            accessor: 'cv',
+            disableFilters: true,
+          },
+          {
+            Header: 'Preferred time for interview',
+            accessor: 'time',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
+          },
+        ],
+      },
+    ],
+    [],
   );
 
-  const { globalFilter }: any = state;
-
-  return (
-    <>
-      <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <div className="candidates">
-        <table {...getTableProps()}>
-          <thead>
-            {headerGroups.map((headerGroup: any) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column: any) => (
-                  <th {...column.getHeaderProps()}>
-                    {column.render('Header')}
-                    <div>{column.canFilter ? column.render('Filter') : null}</div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row: any) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell: any) => {
-                    return (
-                      <td onClick={() => handleClick(row.original.id)} {...cell.getCellProps()}>
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </>
-  );
+  return <Table name={'Candidates table'} columns={columns} data={data} onEdit={handleClick} />;
 };
 
 export default CandidatesList;

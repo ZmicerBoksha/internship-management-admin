@@ -127,26 +127,46 @@ const PREFERRED_TIME = [
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [{ data: candidateInfo, loading: getLoading, error: getError }] = useAxios(url);
+  const [{ data: getCandidateInfo, loading: getLoading, error: getError }] = useAxios(url);
 
-  return candidateInfo ? (
+  const [{ data: updateCandidateInfo, loading: putLoading, error: putError }, executePut] = useAxios(
+    {
+      url: `${url}`,
+      method: 'PUT',
+    },
+    { manual: true },
+  );
+
+  const editCandidateData = (field: any) => {
+    executePut({
+      data: {
+        ...field,
+      },
+    });
+  };
+
+  /* console.log(getCandidateInfo)*/
+
+  return getCandidateInfo ? (
     <div className="wrapper">
       <div className="card">
         <div className="card__container">
-          <Typography variant="subtitle2">{candidateInfo.date}</Typography>
+          {/*<Typography variant="subtitle2">{getCandidateInfo.date}</Typography>*/}
           <Typography variant="h2" className={classes.typography}>
-            {`${candidateInfo.first_name}
-                          ${candidateInfo.last_name}`}
+            {`${getCandidateInfo.firstName}
+                          ${getCandidateInfo.lastName}`}
           </Typography>
           <CandidateProgress />
           <CandidateInfo
-            candidateInfo={candidateInfo}
+            updateCandidateInfo={updateCandidateInfo}
+            candidateInfo={getCandidateInfo}
             englishLevel={ENGLISH_LEVELS}
             countriesList={COUNTRIES_LIST}
             mainSkill={MAIN_SKILL}
             preferredTime={PREFERRED_TIME}
+            editCandidateData={editCandidateData}
           />
-          <CandidateReview englishLevels={ENGLISH_LEVELS} />
+          <CandidateReview englishLevels={ENGLISH_LEVELS} getCandidateInfo={getCandidateInfo} />
         </div>
       </div>
     </div>
