@@ -18,7 +18,8 @@ thead th {
   z-index: 1;
 }
 
-th, td {
+th,
+td {
   border-bottom: 1px solid #ddd;
 }
 

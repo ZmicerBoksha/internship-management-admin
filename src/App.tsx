@@ -14,34 +14,28 @@ import LRU from 'lru-cache';
 import { configure } from 'axios-hooks';
 
 const axios = Axios.create({
-    baseURL: 'http://localhost:8085/api',
-})
-const cache = new LRU({ max: 10 })
+  baseURL: 'http://localhost:8085/api',
+});
+const cache = new LRU({ max: 10 });
 
-configure({ axios, cache })
+configure({ axios, cache });
 
 const App: FunctionComponent = () => {
-    return (
-        <div>
-            <Navbar />
-            <Switch>
-                <Route exact path='/' component={Dashboard} />
-                <Route
-                    path='/events'
-                    component={Events}
-                />
-                <Route
-                    path='/event-form/:eventId?'
-                    component={EventForm}
-                />
-                <Route exact path='/staff' component={Staff} />
-                <Route path='/authorization' component={Authorization} />
-                <Route exact path='/candidates' component={CandidatesPage} />
-                <Route path='/candidates/:id' component={CandidateCard} />
-                <Route path='*' component={Error} />
-            </Switch>
-        </div>
-    );
-}
+  return (
+    <div>
+      <Navbar />
+      <Switch>
+        <Route exact path="/" component={Dashboard} />
+        <Route path="/events" component={Events} />
+        <Route path="/event-form/:eventId?" component={EventForm} />
+        <Route exact path="/staff" component={Staff} />
+        <Route path="/authorization" component={Authorization} />
+        <Route exact path="/candidates" component={CandidatesPage} />
+        <Route path="/candidates/:id" component={CandidateCard} />
+        <Route path="*" component={Error} />
+      </Switch>
+    </div>
+  );
+};
 
 export default App;

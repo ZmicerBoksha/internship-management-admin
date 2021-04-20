@@ -1,6 +1,16 @@
-import { Checkbox, createStyles, FormControlLabel, IconButton, makeStyles, Popover, Theme, Tooltip, Typography } from "@material-ui/core";
-import { FunctionComponent, MouseEvent, useState } from "react";
-import { TableInstance } from "react-table";
+import {
+  Checkbox,
+  createStyles,
+  FormControlLabel,
+  IconButton,
+  makeStyles,
+  Popover,
+  Theme,
+  Tooltip,
+  Typography,
+} from '@material-ui/core';
+import { FunctionComponent, MouseEvent, useState } from 'react';
+import { TableInstance } from 'react-table';
 import ViewColumnIcon from '@material-ui/icons/ViewColumn';
 
 const ID_COLUMNS_HIDE = 'ArtHan/ID_COLUMNS_HIDE';
@@ -15,7 +25,7 @@ const useStyle = makeStyles((theme: Theme) => {
       fontWeight: 700,
       textTransform: 'uppercase',
       textDecoration: 'underline',
-      marginBottom: 15
+      marginBottom: 15,
     },
     grid: {
       display: 'grid',
@@ -23,12 +33,12 @@ const useStyle = makeStyles((theme: Theme) => {
       gridColumnGap: 15,
       gridRowGap: 15,
     },
-  })
-})
+  });
+});
 
 type ColumnHidePageProps = {
-  instance: TableInstance
-}
+  instance: TableInstance;
+};
 
 const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) => {
   const { allColumns, toggleHideColumn } = instance;
@@ -36,7 +46,7 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
   const classes = useStyle();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [columnsOpen, setColumnsOpen] = useState(false);  
+  const [columnsOpen, setColumnsOpen] = useState(false);
 
   const handleColumnsClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -48,10 +58,10 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
     setColumnsOpen(false);
   };
 
-  const hideableColumns = allColumns.filter((column) => !(column.id === '_selector'))
-  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0)
+  const hideableColumns = allColumns.filter(column => !(column.id === '_selector'));
+  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
 
-  const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length
+  const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length;
 
   return hideableColumns.length > 1 ? (
     <>
@@ -77,15 +87,11 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
         <div className={classes.columns_pop_over}>
           <Typography className={classes.popover_title}>Visible columns</Typography>
           <div className={classes.grid}>
-            {hideableColumns.map((column) => (
+            {hideableColumns.map(column => (
               <FormControlLabel
                 key={column.id}
                 control={
-                  <Checkbox
-                    value={column.id}
-                    disabled={column.isVisible && onlyOneOptionLeft}
-                    color="primary"
-                  />
+                  <Checkbox value={column.id} disabled={column.isVisible && onlyOneOptionLeft} color="primary" />
                 }
                 label={column.render('Header')}
                 checked={column.isVisible}
@@ -96,8 +102,7 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
         </div>
       </Popover>
     </>
-  ) : null
-}
-
+  ) : null;
+};
 
 export default ColumnHidePage;

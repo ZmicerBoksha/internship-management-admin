@@ -1,4 +1,4 @@
-import { FunctionComponent, MouseEventHandler, useMemo } from "react"
+import { FunctionComponent, MouseEventHandler, useMemo } from 'react';
 import {
   TableInstance,
   useBlockLayout,
@@ -12,20 +12,20 @@ import {
   useResizeColumns,
   useRowSelect,
   useSortBy,
-  useTable
-} from "react-table";
-import DefaultColumnFilter from "./filters/DefaultColumnFilter";
-import TablePagination from "./TablePagination/TablePagination";
-import { createStyles, makeStyles, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from "@material-ui/core";
-import MaUTable from '@material-ui/core/Table'
-import TableToolbar from "./TableToolbar/TableToolbar";
-import { selectionHook } from "../hooks/selectionHook";
+  useTable,
+} from 'react-table';
+import DefaultColumnFilter from './filters/DefaultColumnFilter';
+import TablePagination from './TablePagination/TablePagination';
+import { createStyles, makeStyles, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
+import MaUTable from '@material-ui/core/Table';
+import TableToolbar from './TableToolbar/TableToolbar';
+import { selectionHook } from '../hooks/selectionHook';
 
 const useStyles = makeStyles(() => {
   return createStyles({
     table_wrap: {
       overflowX: 'auto',
-      overflowY: 'hidden'
+      overflowY: 'hidden',
     },
     table: {
       overflow: 'hidden',
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => {
       borderSpacing: 0,
       border: '1px solid rgba(224, 224, 224, 1)',
       flex: '1 1 auto',
-      background: '#fff'
+      background: '#fff',
     },
     table_head_row: {
       color: '#000',
@@ -80,7 +80,7 @@ const useStyles = makeStyles(() => {
       borderBottom: '1px solid rgba(224, 224, 224, 1)',
       '&:last-child': {
         borderBottom: 'none',
-      }
+      },
     },
     table_cell: {
       padding: 10,
@@ -93,40 +93,39 @@ const useStyles = makeStyles(() => {
       },
       '& img': {
         width: '100%',
-        objectFit: 'cover'
-      }
-    }
-  })
-})  
+        objectFit: 'cover',
+      },
+    },
+  });
+});
 
 type TableProps = {
-  name: string,
-  columns: any,
-  data: any,
-  onAdd?: (instance: TableInstance) => void
-  onEdit?: (instance: TableInstance) => void
+  name: string;
+  columns: any;
+  data: any;
+  onAdd?: (instance: TableInstance) => void;
+  onEdit?: (instance: TableInstance) => void;
 };
 
 const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit }) => {
   const classes = useStyles();
 
-  const filterTypes = {
-
-  }
+  const filterTypes = {};
 
   const defaultColumn = useMemo(
     () => ({
-      Filter: DefaultColumnFilter
+      Filter: DefaultColumnFilter,
     }),
-    []
-  )
+    [],
+  );
 
-  const instance = useTable({
-    columns,
-    data,
-    filterTypes,
-    defaultColumn
-  },
+  const instance = useTable(
+    {
+      columns,
+      data,
+      filterTypes,
+      defaultColumn,
+    },
     useColumnOrder,
     useFilters,
     useGlobalFilter,
@@ -141,19 +140,11 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
     selectionHook,
   );
 
-  const {
-    getTableProps,
-    headerGroups,
-    getTableBodyProps,
-    page,
-    prepareRow
-  } = instance;
+  const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow } = instance;
 
   return (
     <>
-      <TableToolbar
-        instance={instance} {...{ onAdd, onEdit }}
-      />
+      <TableToolbar instance={instance} {...{ onAdd, onEdit }} />
       <div className={classes.table_wrap}>
         <MaUTable stickyHeader className={classes.table}>
           <TableHead>
@@ -171,9 +162,7 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
                         {column.render('Header')}
                       </TableSortLabel>
                     ) : (
-                      <>
-                        {column.render('Header')}
-                      </>
+                      <>{column.render('Header')}</>
                     )}
                   </TableCell>
                 ))}
@@ -182,7 +171,7 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
           </TableHead>
           <TableBody {...getTableBodyProps()} className={classes.table_body}>
             {page.map((row, i) => {
-              prepareRow(row)
+              prepareRow(row);
               return (
                 <TableRow {...row.getRowProps()} className={classes.table_row}>
                   {row.cells.map(cell => {
@@ -190,26 +179,23 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
                       <TableCell {...cell.getCellProps()} className={classes.table_cell}>
                         {cell.render('Cell')}
                       </TableCell>
-                    )
+                    );
                   })}
                 </TableRow>
-              )
+              );
             })}
           </TableBody>
         </MaUTable>
       </div>
-      <TablePagination
-        instance={instance}
-      />
+      <TablePagination instance={instance} />
     </>
-  )
-}
+  );
+};
 
 export default Table;
 
-
-
-{/* <div {...getTableProps()} className={classes.table_wrap}>
+{
+  /* <div {...getTableProps()} className={classes.table_wrap}>
 <div>
   {
     headerGroups.map(headerGroup => {
@@ -268,4 +254,5 @@ export default Table;
     })
   }
 </div>
-</div> */}
+</div> */
+}

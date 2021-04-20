@@ -7,20 +7,20 @@ import Table from '../common/Table/Table';
 import { TableInstance } from 'react-table';
 import { useHistory } from 'react-router';
 
-const useStyles = makeStyles( () => {
+const useStyles = makeStyles(() => {
   return createStyles({
-    pageWrap : {
+    pageWrap: {
       position: 'relative',
       paddingLeft: 25,
       paddingRight: 25,
       marginTop: 35,
-      marginBottom: 35
-    }
-  })
-})
+      marginBottom: 35,
+    },
+  });
+});
 
 interface IEvent {
-  id?: string
+  id?: string;
 }
 
 const Events: FunctionComponent = () => {
@@ -31,32 +31,23 @@ const Events: FunctionComponent = () => {
 
   const history = useHistory();
 
-  const tempFuncCallback = useCallback(
-    (instance: TableInstance<IEvent>) => {
-      const eventID = instance.selectedFlatRows[0].original!.id;
-      history.push(`/event-form/${eventID}`)
+  const tempFuncCallback = useCallback((instance: TableInstance<IEvent>) => {
+    const eventID = instance.selectedFlatRows[0].original!.id;
+    history.push(`/event-form/${eventID}`);
 
-      console.log(
-        'Template out text',
-          //hasOwnProperty('id')
-          eventID
-      )
-    },
-    []
-  )
+    console.log(
+      'Template out text',
+      //hasOwnProperty('id')
+      eventID,
+    );
+  }, []);
 
   return (
     <div className={classes.pageWrap}>
-      <CssBaseline />  
-      <Table
-        name={'Events table'}
-        columns={columns}
-        data={data}
-        onAdd={tempFuncCallback}
-        onEdit={tempFuncCallback}
-      />
+      <CssBaseline />
+      <Table name={'Events table'} columns={columns} data={data} onAdd={tempFuncCallback} onEdit={tempFuncCallback} />
     </div>
-  )
+  );
 };
 
 export default Events;
