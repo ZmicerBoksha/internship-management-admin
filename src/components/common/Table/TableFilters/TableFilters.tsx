@@ -1,24 +1,9 @@
-import {
-  Button,
-  createStyles,
-  IconButton,
-  makeStyles,
-  Popover,
-  Theme,
-  Tooltip,
-  Typography,
-} from "@material-ui/core";
-import {
-  FormEvent,
-  FunctionComponent,
-  MouseEvent,
-  useCallback,
-  useState,
-} from "react";
-import { TableInstance } from "react-table";
-import FilterListIcon from "@material-ui/icons/FilterList";
+import { Button, createStyles, IconButton, makeStyles, Popover, Theme, Tooltip, Typography } from '@material-ui/core';
+import { FormEvent, FunctionComponent, MouseEvent, useCallback, useState } from 'react';
+import { TableInstance } from 'react-table';
+import FilterListIcon from '@material-ui/icons/FilterList';
 
-const ID_FILTERS_HIDE = "ArtHan/ID_FILTERS_HIDE";
+const ID_FILTERS_HIDE = 'ArtHan/ID_FILTERS_HIDE';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -28,28 +13,28 @@ const useStyles = makeStyles((theme: Theme) => {
     popover_title: {
       fontSize: 20,
       fontWeight: 700,
-      textTransform: "uppercase",
-      textDecoration: "underline",
+      textTransform: 'uppercase',
+      textDecoration: 'underline',
       marginBottom: 15,
     },
     filters_reset_button: {
-      position: "absolute",
+      position: 'absolute',
       top: 18,
       right: 21,
     },
     grid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(3, 215px)",
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 215px)',
       gridColumnGap: 20,
       gridRowGap: 20,
     },
     cell: {
-      width: "100%",
-      display: "inline-flex",
-      flexDirection: "column",
+      width: '100%',
+      display: 'inline-flex',
+      flexDirection: 'column',
     },
     hidden: {
-      display: "none",
+      display: 'none',
     },
   });
 });
@@ -81,7 +66,7 @@ const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
       event.preventDefault();
       handleClose();
     },
-    [handleClose]
+    [handleClose],
   );
 
   const resetFilters = useCallback(() => {
@@ -101,30 +86,27 @@ const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
       >
         <div className={classes.columns_pop_over}>
           <Typography className={classes.popover_title}>Filters</Typography>
           <form onSubmit={onSubmit}>
-            <Button
-              onClick={resetFilters}
-              className={classes.filters_reset_button}
-            >
+            <Button onClick={resetFilters} className={classes.filters_reset_button}>
               Reset
             </Button>
             <div className={classes.grid}>
               {allColumns
-                .filter((item) => item.canFilter)
-                .map((column) => {
+                .filter(item => item.canFilter)
+                .map(column => {
                   return (
                     <div key={column.id} className={classes.cell}>
-                      {column.render("Filter")}
+                      {column.render('Filter')}
                     </div>
                   );
                 })}

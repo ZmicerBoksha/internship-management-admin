@@ -1,16 +1,12 @@
-import {
-  createStyles,
-  makeStyles,
-  TablePagination as MyTablePagination,
-} from "@material-ui/core";
-import { FunctionComponent, MouseEvent, useCallback } from "react";
-import { TableInstance } from "react-table";
+import { createStyles, makeStyles, TablePagination as MyTablePagination } from '@material-ui/core';
+import { FunctionComponent, MouseEvent, useCallback } from 'react';
+import { TableInstance } from 'react-table';
 
 const useStyles = makeStyles(() => {
   return createStyles({
     custom_pagination: {
-      background: "#fff",
-      border: "1px solid rgba(224, 224, 224, 1)",
+      background: '#fff',
+      border: '1px solid rgba(224, 224, 224, 1)',
       borderBottomRightRadius: 10,
       borderBottomLeftRadius: 10,
     },
@@ -21,9 +17,7 @@ type TablePaginationProps = {
   instance: TableInstance;
 };
 
-const TablePagination: FunctionComponent<TablePaginationProps> = ({
-  instance,
-}) => {
+const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance }) => {
   const classes = useStyles();
 
   const {
@@ -44,14 +38,14 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({
         gotoPage(newPage);
       }
     },
-    [gotoPage, nextPage, pageIndex, previousPage]
+    [gotoPage, nextPage, pageIndex, previousPage],
   );
 
   const handleChangeRowsPerPage = useCallback(
-    (event) => {
+    event => {
       setPageSize(Number(event.target.value));
     },
-    [setPageSize]
+    [setPageSize],
   );
 
   return (
@@ -63,7 +57,7 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({
       rowsPerPage={pageSize}
       page={pageIndex}
       SelectProps={{
-        inputProps: { "aria-label": "rows per page" },
+        inputProps: { 'aria-label': 'rows per page' },
         native: true,
       }}
       onChangePage={handleChangePage}

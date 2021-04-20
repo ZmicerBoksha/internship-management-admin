@@ -1,39 +1,32 @@
-import {
-  createStyles,
-  IconButton,
-  makeStyles,
-  Theme,
-  Toolbar,
-  Tooltip,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
-import { FunctionComponent, MouseEventHandler } from "react";
-import { TableInstance } from "react-table";
-import ColumnHidePage from "../ColumnHidePage/ColumnHidePage";
-import TableFilters from "../TableFilters/TableFilters";
-import GlobalFilter from "../filters/GlobalFilter";
+import { createStyles, IconButton, makeStyles, Theme, Toolbar, Tooltip } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import { FunctionComponent, MouseEventHandler } from 'react';
+import { TableInstance } from 'react-table';
+import ColumnHidePage from '../ColumnHidePage/ColumnHidePage';
+import TableFilters from '../TableFilters/TableFilters';
+import GlobalFilter from '../filters/GlobalFilter';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
     toolbar: {
-      display: "flex",
-      justifyContent: "space-between",
-      border: "1px solid rgba(224, 224, 224, 1)",
+      display: 'flex',
+      justifyContent: 'space-between',
+      border: '1px solid rgba(224, 224, 224, 1)',
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      borderBottom: "none",
-      background: "#fff",
-      position: "sticky",
+      borderBottom: 'none',
+      background: '#fff',
+      position: 'sticky',
       top: 0,
     },
     left_icons: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
     },
     right_icons: {
-      display: "flex",
-      alignItems: "center",
+      display: 'flex',
+      alignItems: 'center',
     },
   });
 });
@@ -44,11 +37,7 @@ type TableToolbarProps = {
   onEdit?: (instance: TableInstance) => void;
 };
 
-const TableToolbar: FunctionComponent<TableToolbarProps> = ({
-  instance,
-  onAdd,
-  onEdit,
-}) => {
+const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, onEdit }) => {
   const classes = useStyles();
   const { state } = instance;
 

@@ -1,14 +1,7 @@
-import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Dialog,
-  TextField,
-  DialogContentText,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import { DialogActions, DialogContent, DialogTitle, Dialog, TextField, DialogContentText } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 
 type TSoftSkillsProps = {
   field?: JSX.Element;
@@ -17,11 +10,11 @@ type TSoftSkillsProps = {
 
 const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string>('');
 
   const handleClose = () => {
     setOpen(false);
-    setDescription("");
+    setDescription('');
     /**
      * 1) here will be PUT (POST?) request to send review in the BD
      * **/
@@ -33,16 +26,12 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill }) => {
         <AddIcon />
         Add
       </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle>Candidate {skill} skills review</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Leave detailed review on the candidate's {skill} skills. Please note
-            that by sending a review, it cannot be changed.
+            Leave detailed review on the candidate's {skill} skills. Please note that by sending a review, it cannot be
+            changed.
           </DialogContentText>
           {field}
           <TextField
@@ -52,9 +41,7 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill }) => {
             type="text"
             fullWidth
             value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setDescription(e.target.value)
-            }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
           />
         </DialogContent>
         <DialogActions>

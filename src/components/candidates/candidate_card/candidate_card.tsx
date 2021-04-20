@@ -1,135 +1,133 @@
-import React from "react";
-import { useRouteMatch } from "react-router-dom";
-import "./styles.css";
-import CandidateInfo from "./candidate_info/candidate_info";
-import CandidateReview from "./candidate_review/candidate_review";
-import useAxios from "axios-hooks";
-import CandidateProgress from "./candidate_progress/candidate_progress";
-import { makeStyles, Typography } from "@material-ui/core";
+import React from 'react';
+import { useRouteMatch } from 'react-router-dom';
+import './styles.css';
+import CandidateInfo from './candidate_info/candidate_info';
+import CandidateReview from './candidate_review/candidate_review';
+import useAxios from 'axios-hooks';
+import CandidateProgress from './candidate_progress/candidate_progress';
+import { makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
-    width: "100%",
+    width: '100%',
     maxWidth: 500,
   },
   typography: {
-    display: "flex",
-    justifyContent: "center",
-    fontSize: "40px",
-    margin: "20px 0",
+    display: 'flex',
+    justifyContent: 'center',
+    fontSize: '40px',
+    margin: '20px 0',
   },
 });
 
 const ENGLISH_LEVELS = [
   {
-    value: "A1",
-    label: "Beginner(A1)",
+    value: 'A1',
+    label: 'Beginner(A1)',
   },
   {
-    value: "A2",
-    label: "Elementary(A2)",
+    value: 'A2',
+    label: 'Elementary(A2)',
   },
   {
-    value: "B1",
-    label: "Pre-Intermediate(B1)",
+    value: 'B1',
+    label: 'Pre-Intermediate(B1)',
   },
   {
-    value: "B1+",
-    label: "Intermediate(B1+)",
+    value: 'B1+',
+    label: 'Intermediate(B1+)',
   },
   {
-    value: "B2",
-    label: "Upper Intermediate(B2)",
+    value: 'B2',
+    label: 'Upper Intermediate(B2)',
   },
   {
-    value: "C1",
-    label: "Advanced(C1)",
+    value: 'C1',
+    label: 'Advanced(C1)',
   },
 ];
 
 const COUNTRIES_LIST = [
   {
-    value: "Belarus",
-    label: "Belarus",
+    value: 'Belarus',
+    label: 'Belarus',
   },
   {
-    value: "Poland",
-    label: "Poland",
+    value: 'Poland',
+    label: 'Poland',
   },
   {
-    value: "Russia",
-    label: "Russia",
+    value: 'Russia',
+    label: 'Russia',
   },
   {
-    value: "Georgia",
-    label: "Georgia",
+    value: 'Georgia',
+    label: 'Georgia',
   },
   {
-    value: "Ukraine",
-    label: "Ukraine",
+    value: 'Ukraine',
+    label: 'Ukraine',
   },
   {
-    value: "Lithuania",
-    label: "Lithuania",
+    value: 'Lithuania',
+    label: 'Lithuania',
   },
   {
-    value: "Uzbekistan",
-    label: "Uzbekistan",
+    value: 'Uzbekistan',
+    label: 'Uzbekistan',
   },
   {
-    value: "United States",
-    label: "United States",
+    value: 'United States',
+    label: 'United States',
   },
 ];
 
 const MAIN_SKILL = [
   {
-    value: "JavaScript",
-    label: "JavaScript",
+    value: 'JavaScript',
+    label: 'JavaScript',
   },
   {
-    value: "Java",
-    label: "Java",
+    value: 'Java',
+    label: 'Java',
   },
   {
-    value: "DevOps",
-    label: "DevOps",
+    value: 'DevOps',
+    label: 'DevOps',
   },
   {
-    value: "QA Testing",
-    label: "QA Testing",
+    value: 'QA Testing',
+    label: 'QA Testing',
   },
   {
-    value: "Python",
-    label: "Python",
+    value: 'Python',
+    label: 'Python',
   },
 ];
 
 const PREFERRED_TIME = [
   {
-    value: "From 10.00 to 13.00",
-    label: "From 10.00 to 13.00",
+    value: 'From 10.00 to 13.00',
+    label: 'From 10.00 to 13.00',
   },
   {
-    value: "From 13.00 to 16.00",
-    label: "From 13.00 to 16.00",
+    value: 'From 13.00 to 16.00',
+    label: 'From 13.00 to 16.00',
   },
   {
-    value: "From 16.00 to 19.00",
-    label: "From 16.00 to 19.00",
+    value: 'From 16.00 to 19.00',
+    label: 'From 16.00 to 19.00',
   },
   {
-    value: "Any time",
-    label: "Any time",
+    value: 'Any time',
+    label: 'Any time',
   },
 ];
 
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [
-    { data: candidateInfo, loading: getLoading, error: getError },
-  ] = useAxios(url);
+  const [{ data: candidateInfo, loading: getLoading, error: getError }] = useAxios(url);
 
   return candidateInfo ? (
     <div className="wrapper">

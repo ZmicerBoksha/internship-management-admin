@@ -1,11 +1,11 @@
-import { CellProps, HeaderProps, Hooks } from "react-table";
-import { HeaderCheckbox, RowCheckbox } from "../Checkbox/Checkbox";
+import { CellProps, HeaderProps, Hooks } from 'react-table';
+import { HeaderCheckbox, RowCheckbox } from '../Checkbox/Checkbox';
 
 export const selectionHook = (hooks: Hooks<any>) => {
-  hooks.allColumns.push((columns) => [
+  hooks.allColumns.push(columns => [
     // Let's make a column for selection
     {
-      id: "_selector",
+      id: '_selector',
       disableResizing: true,
       disableGroupBy: true,
       minWidth: 45,
@@ -18,9 +18,7 @@ export const selectionHook = (hooks: Hooks<any>) => {
       ),
       // The cell can use the individual row's getToggleRowSelectedProps method
       // to the render a checkbox
-      Cell: ({ row }: CellProps<any>) => (
-        <RowCheckbox {...row.getToggleRowSelectedProps()} />
-      ),
+      Cell: ({ row }: CellProps<any>) => <RowCheckbox {...row.getToggleRowSelectedProps()} />,
     },
     ...columns,
   ]);

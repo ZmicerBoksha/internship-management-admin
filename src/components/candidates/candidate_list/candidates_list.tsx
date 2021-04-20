@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
-import { useTable, useGlobalFilter, useFilters, Column } from "react-table";
-import { useHistory } from "react-router-dom";
-import "./styles.css";
-import GlobalFilter from "./globalFilter";
-import useAxios from "axios-hooks";
+import React, { useMemo } from 'react';
+import { useTable, useGlobalFilter, useFilters, Column } from 'react-table';
+import { useHistory } from 'react-router-dom';
+import './styles.css';
+import GlobalFilter from './globalFilter';
+import useAxios from 'axios-hooks';
 
 type TEducation = {
   educational_institution: string;
@@ -35,19 +35,10 @@ type TCandidateListProps = {
   defaultColumn: any;
 };
 
-const CandidatesList: React.FC<TCandidateListProps> = ({
-  columns,
-  defaultColumn,
-}) => {
+const CandidatesList: React.FC<TCandidateListProps> = ({ columns, defaultColumn }) => {
   const history = useHistory();
 
-  const [
-    {
-      data: candidatesList,
-      loading: candidatesListLoading,
-      error: candidatesListError,
-    },
-  ] = useAxios("/candidate");
+  const [{ data: candidatesList, loading: candidatesListLoading, error: candidatesListError }] = useAxios('/candidate');
 
   console.log(candidatesList);
 
@@ -57,22 +48,14 @@ const CandidatesList: React.FC<TCandidateListProps> = ({
 
   const data = useMemo(() => candidatesList || [], [candidatesList]);
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    state,
-    setGlobalFilter,
-  }: any = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow, state, setGlobalFilter }: any = useTable(
     {
       columns,
       data,
       defaultColumn,
     },
     useFilters,
-    useGlobalFilter
+    useGlobalFilter,
   );
 
   const { globalFilter }: any = state;
@@ -87,10 +70,8 @@ const CandidatesList: React.FC<TCandidateListProps> = ({
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column: any) => (
                   <th {...column.getHeaderProps()}>
-                    {column.render("Header")}
-                    <div>
-                      {column.canFilter ? column.render("Filter") : null}
-                    </div>
+                    {column.render('Header')}
+                    <div>{column.canFilter ? column.render('Filter') : null}</div>
                   </th>
                 ))}
               </tr>
@@ -103,11 +84,8 @@ const CandidatesList: React.FC<TCandidateListProps> = ({
                 <tr {...row.getRowProps()}>
                   {row.cells.map((cell: any) => {
                     return (
-                      <td
-                        onClick={() => handleClick(row.original.id)}
-                        {...cell.getCellProps()}
-                      >
-                        {cell.render("Cell")}
+                      <td onClick={() => handleClick(row.original.id)} {...cell.getCellProps()}>
+                        {cell.render('Cell')}
                       </td>
                     );
                   })}

@@ -1,70 +1,70 @@
-import { SelectColumnFilter } from "../../common/Table/filters/SelectColumnFilter";
+import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
 
 export const GROUPED_COLUMNS = [
   {
-    Header: "Id",
-    accessor: "id",
+    Header: 'Id',
+    accessor: 'id',
     disableFilters: true,
   },
   {
-    Header: "Event custom info",
+    Header: 'Event custom info',
     columns: [
       {
-        Header: "Tab",
-        accessor: "eventTab",
+        Header: 'Tab',
+        accessor: 'eventTab',
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: 'includes',
       },
       {
-        Header: "Format",
-        accessor: "format",
+        Header: 'Format',
+        accessor: 'format',
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: 'includes',
       },
     ],
   },
   {
-    Header: "Name and description",
+    Header: 'Name and description',
     columns: [
       {
-        Header: "Title",
-        accessor: "title",
+        Header: 'Title',
+        accessor: 'title',
       },
       {
-        Header: "Body",
-        accessor: "body",
+        Header: 'Body',
+        accessor: 'body',
       },
     ],
   },
   {
-    Header: "Dates info",
+    Header: 'Dates info',
     columns: [
       {
-        Header: "Event start",
-        accessor: "dateInfo.eventStart",
+        Header: 'Event start',
+        accessor: 'dateInfo.eventStart',
       },
       {
-        Header: "Event finish",
-        accessor: "dateInfo.eventFinish",
+        Header: 'Event finish',
+        accessor: 'dateInfo.eventFinish',
       },
       {
-        Header: "Date end of acceptin",
-        accessor: "dateInfo.datefEndAcceptin",
+        Header: 'Date end of acceptin',
+        accessor: 'dateInfo.datefEndAcceptin',
       },
       {
-        Header: "Event duration",
-        accessor: "dateInfo.duration",
+        Header: 'Event duration',
+        accessor: 'dateInfo.duration',
       },
     ],
   },
   {
-    Header: "Image info",
+    Header: 'Image info',
     columns: [
       {
-        Header: "Src",
-        accessor: "imagenfo.src",
+        Header: 'Src',
+        accessor: 'imagenfo.src',
         disableFilters: true,
-        Cell: (props) => {
+        Cell: props => {
           return (
             <>
               <img src={props.cell.value} />
@@ -73,52 +73,52 @@ export const GROUPED_COLUMNS = [
         },
       },
       {
-        Header: "Alt text",
-        accessor: "imagenfo.alt",
+        Header: 'Alt text',
+        accessor: 'imagenfo.alt',
         disableFilters: true,
       },
     ],
   },
   {
-    Header: "Requirements",
+    Header: 'Requirements',
     columns: [
       {
-        Header: "English level",
-        accessor: "requirements.englishLevel",
+        Header: 'English level',
+        accessor: 'requirements.englishLevel',
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: 'includes',
       },
       {
-        Header: "Technologies",
-        accessor: "requirements.technologies",
+        Header: 'Technologies',
+        accessor: 'requirements.technologies',
       },
     ],
   },
   {
-    Header: "Location",
+    Header: 'Location',
     columns: [
       {
-        Header: "Country",
-        accessor: "location.county",
+        Header: 'Country',
+        accessor: 'location.county',
         Filter: SelectColumnFilter,
-        filter: "includes",
+        filter: 'includes',
       },
       {
-        Header: "City",
-        accessor: "location.city",
+        Header: 'City',
+        accessor: 'location.city',
       },
     ],
   },
   {
-    Header: "Info create",
+    Header: 'Info create',
     columns: [
       {
-        Header: "Who created event (userId)",
-        accessor: "userCreatedId",
+        Header: 'Who created event (userId)',
+        accessor: 'userCreatedId',
       },
       {
-        Header: "Event published at",
-        accessor: "publishedAt",
+        Header: 'Event published at',
+        accessor: 'publishedAt',
       },
     ],
   },
