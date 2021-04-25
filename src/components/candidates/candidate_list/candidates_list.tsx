@@ -4,14 +4,12 @@ import './styles.css';
 import useAxios from 'axios-hooks';
 import Table from '../../common/Table/Table';
 import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
-import { TableInstance } from 'react-table';
-//import { IEvent } from '../../events/events';
 
-type TEducation = {
+/*type TEducation = {
   educational_institution: string;
   faculty: string;
   speciality: string;
-};
+};*/
 
 export type TCandidate = {
   education: string;
@@ -31,7 +29,7 @@ export type TCandidate = {
 const CandidatesList: React.FC = () => {
   const history = useHistory();
 
-  const [{ data: candidatesList, loading: candidatesListLoading, error: candidatesListError }] = useAxios('/candidate');
+  const [{ data: candidatesList, /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios('/candidate');
 
   console.log(candidatesList);
 

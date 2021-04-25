@@ -1,14 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CandidateSkills from '../candidate_skills/candidate_skills';
-import { TSelect } from '../candidate_info/candidate_info';
-import { Paper, TextField, MenuItem } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import useAxios from 'axios-hooks';
 import { TCandidate } from '../../candidate_list/candidates_list';
 
 type TCandidateReviewProps = {
   getCandidateInfo: TCandidate;
-  englishLevels: TSelect[];
 };
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,10 +31,20 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const CandidateReview: React.FC<TCandidateReviewProps> = ({ englishLevels, getCandidateInfo }) => {
+const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) => {
   const classes = useStyles();
+  const [softSkillsDescription, setSoftSkillsDescription] = useState<string>('');
+  const [hardSkillsDescription, setHardSkillsDescription] = useState<string>('');
 
-  const [{ data: postReview, loading: postLoading, error: postError }, executePost] = useAxios(
+  const handleSoftSkillsReview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSoftSkillsDescription(e.target.value);
+  };
+
+  const handleHardSkillsReview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setHardSkillsDescription(e.target.value);
+  };
+
+  const [{ data: postReview, /*loading: postLoading, error: postError*/ }, executePost] = useAxios(
     {
       url: '/interview-feedback',
       method: 'POST',
@@ -47,7 +55,7 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ englishLevels, getCa
     { manual: true },
   );
 
-  const addReviewFromHR = (data: any) => {
+  const addReview = (data: any) => {
     executePost({
       data: {
         ...data,
@@ -55,33 +63,51 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ englishLevels, getCa
     });
   };
 
-  console.log(postReview);
+  const [{ data: getInterviewFeedback /*loading: getLoading, error: getError*/ }, getFetch] = useAxios(
+    `/interview-feedback?search=candidate.id==${getCandidateInfo.id}`,
+  );
+
+  useEffect(() => {
+    getFetch();
+  }, [postReview, getFetch]);
+
+  const handleSubmitReview = () => {
+    setSoftSkillsDescription('');
+    setHardSkillsDescription('');
+    addReview({
+      feedback: softSkillsDescription || hardSkillsDescription,
+      idCandidate: getCandidateInfo.id,
+      idEmployee: 2 /*will change later, when authorization will be ready*/,
+    });
+  };
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
         <h2 className="card__review-title">Soft skills review</h2>
-        <CandidateSkills
-          field={
-            <TextField required select margin="dense" label="English level" type="text" defaultValue="" fullWidth>
-              {englishLevels.map((option: TSelect) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-          }
-          addReview={addReviewFromHR}
-          getCandidateInfo={getCandidateInfo}
-          skill="soft"
-        />
-        {/**
-         * here should be GET request to get reviews from BD
-         **/}
+        {getInterviewFeedback && getInterviewFeedback.content.length ? (
+          <div>{getInterviewFeedback.content[0].feedback}</div>
+        ) : (
+          <CandidateSkills
+            skill="soft"
+            skillsDescription={softSkillsDescription}
+            handleSkillsDescription={handleSoftSkillsReview}
+            handleSubmitReview={handleSubmitReview}
+          />
+        )}
       </Paper>
       <Paper className={classes.paper}>
         <h2 className="card__review-title">Technical skills review</h2>
-        <CandidateSkills skill="hard" />
+        {getInterviewFeedback && getInterviewFeedback.content.length >= 2 ? (
+          <div>{getInterviewFeedback.content[1].feedback}</div>
+        ) : (
+          <CandidateSkills
+            skill="hard"
+            skillsDescription={hardSkillsDescription}
+            handleSkillsDescription={handleHardSkillsReview}
+            handleSubmitReview={handleSubmitReview}
+          />
+        )}
       </Paper>
     </div>
   );

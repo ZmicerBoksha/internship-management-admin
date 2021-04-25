@@ -127,12 +127,15 @@ const PREFERRED_TIME = [
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [{ data: getCandidateInfo, loading: getLoading, error: getError }] = useAxios(url);
+  const [{ data: getCandidateInfo, /*loading: getLoading, error: getError*/ }] = useAxios(url);
 
-  const [{ data: updateCandidateInfo, loading: putLoading, error: putError }, executePut] = useAxios(
+  const [{ data: updateCandidateInfo, /*loading: putLoading, error: putError */}, executePut] = useAxios(
     {
-      url: `${url}`,
+      url: url,
       method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     },
     { manual: true },
   );
@@ -145,10 +148,7 @@ const CandidateCard: React.FC = () => {
     });
   };
 
-  /* console.log(getCandidateInfo)*/
-
   return getCandidateInfo ? (
-    <div className="wrapper">
       <div className="card">
         <div className="card__container">
           {/*<Typography variant="subtitle2">{getCandidateInfo.date}</Typography>*/}
@@ -166,10 +166,9 @@ const CandidateCard: React.FC = () => {
             preferredTime={PREFERRED_TIME}
             editCandidateData={editCandidateData}
           />
-          <CandidateReview englishLevels={ENGLISH_LEVELS} getCandidateInfo={getCandidateInfo} />
+          <CandidateReview getCandidateInfo={getCandidateInfo} />
         </div>
       </div>
-    </div>
   ) : null;
 };
 

@@ -58,15 +58,15 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
   updateCandidateInfo,
 }) => {
   const classes = useStyles();
-
-  const [active, setActive] = useState<boolean>(true);
+  const [active, setActive] = useState<boolean>(false);
+  const errorMessageRequired = 'This field is required';
+  const printErrorMessageMaxLength = (number: number) => `This field cannot exceed ${number} characters`;
 
   const handleChangeSwitcher = (event: React.ChangeEvent<HTMLInputElement>) => {
     setActive(event.target.checked);
   };
 
-  const errorMessageRequired = 'This field is required';
-  const printErrorMessageMaxLength = (number: number) => `This field cannot exceed ${number} characters`;
+  console.log(updateCandidateInfo);
 
   const defaultValues = {
     firstName: candidateInfo.firstName,
@@ -82,19 +82,16 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
   };
 
   const onSubmit = (data: TCandidate) => {
-    console.log(data);
     editCandidateData(data);
   };
+
   const {
     handleSubmit,
     control,
-    register,
     formState: { errors },
   } = useForm<TCandidate>({
     defaultValues,
   });
-
-  console.log(errors);
 
   return (
     <>
@@ -103,7 +100,6 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
         checked={active}
         onChange={handleChangeSwitcher}
         color="primary"
-        name="checkedB"
         inputProps={{ 'aria-label': 'primary checkbox' }}
       />
       <form className={classes.root} onSubmit={handleSubmit(onSubmit)}>
@@ -116,10 +112,13 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                   <TextField
                     {...field}
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="First name"
-                    required
+                    helperText={
+                      (errors.firstName?.type === 'required' && errorMessageRequired) ||
+                      (errors.firstName?.type === 'maxLength' && printErrorMessageMaxLength(20))
+                    }
                     error={!!errors.firstName}
                   />
                 )}
@@ -127,16 +126,6 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 control={control}
                 rules={{ required: true, maxLength: 20 }}
               />
-              {errors.firstName?.type === 'required' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
-              {errors.firstName?.type === 'maxLength' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {printErrorMessageMaxLength(20)}
-                </Typography>
-              )}
               <Controller
                 name="lastName"
                 control={control}
@@ -145,44 +134,42 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                   <TextField
                     {...field}
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="Last name"
-                    required
+                    helperText={
+                      (errors.lastName?.type === 'required' && errorMessageRequired) ||
+                      (errors.lastName?.type === 'maxLength' && printErrorMessageMaxLength(20))
+                    }
                     error={!!errors.lastName}
                   />
                 )}
               />
-              {errors.lastName?.type === 'required' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
-              {errors.lastName?.type === 'maxLength' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {printErrorMessageMaxLength(20)}
-                </Typography>
-              )}
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.paper}>
               <h2 className="card__form-title">Location</h2>
-              <TextField
-                required
-                select
-                label="Country"
-                defaultValue={defaultValues.location}
-                InputProps={{
-                  readOnly: active,
-                }}
-              >
-                {countriesList.map((option: TSelect) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Controller
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="Country"
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                  >
+                    {countriesList.map((option: TSelect) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+                name="location"
+                control={control}
+              />
               <Controller
                 name="location"
                 control={control}
@@ -191,24 +178,17 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                   <TextField
                     {...field}
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="City"
-                    required
+                    helperText={
+                      (errors.location?.type === 'required' && errorMessageRequired) ||
+                      (errors.location?.type === 'maxLength' && printErrorMessageMaxLength(20))
+                    }
                     error={!!errors.location}
                   />
                 )}
               />
-              {errors.location?.type === 'required' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
-              {errors.location?.type === 'maxLength' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {printErrorMessageMaxLength(20)}
-                </Typography>
-              )}
             </Paper>
           </Grid>
           <Grid item xs={4}>
@@ -225,30 +205,19 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 render={({ field }) => (
                   <TextField
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="Phone"
                     {...field}
-                    required
+                    helperText={
+                      (errors.phone?.type === 'required' && errorMessageRequired) ||
+                      (errors.phone?.type === 'maxLength' && printErrorMessageMaxLength(13)) ||
+                      (errors.phone?.type === 'pattern' && 'Check correct of phone number')
+                    }
                     error={!!errors.phone}
                   />
                 )}
               />
-              {errors.phone?.type === 'required' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
-              {errors.phone?.type === 'pattern' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  Check correct of phone number
-                </Typography>
-              )}
-              {errors.phone?.type === 'maxLength' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {printErrorMessageMaxLength(13)}
-                </Typography>
-              )}
               <Controller
                 name="email"
                 control={control}
@@ -259,25 +228,18 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 render={({ field }) => (
                   <TextField
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="Email"
                     {...field}
-                    required
+                    helperText={
+                      (errors.email?.type === 'required' && errorMessageRequired) ||
+                      (errors.email?.type === 'pattern' && 'Check correct of email address')
+                    }
                     error={!!errors.email}
                   />
                 )}
               />
-              {errors.email?.type === 'required' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
-              {errors.email?.type === 'pattern' && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  Check correct of email address
-                </Typography>
-              )}
               <Controller
                 name="skype"
                 control={control}
@@ -285,68 +247,73 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 render={({ field }) => (
                   <TextField
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     label="Skype"
                     {...field}
-                    required
+                    helperText={errors.skype?.type === 'required' && errorMessageRequired}
                     error={!!errors.skype}
                   />
                 )}
               />
-              {errors.skype && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.paper}>
               <h2 className="card__form-title">Skills</h2>
-              <TextField
-                required
-                select
-                label="Main skill"
-                InputProps={{
-                  readOnly: active,
-                }}
-                defaultValue={candidateInfo.expertise}
-              >
-                {mainSkill.map((option: TSelect) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Controller
+                name="expertise"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="Main skill"
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                  >
+                    {mainSkill.map((option: TSelect) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
               <Controller
                 name="experience"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     {...field}
                     label="Other Skills"
                   />
                 )}
               />
-              <TextField
-                required
-                select
-                label="English level"
-                InputProps={{
-                  readOnly: active,
-                }}
-                defaultValue={candidateInfo.englishLevel}
-              >
-                {englishLevel.map((option: TSelect) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Controller
+                name="englishLevel"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    select
+                    label="English level"
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                  >
+                    {englishLevel.map((option: TSelect) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
               {/*<Controller
                             name="cv"
                             control={control}
@@ -354,7 +321,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             render={({field}) =>
                                 <TextField
                                     InputProps={{
-                                        readOnly: active,
+                                        readOnly: !active,
                                     }}
                                     {...field}
                                     label="CV"
@@ -376,19 +343,15 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 render={({ field }) => (
                   <TextField
                     InputProps={{
-                      readOnly: active,
+                      readOnly: !active,
                     }}
                     {...field}
                     label="Institution"
+                    helperText={errors.education?.type === 'required' && errorMessageRequired}
                     error={!!errors.education}
                   />
                 )}
               />
-              {errors.education && (
-                <Typography className={classes.typography} variant="subtitle2">
-                  {errorMessageRequired}
-                </Typography>
-              )}
               {/*<Controller
                             name="education.faculty"
                             control={control}
@@ -396,7 +359,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             render={({field}) =>
                                 <TextField
                                     InputProps={{
-                                        readOnly: active,
+                                        readOnly: !active,
                                     }}
                                     {...field}
                                     label="Faculty"
@@ -414,7 +377,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             render={({field}) =>
                                 <TextField
                                     InputProps={{
-                                        readOnly: active,
+                                        readOnly: !active,
                                     }}
                                     {...field}
                                     label="Speciality"
@@ -435,7 +398,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             render={({field}) =>
                                 <TextField
                                     InputProps={{
-                                        readOnly: active,
+                                        readOnly: !active,
                                     }}
                                     {...field}
                                     label="Graduation Date"
@@ -456,7 +419,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             select
                             label="Preferred time for interview"
                             InputProps={{
-                                readOnly: active,
+                                readOnly: !active,
                             }}
                             defaultValue={candidateInfo.time}
                         >
@@ -470,16 +433,13 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
           </Grid>
         </Grid>
         <div style={{ display: 'flex', justifyContent: 'center', margin: '30px 0' }}>
-          {!active && (
-            <Button type="submit" variant="contained" color="primary" onClick={updateCandidateInfo && setActive(true)}>
+          {active && (
+            <Button type="submit" variant="contained" color="primary" onClick={updateCandidateInfo && setActive(false)}>
               Save
               <SaveIcon fontSize="small" style={{ color: 'white' }} />
             </Button>
           )}
         </div>
-        {/**
-         *here should be button 'save' with PUT request
-         * */}
       </form>
     </>
   );

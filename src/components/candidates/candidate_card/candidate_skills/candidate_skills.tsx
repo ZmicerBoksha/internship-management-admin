@@ -2,32 +2,24 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { DialogActions, DialogContent, DialogTitle, Dialog, TextField, DialogContentText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import { TCandidate } from '../../candidate_list/candidates_list';
 
 type TSoftSkillsProps = {
-  getCandidateInfo?: TCandidate;
-  field?: JSX.Element;
   skill: string;
-  addReview?: any;
+  skillsDescription: string;
+  handleSkillsDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmitReview?: any;
 };
 
-const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill, addReview, getCandidateInfo }) => {
+const CandidateSkills: React.FC<TSoftSkillsProps> = ({
+  skill,
+  skillsDescription,
+  handleSkillsDescription,
+  handleSubmitReview,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>('');
 
   const handleClose = () => {
     setOpen(false);
-    setDescription('');
-  };
-
-  const handleSendReview = () => {
-    setOpen(false);
-    setDescription('');
-    addReview({
-      feedback: description,
-      idCandidate: 40,
-      idEmployee: 1,
-    });
   };
 
   return (
@@ -43,22 +35,26 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill, addReview, 
             Leave detailed review on the candidate's {skill} skills. Please note that by sending a review, it cannot be
             changed.
           </DialogContentText>
-          {field}
           <TextField
             required
-            margin="dense"
             label="Description of candidate"
             type="text"
             fullWidth
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+            value={skillsDescription}
+            onChange={handleSkillsDescription}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleSendReview} color="primary">
+          <Button
+            onClick={() => {
+              handleSubmitReview();
+              handleClose();
+            }}
+            color="primary"
+          >
             Send review
           </Button>
         </DialogActions>
