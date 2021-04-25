@@ -5,7 +5,7 @@ import CandidateInfo from './candidate_info/candidate_info';
 import CandidateReview from './candidate_review/candidate_review';
 import useAxios from 'axios-hooks';
 import CandidateProgress from './candidate_progress/candidate_progress';
-import { makeStyles, Typography } from '@material-ui/core';
+import { Divider, makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
   root: {
@@ -127,9 +127,9 @@ const PREFERRED_TIME = [
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [{ data: getCandidateInfo, /*loading: getLoading, error: getError*/ }] = useAxios(url);
+  const [{ data: getCandidateInfo /*loading: getLoading, error: getError*/ }] = useAxios(url);
 
-  const [{ data: updateCandidateInfo, /*loading: putLoading, error: putError */}, executePut] = useAxios(
+  const [{ data: updateCandidateInfo /*loading: putLoading, error: putError */ }, executePut] = useAxios(
     {
       url: url,
       method: 'PUT',
@@ -149,26 +149,26 @@ const CandidateCard: React.FC = () => {
   };
 
   return getCandidateInfo ? (
-      <div className="card">
-        <div className="card__container">
-          {/*<Typography variant="subtitle2">{getCandidateInfo.date}</Typography>*/}
-          <Typography variant="h2" className={classes.typography}>
-            {`${getCandidateInfo.firstName}
+    <div className="card">
+      <div className="card__container">
+        {/*<Typography variant="subtitle2">{getCandidateInfo.date}</Typography>*/}
+        <Typography variant="h2" className={classes.typography}>
+          {`${getCandidateInfo.firstName}
                           ${getCandidateInfo.lastName}`}
-          </Typography>
-          <CandidateProgress />
-          <CandidateInfo
-            updateCandidateInfo={updateCandidateInfo}
-            candidateInfo={getCandidateInfo}
-            englishLevel={ENGLISH_LEVELS}
-            countriesList={COUNTRIES_LIST}
-            mainSkill={MAIN_SKILL}
-            preferredTime={PREFERRED_TIME}
-            editCandidateData={editCandidateData}
-          />
-          <CandidateReview getCandidateInfo={getCandidateInfo} />
-        </div>
+        </Typography>
+        <CandidateProgress />
+        <CandidateInfo
+          updateCandidateInfo={updateCandidateInfo}
+          candidateInfo={getCandidateInfo}
+          englishLevel={ENGLISH_LEVELS}
+          countriesList={COUNTRIES_LIST}
+          mainSkill={MAIN_SKILL}
+          preferredTime={PREFERRED_TIME}
+          editCandidateData={editCandidateData}
+        />
+        <CandidateReview getCandidateInfo={getCandidateInfo} />
       </div>
+    </div>
   ) : null;
 };
 

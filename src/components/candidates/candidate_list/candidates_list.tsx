@@ -29,7 +29,9 @@ export type TCandidate = {
 const CandidatesList: React.FC = () => {
   const history = useHistory();
 
-  const [{ data: candidatesList, /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios('/candidate');
+  const [{ data: candidatesList /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios(
+    '/candidate',
+  );
 
   console.log(candidatesList);
 

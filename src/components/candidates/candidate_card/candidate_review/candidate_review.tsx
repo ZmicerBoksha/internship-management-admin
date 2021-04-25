@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CandidateSkills from '../candidate_skills/candidate_skills';
-import { Paper } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import useAxios from 'axios-hooks';
 import { TCandidate } from '../../candidate_list/candidates_list';
@@ -44,7 +44,7 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
     setHardSkillsDescription(e.target.value);
   };
 
-  const [{ data: postReview, /*loading: postLoading, error: postError*/ }, executePost] = useAxios(
+  const [{ data: postReview /*loading: postLoading, error: postError*/ }, executePost] = useAxios(
     {
       url: '/interview-feedback',
       method: 'POST',
@@ -86,7 +86,9 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
       <Paper className={classes.paper}>
         <h2 className="card__review-title">Soft skills review</h2>
         {getInterviewFeedback && getInterviewFeedback.content.length ? (
-          <div>{getInterviewFeedback.content[0].feedback}</div>
+          <Typography variant="subtitle1" style={{ fontSize: '18px' }}>
+            {getInterviewFeedback.content[0].feedback}
+          </Typography>
         ) : (
           <CandidateSkills
             skill="soft"
@@ -99,7 +101,9 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
       <Paper className={classes.paper}>
         <h2 className="card__review-title">Technical skills review</h2>
         {getInterviewFeedback && getInterviewFeedback.content.length >= 2 ? (
-          <div>{getInterviewFeedback.content[1].feedback}</div>
+          <Typography variant="subtitle1" style={{ fontSize: '18px' }}>
+            {getInterviewFeedback.content[1].feedback}
+          </Typography>
         ) : (
           <CandidateSkills
             skill="hard"
