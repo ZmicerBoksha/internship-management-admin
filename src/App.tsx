@@ -19,7 +19,7 @@ const App: FunctionComponent = () => {
                     component={Events}
                 />
                 <Route   
-                    path='/event-form/:eventId?'
+                    path='/event-form/:eventFormType?/:eventId?'
                     component={EventForm}
                 />
                 <Route exact path='/staff' component={Staff} />
