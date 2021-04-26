@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IUrl {
-  add: string | undefined;
+  add?: string;
 }
 
 const StaffPage: React.FC = () => {
