@@ -126,7 +126,7 @@ const StaffPage: React.FC = () => {
         <Typography variant="h6" className="switchLabel" noWrap>
           Edit mode
         </Typography>
-        {edit ? <Button variant="contained">Save</Button> : ''}
+        {edit && <Button variant="contained">Save</Button> }
       </Grid>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container justify="center" xs={12}>
