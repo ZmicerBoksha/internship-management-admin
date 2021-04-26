@@ -3,8 +3,6 @@ import CreateTable from "../table/table";
 import makeData from "../table/makeData";
 
 // @ts-ignore
-// @ts-ignore
-// @ts-ignore
 
 const HR__TABLE = [
     {
@@ -48,7 +46,7 @@ const HR__TABLE = [
                 Header: "poins",
                 accessor: "",
                 Cell: ({cell}: any) => (
-                    <button value={cell.row.id}  onClick={()=>{window.location.href=(`/hr/${cell.row.id}`)}}> {cell.row.values.age}  </button>)
+                    <button value={cell.row.id}  onClick={()=>{window.location.href=(`/staff/hr/${cell.row.id}`)}}> {cell.row.values.age}  </button>)
             }
         ]
     }

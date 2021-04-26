@@ -17,9 +17,9 @@ const Routers: React.FC = () => {
         <Route exact path="/" component={Dashboard} />
         <Route path="/events" component={Events} />
         <Route path="/event-form/:eventId?" component={EventForm} />
-        <Route exact path='/hrs' component={HrTable} />
-        <Route exact path='/ts' component={HrTable} />
-        <Route exact path="/hr/:id" component={StaffPage}/>
+        <Route exact path='/staff/hr' component={HrTable} />
+        <Route exact path='/staff/ts' component={HrTable} />
+        <Route exact path="/staff/hr/:id" component={StaffPage}/>
         <Route exact path="/staff/:add?" component={StaffPage}/>
         <Route path="/authorization" component={Authorization} />
         <Route exact path="/candidate" component={CandidatesPage} />

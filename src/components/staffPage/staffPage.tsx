@@ -48,7 +48,6 @@ interface IUrl {
 }
 
 
-
 const StaffPage: React.FC = () => {
     let history = useHistory();
     let [edit, setEdit] = useState(false);
@@ -59,7 +58,7 @@ const StaffPage: React.FC = () => {
     useEffect(() => {
         createUrl.add === "add" && setAddMode(true)
     }, [])
-
+    console.log(createUrl.add);
 
     const classes = useStyles();
 
@@ -91,7 +90,7 @@ const StaffPage: React.FC = () => {
 
     const onSubmit = (data: any) => {
         // @ts-ignore
-        addMode ? history.push('/hrs') && sendRequest({
+        addMode ? history.push('/staff/hr') && sendRequest({
             data: data,
             method: POST,
             url: `${PREFIX}employees`
