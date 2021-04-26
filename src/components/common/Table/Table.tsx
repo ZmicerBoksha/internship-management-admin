@@ -105,9 +105,10 @@ type TableProps = {
   data: any,
   onAdd?: (instance: TableInstance) => void
   onEdit?: (instance: TableInstance) => void
+  onDelete?: (instance: TableInstance) => void
 };
 
-const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit }) => {
+const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete }) => {
   const classes = useStyles();
 
   const filterTypes = {
@@ -152,7 +153,7 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
   return (
     <>
       <TableToolbar
-        instance={instance} {...{ onAdd, onEdit }}
+        instance={instance} {...{ onAdd, onEdit, onDelete }}
       />
       <div className={classes.table_wrap}>
         <MaUTable stickyHeader className={classes.table}>
