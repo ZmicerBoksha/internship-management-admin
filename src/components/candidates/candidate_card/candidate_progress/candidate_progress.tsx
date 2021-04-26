@@ -5,14 +5,22 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import PauseIcon from '@material-ui/icons/Pause';
+import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
     },
-    backButton: {
-      marginRight: theme.spacing(1),
+    reject: {
+      marginRight: theme.spacing(2),
+      backgroundColor: 'red',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: '#c21818',
+      },
     },
     instructions: {
       marginTop: theme.spacing(1),
@@ -34,6 +42,21 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       flexDirection: 'column',
       margin: '20px 0',
+    },
+    pending: {
+      backgroundColor: '#fdbf02',
+      color: 'white',
+      marginRight: theme.spacing(2),
+      '&:hover': {
+        backgroundColor: '#bd951a',
+      },
+    },
+    approve: {
+      backgroundColor: '#1EB31FFF',
+      color: 'white',
+      '&:hover': {
+        backgroundColor: '#217b21',
+      },
     },
   }),
 );
@@ -74,10 +97,6 @@ const CandidateProgress: React.FC = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1);
-  };
-
   return (
     <div className={classes.root}>
       <Stepper className={classes.stepper} activeStep={activeStep} alternativeLabel>
@@ -91,17 +110,17 @@ const CandidateProgress: React.FC = () => {
         {activeStep === steps.length ? (
           <div className={classes.info}>
             <Typography>All steps completed. Please accept or reject this candidate.</Typography>
-            <Button style={{ margin: '20px 0 40px' }} onClick={() => setActiveStep(0)}>
-              Reset
-            </Button>
+            <div className={classes.buttonWrapper}>
+              <Button className={classes.reject}>Reject</Button>
+              <Button className={classes.pending}>Pending</Button>
+              <Button className={classes.approve}>Approve</Button>
+            </div>
           </div>
         ) : (
           <div>
             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
             <div className={classes.buttonWrapper}>
-              <Button disabled={activeStep === 0} onClick={handleBack} className={classes.backButton}>
-                Back
-              </Button>
+              <Button className={classes.reject}>Reject</Button>
               <Button variant="contained" color="primary" onClick={handleNext}>
                 {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
               </Button>
