@@ -1,8 +1,13 @@
 import React from 'react';
 import './candidateMiniCard.scss';
 import {Card, CardContent, Divider, Grid, Paper, Typography} from "@material-ui/core";
+type CandidateMiniCardProps={
+    timeZon:string,
+    op?:string
+}
+const  CandidateMiniCard: React.FC<CandidateMiniCardProps>= ({timeZon,op}) => {
+    const date = new Date("2012-05-24");
 
-const CandidateMiniCard: React.FC = () => {
     return (
         <Card className="miniCard">
                 <Grid container>
@@ -29,7 +34,12 @@ const CandidateMiniCard: React.FC = () => {
                             Сall date:
                         </Typography>
                         <Typography variant="h6" noWrap>
-                            13:00 27/04/2021
+                            {new Intl.DateTimeFormat('en-GB', {
+                                hour: 'numeric',
+                                minute: 'numeric',
+                                second: 'numeric',
+                                timeZone: timeZon
+                            }).format(date)}
                         </Typography>
                     </div>
                     <div className="wrapper">

@@ -1,22 +1,34 @@
-import React, {useState} from 'react';
-import useAxios from 'axios-hooks'
+import React, {useEffect, useState} from 'react';
+import useAxios from 'axios-hooks';
+import {Controller, useForm} from "react-hook-form";
+import {
+    useHistory
+} from "react-router-dom";
 import {
     Button, createStyles,
-    FormControlLabel,
+    FormControlLabel, FormHelperText,
     Grid,
     Paper,
     Switch,
     TextField, Theme,
     Typography
 } from "@material-ui/core";
+import {useParams} from "react-router";
 import './staffPageStyle.scss';
-import CandidateMiniCard from "../canditadeMiniCard/candidateMiniCard";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {COUNTRY_LIST} from "../../constants"
+import InputMask from 'react-input-mask';
+import CandidateTrello from "../candidateTrello/candidateTrello";
+import {
+    COUNTRY_LIST,
+    PREFIX,
+    PHONE_PATTERN,
+    REQUIRED__ERROR__MESSAGE,
+    MAX__LENGTH__ERROR__MESSAGE, MAX__LENGTH, ADD_PATH, POST, PUT
+} from "../../constants"
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,74 +43,93 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const employee = {
-    empFirstName: 'Anton',
-    empLastName: 'Nikolaev',
-    empLocationCountry: 'Belarus',
-    empLocationCity: 'Minsk',
-    empPhone: '+37529-678-88-00',
-    empSkype: 'anton21',
-    empTimezone: 'Europe/Moskow',
-    role: 'HR',
-    empEmail: 'vlad21@gmail.com'
+interface IUrl {
+    add: string | undefined
 }
 
 
+
 const StaffPage: React.FC = () => {
-        let [edit, setEdit] = useState(false);
-        let [editTimeZone, setTimeZone] = useState(false);
-        let [state, setState] = useState<{ empFirstName: string; empLastName: string; empLocationCountry: string; empLocationCity: string; empPhone: string; empSkype: string; empTimezone: string; role: string; empEmail: string; }>({
+    let history = useHistory();
+    let [edit, setEdit] = useState(false);
+    let [addMode, setAddMode] = useState(false);
 
-                empFirstName: 'Anton',
-                empLastName: 'Nikolaev',
-                empLocationCountry: 'Belarus',
-                empLocationCity: 'Minsk',
-                empPhone: '+37529-678-88-00',
-                empSkype: 'anton21',
-                empTimezone: 'Europe/Moscow',
-                role: 'HR',
-                empEmail: 'vlad21@gmail.com'
+    const createUrl = useParams<IUrl>();
 
-            }
-            )
-        ;
+    useEffect(() => {
+        createUrl.add === "add" && setAddMode(true)
+    }, [])
 
-        const handleChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-            const name = event.target.name as keyof typeof state;
-            setState({
-                ...state,
-                [name]: event.target.value,
-            });
-        };
 
-        const classes = useStyles();
+    const classes = useStyles();
+
+    const {control, handleSubmit, watch, formState: {errors}, setValue} = useForm();
+
+    const watchCountry = watch("empLocationCountry");
+
+
+    useEffect(() => {
+        const timeZone = COUNTRY_LIST.get(watchCountry);
+        if (Array.isArray(timeZone)) {
+            setValue("empTimezone", timeZone[0]);
+        }
+    }, [watchCountry]);
+
+
+    const [{data: putData, loading: putLoading, error: putError}, sendRequest] = useAxios(
+        {
+            url: `${PREFIX}employees/${window.location.href.split("/").slice(-1)[0]}`,
+            method: 'PUT'
+        },
+        {manual: true}
+    )
+
+    const [{data, loading, error}, refetch] = useAxios(`${PREFIX}employees/1`)
+
+    let staffData = addMode ? '' : data;
+
+
+    const onSubmit = (data: any) => {
+        // @ts-ignore
+        addMode ? history.push('/hrs') && sendRequest({
+            data: data,
+            method: POST,
+            url: `${PREFIX}employees`
+        }) : sendRequest({
+            data: data,
+            method: PUT,
+            url: `${PREFIX}employees/${window.location.href.split("/").slice(-1)[0]}`
+        })
+    };
+
+
+    if (loading) return <p>Loading...</p>
+    if (error) return <p>Error!</p>
 
 
     return (
-            <Grid container spacing={3}>
-                <Grid className="row" container xs={12} alignItems="center">
-                    <Typography className="title" variant="h4" noWrap>
-                        {window.location.href.split("/").slice(-2)[0]} page
-
-                    </Typography>
-
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                checked={edit}
-                                onChange={() => setEdit(!edit)}
-                                name="checkedA"
-                                color="primary"
-                            />
-                        }
-                        label=""
-                    />
-
-                    <Typography variant="h6" className="switchLabel" noWrap>
-                        Edit mode
-                    </Typography>
-                    {edit ? <Button variant="contained">Save</Button> : ""}
-                </Grid>
+        <Grid container spacing={3}>
+            <Grid className="row" container xs={12} alignItems="center">
+                <Typography className="title" variant="h4" noWrap>
+                    {window.location.href.split("/").slice(-2)[0]} page
+                </Typography>
+                <FormControlLabel
+                    control={
+                        <Switch
+                            checked={edit}
+                            onChange={() => setEdit(!edit)}
+                            name="checkedA"
+                            color="primary"
+                        />
+                    }
+                    label=""
+                />
+                <Typography variant="h6" className="switchLabel" noWrap>
+                    Edit mode
+                </Typography>
+                {edit ? <Button variant="contained">Save</Button> : ""}
+            </Grid>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Grid container justify="center" xs={12}>
 
                     <Grid item xs={6} spacing={2}>
@@ -106,64 +137,130 @@ const StaffPage: React.FC = () => {
                             Details
                         </Typography>
                         <Paper>
+
                             <Grid container spacing={2} alignItems="center">
                                 <Grid item spacing={2} alignItems="center">
 
-                                    <TextField id="firstName" label="First name:" InputProps={{readOnly: !edit,}}
-                                               defaultValue={employee.empFirstName}/>
-
-                                    <TextField id="lastName" label="Last name:" InputProps={{readOnly: !edit,}}
-                                               defaultValue={employee.empLastName}/>
+                                    <Controller
+                                        name="empFirstName"
+                                        control={control}
+                                        defaultValue={staffData?.empFirstName}
+                                        rules={{
+                                            required: true,
+                                            maxLength: MAX__LENGTH,
+                                        }}
+                                        render={({field}) => {
+                                            return (
+                                                <TextField required={edit} error={errors.empFirstName}
+                                                           helperText={errors.empFirstName?.type === 'required' && REQUIRED__ERROR__MESSAGE || errors.empFirstName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)}
+                                                           {...field}
+                                                           id="firstName" label="First name:"
+                                                           InputProps={{readOnly: !edit,}}/>
+                                            )
+                                        }}
+                                    />
+                                    <Controller
+                                        name="empLastName"
+                                        control={control}
+                                        defaultValue={staffData?.empLastName}
+                                        rules={{
+                                            required: true,
+                                            maxLength: MAX__LENGTH,
+                                        }}
+                                        render={({field}) => {
+                                            return (
+                                                <TextField
+                                                    helperText={errors.empLastName?.type === 'required' && REQUIRED__ERROR__MESSAGE || errors.empLastName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)}
+                                                    required={edit} error={errors.empLastName} {...field}
+                                                    id="empLastName" label="Last name:"
+                                                    InputProps={{readOnly: !edit,}}
+                                                />
+                                            )
+                                        }}
+                                    />
                                 </Grid>
                                 <Grid item spacing={2} alignItems="center">
 
                                     <FormControl className={classes.formControl} disabled={!edit}>
-                                        <InputLabel id="country">Country</InputLabel>
-                                        <Select
-                                            labelId="country"
-                                            id="country"
-                                            onChange={handleChange}
-                                            defaultValue={employee.empLocationCountry}
-                                            inputProps={{
-                                                name: 'empLocationCountry',
-                                                id: 'timeZone',
+                                        <InputLabel id="empLocationCountry">Country</InputLabel>
+                                        <Controller
+                                            name="empLocationCountry"
+                                            control={control}
+                                            defaultValue={staffData?.empLocationCountry || Array.from(COUNTRY_LIST.keys())[0]}
+                                            render={({field}) => {
+                                                return (
+                                                    <Select
+                                                        {...field}
+                                                        labelId="empLocationCountry"
+                                                        id="empLocationCountry"
+                                                    >
+                                                        {Array.from(COUNTRY_LIST.keys()).map((country) =>
+                                                            <MenuItem value={country}>{country}</MenuItem>
+                                                        )}
+                                                    </Select>)
                                             }}
-                                        >
-                                            { Array.from( COUNTRY_LIST.keys()).map((country) =>
-                                                <MenuItem value={country}>{country}</MenuItem>
-                                            )}
-                                        </Select>
+                                        />
                                     </FormControl>
-                                    <FormControl className={classes.formControl} disabled={!edit}>
-                                        <InputLabel id="timeZone">Time zone</InputLabel>
-                                        <Select
-                                            labelId="timeZone"
-                                            id="timeZone"
-                                            onChange={handleChange}
-                                            inputProps={{
-                                                name: 'empTimezone',
-                                                id: 'timeZone',
+                                    {watchCountry === 'US' || watchCountry === 'Russia' ?
+                                        <FormControl className={classes.formControl} disabled={!edit}>
+                                            <InputLabel id="empTimezone">Time zone</InputLabel>
+                                            <Controller
+                                                name="empTimezone"
+                                                control={control}
+                                                defaultValue={staffData?.empTimezone}
+                                                rules={{
+                                                    required: true,
+                                                }}
+                                                render={({field}) => {
+                                                    return (
+                                                        <Select
+                                                            error={errors.empTimezone}
+                                                            {...field}
+                                                            labelId="empTimezone"
+                                                            id="empTimezone"
+                                                        >
+                                                            {Array.from(COUNTRY_LIST.get(watchCountry)).map((timeZone: any) =>
+                                                                <MenuItem value={timeZone}>{timeZone}</MenuItem>
+                                                            )}
+                                                        </Select>
+                                                    )
+                                                }}
+                                            />
+                                        </FormControl> :
+                                        <Controller
+                                            name="empTimezone"
+                                            control={control}
+                                            defaultValue={staffData?.empTimezone}
+
+                                            render={({field}) => {
+                                                return (
+                                                    <TextField  {...field} id="timeZone" label="Time zone:"
+                                                                InputProps={{readOnly: true,}}
+                                                                value={COUNTRY_LIST.get(watchCountry) || staffData?.empTimezone}/>
+                                                )
                                             }}
-                                            defaultValue={COUNTRY_LIST.get(state.empLocationCountry)}
-                                            value={COUNTRY_LIST.get(state.empLocationCountry)}
-                                        >
-                                          {typeof COUNTRY_LIST.get(state.empLocationCountry)==='string'?    <MenuItem value={COUNTRY_LIST.get(state.empLocationCountry)}>{COUNTRY_LIST.get(state.empLocationCountry)}</MenuItem>:
+                                        />}
 
-                                              Array.from(COUNTRY_LIST.get(state.empLocationCountry)!).map((timeZone) =>
-                                                <MenuItem value={timeZone}>{timeZone}</MenuItem>
+                                    <Controller
+                                        name="empLocationCity"
+                                        control={control}
+                                        defaultValue={staffData?.empLocationCity}
+                                        rules={{
+                                            required: true,
+                                            maxLength: MAX__LENGTH,
+                                        }}
 
+                                        render={({field}) => {
+                                            return (
+                                                <TextField
+                                                    required={edit} error={errors.empLocationCity}
+                                                    helperText={errors.empLocationCity?.type === 'required' && REQUIRED__ERROR__MESSAGE || errors.empLocationCity?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)}
+                                                    {...field} id="empLocationCity" label="City:"
+                                                    InputProps={{readOnly: !edit,}}
+                                                />
                                             )
-                                             }
-                                            {console.log(state)}
-                                        </Select>
-                                    </FormControl>
-                                    <TextField id="name" label="City:" InputProps={{readOnly: !edit,}}
-                                               defaultValue={employee.empLocationCity}/>
-
-                                    {editTimeZone ? <Typography variant="h6" noWrap>
-                                        Your current time zone is {Intl.DateTimeFormat().resolvedOptions().timeZone}
-                                    </Typography> : ``}
-
+                                        }}
+                                    />
 
                                 </Grid>
                             </Grid>
@@ -176,35 +273,79 @@ const StaffPage: React.FC = () => {
                         </Typography>
                         <Paper>
                             <Grid>
-                                <TextField id="name" label="Phone:" InputProps={{readOnly: !edit,}}
-                                           defaultValue={employee.empPhone}/>
-
-                                <TextField id="name" label="Skype:" InputProps={{readOnly: !edit,}}
-                                           defaultValue={employee.empSkype}/>
+                                <Controller
+                                    name="empPhone"
+                                    control={control}
+                                    defaultValue={staffData?.empPhone}
+                                    rules={{
+                                        required: true,
+                                        maxLength: MAX__LENGTH,
+                                        pattern: PHONE_PATTERN,
+                                    }}
+                                    render={({field}) => {
+                                        return (
+                                            <TextField label="Phone:"  {...field} id="empPhone"
+                                                       InputProps={{readOnly: !edit,}} error={errors.empPhone}
+                                                       required={edit}><InputMask mask="(0)999 999 99 99"/></TextField>
+                                        )
+                                    }}
+                                />
+                                <Controller
+                                    name="empSkype"
+                                    control={control}
+                                    defaultValue={staffData?.empSkype}
+                                    rules={{
+                                        required: true,
+                                        maxLength: MAX__LENGTH,
+                                    }}
+                                    render={({field}) => {
+                                        return (
+                                            <TextField
+                                                required={edit} error={errors.empSkype}
+                                                helperText={errors.empSkype?.type === 'required' && REQUIRED__ERROR__MESSAGE || errors.empSkype?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)}
+                                                {...field} id="empSkype" label="Skype:"
+                                                InputProps={{readOnly: !edit,}}
+                                            />
+                                        )
+                                    }}
+                                />
+                                <Controller
+                                    name="roleId"
+                                    control={control}
+                                    defaultValue={1}
+                                    render={({field}) => {
+                                        return (
+                                            <TextField
+                                                {...field} id="roleId" label="roleId:"
+                                                InputProps={{readOnly: !edit,}}
+                                            />
+                                        )
+                                    }}
+                                />
 
                             </Grid>
-                            <TextField id="name" label="Email:" InputProps={{readOnly: !edit,}}
-                                       defaultValue={employee.empEmail}/>
+                            <Controller
+                                name="empEmail"
+                                control={control}
+                                defaultValue={staffData?.empEmail}
+                                render={({field}) => {
+                                    return (
+                                        <TextField
+                                            required={edit} error={errors.empEmail}
+                                            helperText={errors.empEmail?.type === 'required' && REQUIRED__ERROR__MESSAGE || errors.empEmail?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)}
+                                            {...field} id="empEmail" label="Email:"
+                                            InputProps={{readOnly: !edit,}}
+                                        />
+                                    )
+                                }}
+                            />
                         </Paper>
                     </Grid>
+                    <input type="submit"/>
                 </Grid>
-                <Grid container xs={12} justify="center">
-                    <Grid item xs={6}>
-                        <Typography variant="h5" className="subtitle subtitle--notRevived" noWrap>
-                            Not reviewed candidates
-                        </Typography>
-                        <div><CandidateMiniCard/></div>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Typography variant="h5" className="subtitle subtitle--revived" noWrap>
-                            Reviewed candidates
-                        </Typography>
-                        <div></div>
-                    </Grid>
-                </Grid>
-            </Grid>
-        );
-    }
-;
-
+            </form>
+            {addMode ? '' : <CandidateTrello timeZon={staffData?.empTimezone}/>}
+        </Grid>
+    );
+};
 export default StaffPage;

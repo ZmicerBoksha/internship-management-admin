@@ -14,16 +14,16 @@ const App: React.FC = () => {
 
     return (
         <BrowserRouter >
-            <Navbar />
+            <Navbar/>
             <Switch>
                 <Route exact path='/' component={Dashboard} />
                 <Route exact path='/events' component={Events} />
                 <Route exact path='/hrs' component={HrTable} />
                 <Route exact path='/ts' component={HrTable} />
                 <Route exact path="/hr/:id" component={StaffPage}/>
+                <Route exact path="/staff/:add?" component={StaffPage}/>
                 <Route path='/authorization' component={Authorization} />
                 <Route path='*' component={Error} />
-
             </Switch>
         </BrowserRouter>
     );

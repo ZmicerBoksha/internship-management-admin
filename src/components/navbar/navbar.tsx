@@ -1,13 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
 import './navBarStyle.scss';
 
 const Navbar: React.FC = () => {
+    let [currentLink, currentLinkEdit] = useState<string>('dashboard');
     return (
         <aside className="aside">
             <nav className="menu">
                 <ul className="menu__list">
-                    <li className="menu__item">
+
+                    <li onClick={() => {currentLinkEdit("dashboard")}}
+                        className={currentLink === "dashboard" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
                             to="/"
@@ -15,7 +18,8 @@ const Navbar: React.FC = () => {
                             Dashboard
                         </Link>
                     </li>
-                    <li className="menu__item">
+                    <li onClick={() => currentLinkEdit("authorization")}
+                        className={currentLink === "authorization" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
                             to="/authorization"
@@ -23,7 +27,8 @@ const Navbar: React.FC = () => {
                             Authorization
                         </Link>
                     </li>
-                    <li className="menu__item">
+                    <li onClick={() => currentLinkEdit("events")}
+                        className={currentLink === "events" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
                             to="/events"
@@ -31,7 +36,8 @@ const Navbar: React.FC = () => {
                             Events
                         </Link>
                     </li>
-                    <li className="menu__item">
+                    <li onClick={() => currentLinkEdit("ts")}
+                        className={currentLink === "ts" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
                             to="/ts"
@@ -39,12 +45,22 @@ const Navbar: React.FC = () => {
                             TS
                         </Link>
                     </li>
-                    <li className="menu__item">
+                    <li onClick={() => currentLinkEdit("hrs")}
+                        className={currentLink === "hrs" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
                             to="/hrs"
                         >
                             HR
+                        </Link>
+                    </li>
+                    <li onClick={() => currentLinkEdit("add")}
+                        className={currentLink === "add" ? "menu__item menu__item-link--active" : "menu__item"}>
+                        <Link
+                            className="menu__item-link"
+                            to="/staff/add"
+                        >
+                            Staff add
                         </Link>
                     </li>
                 </ul>

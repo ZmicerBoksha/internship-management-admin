@@ -1,7 +1,8 @@
-.aside{
+.aside {
   max-width: 300px;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
+
 .menu__list {
   display: flex;
   flex-direction: column;
@@ -13,7 +14,7 @@
   list-style-type: none;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     background-color: #F5F5F5;
   }
 }
@@ -23,4 +24,8 @@
   text-decoration: none;
   color: #707070;
   padding: 10px;
+}
+
+.menu__item-link--active {
+  background-color: #F5F5F5;
 }
