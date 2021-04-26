@@ -6,10 +6,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import {makeStyles, useTheme, Theme, createStyles} from '@material-ui/core/styles';
-import {Collapse, MenuItem, MenuList} from '@material-ui/core';
-import {Link, Route, Switch} from 'react-router-dom';
-import {ExpandLess} from '@material-ui/icons';
+import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
+import { Collapse, MenuItem, MenuList } from '@material-ui/core';
+import { Link, Route, Switch } from 'react-router-dom';
+import { ExpandLess } from '@material-ui/icons';
 import EventIcon from '@material-ui/icons/Event';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import StaffIcon from '@material-ui/icons/Group';
@@ -89,205 +89,206 @@ export default Navbar;
 
 */
 
-
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-        },
-        drawer: {
-            [theme.breakpoints.up('sm')]: {
-                width: drawerWidth,
-                flexShrink: 0,
-            },
-        },
-        appBar: {
-            [theme.breakpoints.up('sm')]: {
-                width: `calc(100% - ${drawerWidth}px)`,
-            },
-        },
-        menuButton: {
-            marginRight: theme.spacing(2),
-            [theme.breakpoints.up('sm')]: {
-                display: 'none',
-            },
-        },
-        toolbar: theme.mixins.toolbar,
-        drawerPaper: {
-            width: drawerWidth,
-        },
-        content: {
-            flexGrow: 1,
-            padding: theme.spacing(3),
-        },
-        nested: {
-            paddingLeft: theme.spacing(5),
-        },
-    }),
+  createStyles({
+    root: {
+      display: 'flex',
+    },
+    drawer: {
+      [theme.breakpoints.up('sm')]: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
+    },
+    appBar: {
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+      },
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
+    },
+    toolbar: theme.mixins.toolbar,
+    drawerPaper: {
+      width: drawerWidth,
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+    },
+    nested: {
+      paddingLeft: theme.spacing(5),
+    },
+  }),
 );
 
 export default function Navbar() {
-    const classes = useStyles();
-    const theme = useTheme();
-    const [mobileOpen, setMobileOpen] = React.useState(false);
-    const [open, setOpen] = React.useState(true);
-    const [staffOpen, setStaffOpen] = React.useState(true);
-    const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
+  const [staffOpen, setStaffOpen] = React.useState(true);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const handleListItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
-        setSelectedIndex(index);
-    };
+  const handleListItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
+    setSelectedIndex(index);
+  };
 
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
-    const handleClick = () => {
-        setOpen(!open);
-    };
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
-    const staffHandleClick = () => {
-        setStaffOpen(!staffOpen);
-    };
+  const staffHandleClick = () => {
+    setStaffOpen(!staffOpen);
+  };
 
-    const drawer = (
-        <div>
-            <MenuList>
+  const drawer = (
+    <div>
+      <MenuList>
+        <MenuItem
+          component={Link}
+          to="/"
+          selected={selectedIndex === 0}
+          onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, 0)}
+        >
+          <DashboardIcon style={{ marginRight: '5px' }} />
+          Dashboard
+        </MenuItem>
+        <MenuItem
+          component={Link}
+          to="/events"
+          button
+          selected={selectedIndex === 1}
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            handleListItemClick(event, 1);
+            handleClick();
+          }}
+        >
+          {open ? <ExpandLess style={{ marginRight: '5px' }} /> : <EventIcon style={{ marginRight: '5px' }} />}
+          Events
+        </MenuItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <MenuList disablePadding>
+            {['Planned', 'In progress', 'Archive'].map((category, index) => {
+              return (
                 <MenuItem
-                    component={Link}
-                    to="/"
-                    selected={selectedIndex === 0}
-                    onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, 0)}
+                  key={index}
+                  button
+                  className={classes.nested}
+                  component={Link}
+                  to={`/events/${index}`}
+                  selected={selectedIndex === index + 2}
+                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 2)}
                 >
-                    <DashboardIcon style={{marginRight: '5px'}}/>
-                    Dashboard
+                  {category}
                 </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Collapse>
+        {/*temporary*/}
+        <MenuItem
+          component={Link}
+          to="/candidate"
+          selected={selectedIndex === 5}
+          onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, 5)}
+        >
+          <CandidateIcon style={{ marginRight: '5px' }} />
+          Candidates
+        </MenuItem>
+        <MenuItem
+          component={Link}
+          to="/staff"
+          selected={selectedIndex === 6}
+          onClick={(event: React.MouseEvent<HTMLElement>) => {
+            handleListItemClick(event, 6);
+            staffHandleClick();
+          }}
+        >
+          <StaffIcon style={{ marginRight: '5px' }} />
+          Staff
+        </MenuItem>
+        <Collapse in={staffOpen} timeout="auto" unmountOnExit>
+          <MenuList disablePadding>
+            {['HR', 'TS', 'add'].map((category, index) => {
+              return (
                 <MenuItem
-                    component={Link}
-                    to="/events"
-                    button
-                    selected={selectedIndex === 1}
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {
-                        handleListItemClick(event, 1);
-                        handleClick();
-                    }}
+                  key={index}
+                  button
+                  className={classes.nested}
+                  component={Link}
+                  to={`/staff/${category}`}
+                  selected={selectedIndex === index + 3}
+                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 3)}
                 >
-                    {open ? <ExpandLess style={{marginRight: '5px'}}/> : <EventIcon style={{marginRight: '5px'}}/>}
-                    Events
+                  {category}
                 </MenuItem>
-                <Collapse in={open} timeout="auto" unmountOnExit>
-                    <MenuList disablePadding>
-                        {['Planned', 'In progress', 'Archive'].map((category, index) => {
-                            return (
-                                <MenuItem
-                                    key={index}
-                                    button
-                                    className={classes.nested}
-                                    component={Link}
-                                    to={`/events/${index}`}
-                                    selected={selectedIndex === index + 2}
-                                    onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 2)}
-                                >
-                                    {category}
-                                </MenuItem>
-                            );
-                        })}
-                    </MenuList>
-                </Collapse>
-                {/*temporary*/}
-                <MenuItem
-                    component={Link}
-                    to="/candidate"
-                    selected={selectedIndex === 5}
-                    onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, 5)}
-                >
-                    <CandidateIcon style={{marginRight: '5px'}}/>
-                    Candidates
-                </MenuItem>
-                <MenuItem
-                    component={Link}
-                    to="/staff"
-                    selected={selectedIndex === 6}
-                    onClick={(event: React.MouseEvent<HTMLElement>) => {handleListItemClick(event, 6);
-                    staffHandleClick()}}
-                >
-                    <StaffIcon style={{marginRight: '5px'}}/>
-                    Staff
-                </MenuItem>
-                <Collapse in={staffOpen} timeout="auto" unmountOnExit>
-                    <MenuList disablePadding>
-                        {['HR', 'TS', 'add'].map((category, index) => {
-                            return (
-                                <MenuItem
-                                    key={index}
-                                    button
-                                    className={classes.nested}
-                                    component={Link}
-                                    to={`/staff/${category}`}
-                                    selected={selectedIndex === index + 3}
-                                    onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 3)}
-                                >
-                                    {category}
-                                </MenuItem>
-                            );
-                        })}
-                    </MenuList>
-                </Collapse>
-            </MenuList>
-        </div>
-    );
+              );
+            })}
+          </MenuList>
+        </Collapse>
+      </MenuList>
+    </div>
+  );
 
-    return (
-        <div className={classes.root}>
-            <AppBar position="fixed" className={classes.appBar}>
-                <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        edge="start"
-                        onClick={handleDrawerToggle}
-                        className={classes.menuButton}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="h6" noWrap>
-                        Admin panel
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-            <nav className={classes.drawer} aria-label="mailbox folders">
-                {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-                <Hidden smUp implementation="css">
-                    <Drawer
-                        variant="temporary"
-                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-                        open={mobileOpen}
-                        onClose={handleDrawerToggle}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        ModalProps={{
-                            keepMounted: true, // Better open performance on mobile.
-                        }}
-                    >
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-                <Hidden xsDown implementation="css">
-                    <Drawer
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
-                        variant="permanent"
-                        open
-                    >
-                        {drawer}
-                    </Drawer>
-                </Hidden>
-            </nav>
-            <Routers/>
-        </div>
-    );
+  return (
+    <div className={classes.root}>
+      <AppBar position="fixed" className={classes.appBar}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            Admin panel
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <nav className={classes.drawer} aria-label="mailbox folders">
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        <Hidden smUp implementation="css">
+          <Drawer
+            variant="temporary"
+            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+        <Hidden xsDown implementation="css">
+          <Drawer
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+            variant="permanent"
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Hidden>
+      </nav>
+      <Routers />
+    </div>
+  );
 }

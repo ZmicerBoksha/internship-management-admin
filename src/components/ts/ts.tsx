@@ -1,11 +1,7 @@
 import React from 'react';
 
 const TS: React.FC = () => {
-    return (
-        <div>
-
-        </div>
-    );
+  return <div></div>;
 };
 
 export default TS;

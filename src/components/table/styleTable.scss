@@ -7,11 +7,9 @@ table {
   border: 1px solid black;
 }
 
-
 td :last-child {
   border-bottom: 0;
 }
-
 
 th,
 td {
@@ -24,4 +22,3 @@ td {
 td:last-child {
   border-right: 0;
 }
-

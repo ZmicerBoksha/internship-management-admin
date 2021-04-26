@@ -1,23 +1,23 @@
 .row {
-  background-color: #E8E3E9;
+  background-color: #e8e3e9;
   border-radius: 5px;
   border: 1px solid black;
 }
 
-.switchLabel{
+.switchLabel {
   color: #757575;
 }
 
 .title {
   text-transform: uppercase;
-  background-color: #E8E3E9;
+  background-color: #e8e3e9;
   color: #757575;
   border-radius: 5px;
   padding: 10px 30px 10px 20px;
 }
 
 .subtitle {
-  background-color: #1976D2;
+  background-color: #1976d2;
   color: white;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -27,17 +27,15 @@
 
 .subtitle--notRevived {
   text-align: center;
-  background-color: #EF9588;
+  background-color: #ef9588;
   text-transform: uppercase;
-
 }
 
 .subtitle--revived {
   text-align: center;
-  background-color: #A6CE39;
+  background-color: #a6ce39;
   text-transform: uppercase;
 }
-
 
 .columnName {
   padding-right: 20px;
