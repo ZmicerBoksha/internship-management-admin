@@ -4,20 +4,22 @@ import { DialogActions, DialogContent, DialogTitle, Dialog, TextField, DialogCon
 import AddIcon from '@material-ui/icons/Add';
 
 type TSoftSkillsProps = {
-  field?: JSX.Element;
   skill: string;
+  skillsDescription: string;
+  handleSkillsDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSubmitReview?: any;
 };
 
-const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill }) => {
+const CandidateSkills: React.FC<TSoftSkillsProps> = ({
+  skill,
+  skillsDescription,
+  handleSkillsDescription,
+  handleSubmitReview,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
-  const [description, setDescription] = useState<string>('');
 
   const handleClose = () => {
     setOpen(false);
-    setDescription('');
-    /**
-     * 1) here will be PUT (POST?) request to send review in the BD
-     * **/
   };
 
   return (
@@ -33,22 +35,26 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({ field, skill }) => {
             Leave detailed review on the candidate's {skill} skills. Please note that by sending a review, it cannot be
             changed.
           </DialogContentText>
-          {field}
           <TextField
             required
-            margin="dense"
             label="Description of candidate"
             type="text"
             fullWidth
-            value={description}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
+            value={skillsDescription}
+            onChange={handleSkillsDescription}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button
+            onClick={() => {
+              handleSubmitReview();
+              handleClose();
+            }}
+            color="primary"
+          >
             Send review
           </Button>
         </DialogActions>
