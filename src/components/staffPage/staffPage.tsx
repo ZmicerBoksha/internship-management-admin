@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IUrl {
-  add: string | undefined;
+  add?: string;
 }
 
 const StaffPage: React.FC = () => {
@@ -126,7 +126,7 @@ const StaffPage: React.FC = () => {
         <Typography variant="h6" className="switchLabel" noWrap>
           Edit mode
         </Typography>
-        {edit ? <Button variant="contained">Save</Button> : ''}
+        {edit && <Button variant="contained">Save</Button> }
       </Grid>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container justify="center" xs={12}>
@@ -366,7 +366,7 @@ const StaffPage: React.FC = () => {
           <input type="submit" />
         </Grid>
       </form>
-      {addMode ? '' : <CandidateTrello timeZon={staffData?.empTimezone} />}
+      {!addMode && <CandidateTrello timeZon={staffData?.empTimezone} />}
     </Grid>
   );
 };

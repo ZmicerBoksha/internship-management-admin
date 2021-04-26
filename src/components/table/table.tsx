@@ -33,7 +33,7 @@ function Table({ columns, data, update }) {
               {headerGroup.headers.map((column: any) => (
                 <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                   {column.render('Header')}
-                  <span>{column.isSorted ? (column.isSortedDesc ? ' 🔽' : ' 🔼') : ''}</span>
+                  <span>{column.isSorted && (column.isSortedDesc ? ' 🔽' : ' 🔼') }</span>
                 </th>
               ))}
             </tr>
