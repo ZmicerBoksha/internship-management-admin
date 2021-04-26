@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       minWidth: '500px',
+      minHeight: '200px',
       padding: '30px',
       display: 'flex',
       flexDirection: 'column',
@@ -56,11 +57,7 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
   );
 
   const addReview = (data: any) => {
-    executePost({
-      data: {
-        ...data,
-      },
-    });
+    executePost({data})
   };
 
   const [{ data: getInterviewFeedback /*loading: getLoading, error: getError*/ }, getFetch] = useAxios(
