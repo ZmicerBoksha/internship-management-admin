@@ -3,9 +3,8 @@ import './candidateMiniCard.scss';
 import {Card, CardContent, Divider, Grid, Paper, Typography} from "@material-ui/core";
 type CandidateMiniCardProps={
     timeZon:string,
-    op?:string
 }
-const  CandidateMiniCard: React.FC<CandidateMiniCardProps>= ({timeZon,op}) => {
+const  CandidateMiniCard: React.FC<CandidateMiniCardProps>= ({timeZon}) => {
     const date = new Date("2012-05-24");
 
     return (

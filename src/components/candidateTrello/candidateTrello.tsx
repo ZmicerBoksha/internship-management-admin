@@ -6,7 +6,6 @@ import {PREFIX} from "../../constants";
 
 type CandidateTrelloProps = {
     timeZon: string,
-    op?: string
 }
 
 const CandidateTrello: React.FC<CandidateTrelloProps> = ({timeZon}) => {

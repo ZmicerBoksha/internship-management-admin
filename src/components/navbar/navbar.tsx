@@ -227,8 +227,8 @@ export default function Navbar() {
                   className={classes.nested}
                   component={Link}
                   to={`/staff/${category}`}
-                  selected={selectedIndex === index + 3}
-                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 3)}
+                  selected={selectedIndex === index + 7}
+                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 7)}
                 >
                   {category}
                 </MenuItem>

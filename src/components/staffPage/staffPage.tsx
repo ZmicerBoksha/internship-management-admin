@@ -95,9 +95,9 @@ const StaffPage: React.FC = () => {
   let staffData = addMode ? '' : data;
 
   const onSubmit = (data: any) => {
+
     // @ts-ignore
-    addMode
-      ? history.push('/staff/hr') &&
+      addMode? history.push('/staff/hr') &&
         sendRequest({
           data: data,
           method: POST,
