@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
-import './navBarStyle.scss';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Navbar: React.FC = () => {
     let [currentLink, currentLinkEdit] = useState<string>('dashboard');
