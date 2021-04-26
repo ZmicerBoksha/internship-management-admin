@@ -43,7 +43,7 @@ const Events: FunctionComponent = () => {
   }, []);
 
   return (
-    <div className={classes.pageWrap}>
+    <div>
       <CssBaseline />
       <Table name={'Events table'} columns={columns} data={data} onAdd={tempFuncCallback} onEdit={tempFuncCallback} />
     </div>
@@ -51,3 +51,4 @@ const Events: FunctionComponent = () => {
 };
 
 export default Events;
+
