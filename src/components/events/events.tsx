@@ -8,12 +8,12 @@ import {
   createStyles, 
   CssBaseline, 
   makeStyles } from '@material-ui/core';
-import Table from '../common/Table/Table';
+import Table from '../common/table/table';
 import { TableInstance } from 'react-table';
 import { useHistory } from 'react-router';
 import { eventsApi } from '../../api/api';
-import { Columns } from './Columns/Columns';
-import Preloader from '../common/Preloader/Preloader';
+import { Columns } from './columns/columns';
+import Preloader from '../common/preloader/preloader';
 
 const useStyles = makeStyles( () => {
   return createStyles({
@@ -52,7 +52,7 @@ const Events: FunctionComponent = () => {
 
   const addEvent = useCallback(
     () => {
-      history.push(`/event-form/add`);
+      history.push(`/events/new`);
     },
     []
   );
@@ -60,7 +60,7 @@ const Events: FunctionComponent = () => {
   const editEvent = useCallback(
     (instance: TableInstance<IEvent>) => {
       const eventID = instance.selectedFlatRows[0].original!.id;
-      history.push(`/event-form/update/${eventID}`);
+      history.push(`/events/info/${eventID}`);
     },
     []
   );

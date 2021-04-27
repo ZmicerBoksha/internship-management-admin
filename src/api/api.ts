@@ -1,23 +1,21 @@
 import axios from "axios";
 
 export interface IEventForm {
-  id?: number,
+  id: number,
   eventTab: string,
-  format: 'ONLINE ' | 'OFFLINE',
+  format: 'ONLINE' | 'OFFLINE',
   title: string,
   body: string,
-  location?: {
-    country: string,
-    city: string
-  },
+  country?: string,
+  city?: string
   englishLevel: string,
   technologies: string,
   startDate: Date,
-  finishDate: Date,
-  dateEndOfAsseptin: Date,
-  duration: string
-  imageInfo: {
-    altText: string,
+  deadline: Date,
+  dateOfEndAccept: Date,
+  duration: string,
+  image: {
+    altText?: string,
     imageData: any,
   }
 }
@@ -62,13 +60,13 @@ export const eventsApi = {
           "englishLevel": formData.englishLevel,
           "technologies": formData.technologies,
           "startDate": formData.startDate,
-          "deadline": formData.finishDate,
-          "dateOfEndAccept": formData.dateEndOfAsseptin,
+          "deadline": formData.deadline,
+          "dateOfEndAccept": formData.dateOfEndAccept,
           "duration": formData.duration,
           "eventTab": formData.eventTab,
           "format": formData.format,
-          "country": formData.location?.country,
-          "city": formData.location?.city,
+          "country": formData?.country,
+          "city": formData?.city,
           "image": 1,
           "creatorEvent": 1,
           "employee": 1,
@@ -90,13 +88,13 @@ export const eventsApi = {
           "englishLevel": formData.englishLevel,
           "technologies": formData.technologies,
           "startDate": formData.startDate,
-          "deadline": formData.finishDate,
-          "dateOfEndAccept": formData.dateEndOfAsseptin,
+          "deadline": formData.deadline,
+          "dateOfEndAccept": formData.dateOfEndAccept,
           "duration": formData.duration,
           "eventTab": formData.eventTab,
           "format": formData.format,
-          "country": formData.location?.country,
-          "city": formData.location?.city,
+          "country": formData?.country,
+          "city": formData?.city,
           "image": 1,
           "creatorEvent": 1,
           "employee": 1,

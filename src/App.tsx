@@ -5,8 +5,8 @@ import Staff from './components/staff/staff';
 import Authorization from './components/authorization/authorization';
 import Navbar from './components/navbar/navbar';
 import Error from './components/path_error/error';
-import Events from './components/Events/Events';
-import EventForm from './components/Events/EventForm/EventForm';
+import Events from './components/events/events';
+import EventInfo from './components/events/eventInfo/eventInfo';
 
 const App: FunctionComponent = () => {
     return (
@@ -15,12 +15,14 @@ const App: FunctionComponent = () => {
             <Switch>
                 <Route exact path='/' component={Dashboard} />
                 <Route   
+                    exact
                     path='/events' 
                     component={Events}
                 />
                 <Route   
-                    path='/event-form/:eventFormType?/:eventId?'
-                    component={EventForm}
+                    exact
+                    path='/events/:eventType?/:eventId?'
+                    component={EventInfo}
                 />
                 <Route exact path='/staff' component={Staff} />
                 <Route path='/authorization' component={Authorization} />

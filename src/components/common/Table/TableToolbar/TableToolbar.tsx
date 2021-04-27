@@ -4,9 +4,9 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FunctionComponent, MouseEventHandler } from "react";
 import { TableInstance } from "react-table";
-import ColumnHidePage from "../ColumnHidePage/ColumnHidePage";
-import TableFilters from "../TableFilters/TableFilters";
-import GlobalFilter from "../filters/GlobalFilter";
+import ColumnHidePage from "../columnHidePage/columnHidePage";
+import TableFilters from "../tableFilters/tableFilters";
+import GlobalFilter from "../filters/globalFilter";
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
