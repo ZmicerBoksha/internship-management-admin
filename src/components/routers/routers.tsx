@@ -8,15 +8,15 @@ import CandidateCard from '../candidates/candidate_card/candidate_card';
 import Error from '../path_error/error';
 import HrTable from '../hrTable/hrTable';
 import StaffPage from '../staffPage/staffPage';
-import EventForm from '../events/EventForm/EventForm';
+import EventInfo from '../events/eventInfo/eventInfo';
 
 const Routers: React.FC = () => {
   return (
     <div className="wrapper">
       <Switch>
         <Route exact path="/" component={Dashboard} />
-        <Route path='/events' component={Events} />
-        <Route path='/event-form/:eventFormType?/:eventId?' component={EventForm} />
+        <Route exact path='/events' component={Events} />
+        <Route exact path='/events/:eventType?/:eventId?' component={EventInfo} />
         <Route exact path="/staff/hr" component={HrTable} />
         <Route exact path="/staff/ts" component={HrTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />

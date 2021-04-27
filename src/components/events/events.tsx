@@ -12,8 +12,8 @@ import { TableInstance } from 'react-table';
 import { useHistory } from 'react-router';
 import { eventsApi } from '../../api/api';
 import Preloader from '../common/Preloader/Preloader';
-import { Columns } from './columns/Columns';
 import Table from '../common/table/Table';
+import { Columns } from './columns/Columns';
 
 const useStyles = makeStyles( () => {
   return createStyles({
@@ -52,7 +52,7 @@ const Events: FunctionComponent = () => {
 
   const addEvent = useCallback(
     () => {
-      history.push(`/event-form/add`);
+      history.push(`/events/new`);
     },
     []
   );
@@ -60,7 +60,7 @@ const Events: FunctionComponent = () => {
   const editEvent = useCallback(
     (instance: TableInstance<IEvent>) => {
       const eventID = instance.selectedFlatRows[0].original!.id;
-      history.push(`/event-form/update/${eventID}`);
+      history.push(`/events/info/${eventID}`);
     },
     []
   );
