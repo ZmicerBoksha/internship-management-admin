@@ -1,12 +1,12 @@
-import { createStyles, IconButton, makeStyles, Theme, Toolbar, Tooltip } from "@material-ui/core";
+import { createStyles, IconButton, makeStyles, Theme, Toolbar, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { FunctionComponent, MouseEventHandler } from "react";
-import { TableInstance } from "react-table";
-import ColumnHidePage from "../columnHidePage/columnHidePage";
-import TableFilters from "../tableFilters/tableFilters";
-import GlobalFilter from "../filters/globalFilter";
+import { FunctionComponent, MouseEventHandler } from 'react';
+import { TableInstance } from 'react-table';
+import ColumnHidePage from '../columnHidePage/columnHidePage';
+import TableFilters from '../tableFilters/tableFilters';
+import GlobalFilter from '../filters/globalFilter';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -17,40 +17,40 @@ const useStyles = makeStyles((theme: Theme) => {
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
       borderBottom: 'none',
-      background: "#fff",
+      background: '#fff',
       position: 'sticky',
-      top: 0
+      top: 0,
     },
     left_icons: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     right_icons: {
       display: 'flex',
-      alignItems: 'center'
-    }
-  })
-})
+      alignItems: 'center',
+    },
+  });
+});
 
 type TableToolbarProps = {
-  instance: TableInstance,
-  onAdd?: (instance: TableInstance) => void
-  onEdit?: (instance: TableInstance) => void
-  onDelete?: (instance: TableInstance) => void
-}
+  instance: TableInstance;
+  onAdd?: (instance: TableInstance) => void;
+  onEdit?: (instance: TableInstance) => void;
+  onDelete?: (instance: TableInstance) => void;
+};
 
 const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, onEdit, onDelete }) => {
   const classes = useStyles();
-  const {state} = instance;
+  const { state } = instance;
 
   return (
     <Toolbar className={classes.toolbar}>
       <div className={classes.left_icons}>
-        {onAdd && 
+        {onAdd && (
           <Tooltip title="Add new event">
             <div>
-              <IconButton 
-                onClick={() => onAdd(instance)} 
+              <IconButton
+                onClick={() => onAdd(instance)}
                 aria-label="Add new event"
                 disabled={!!Object.keys(state.selectedRowIds).length}
               >
@@ -58,12 +58,12 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
               </IconButton>
             </div>
           </Tooltip>
-        }
-        {onEdit &&
+        )}
+        {onEdit && (
           <Tooltip title="Edit event">
             <div>
-              <IconButton 
-                onClick={() => onEdit(instance)} 
+              <IconButton
+                onClick={() => onEdit(instance)}
                 aria-label="Edit event"
                 disabled={!(Object.keys(state.selectedRowIds).length === 1)}
               >
@@ -71,34 +71,28 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
               </IconButton>
             </div>
           </Tooltip>
-        }  
-        {onDelete &&
+        )}
+        {onDelete && (
           <Tooltip title="Delete event(s)">
             <div>
-              <IconButton 
-                onClick={() => onDelete(instance)} 
+              <IconButton
+                onClick={() => onDelete(instance)}
                 aria-label="Delete event(s)"
-                disabled={!(Object.keys(state.selectedRowIds).length)}
+                disabled={!Object.keys(state.selectedRowIds).length}
               >
                 <DeleteIcon />
               </IconButton>
             </div>
           </Tooltip>
-        }       
-      </div>  
+        )}
+      </div>
       <div className={classes.right_icons}>
-        <GlobalFilter 
-          instance={instance} 
-        />
-        <ColumnHidePage 
-          instance={instance} 
-        />
-        <TableFilters 
-          instance={instance} 
-        />
+        <GlobalFilter instance={instance} />
+        <ColumnHidePage instance={instance} />
+        <TableFilters instance={instance} />
       </div>
     </Toolbar>
-  )
-}
+  );
+};
 
 export default TableToolbar;

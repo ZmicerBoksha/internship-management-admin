@@ -1,18 +1,9 @@
-import { 
-  createStyles, 
-  makeStyles, 
-  Switch, 
-  Typography } from "@material-ui/core";
-import { 
-  FunctionComponent, 
-  useEffect, 
-  useState } from "react";
-import { useLocation, useParams } from "react-router";
-import { 
-  eventsApi, 
-  IEventForm } from "../../../api/api";
-import Preloader from "../../common/preloader/preloader";
-import EventForm from "../eventForm/eventForm";
+import { createStyles, makeStyles, Switch, Typography } from '@material-ui/core';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router';
+import { eventsApi, IEventForm } from '../../../api/api';
+import Preloader from '../../common/preloader/preloader';
+import EventForm from '../eventForm/eventForm';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -21,18 +12,18 @@ const useStyles = makeStyles(() => {
       paddingLeft: 25,
       paddingRight: 25,
       marginTop: 35,
-      marginBottom: 35
+      marginBottom: 35,
     },
     page_title: {
       fontSize: 38,
-      fontWeight: 700
-    }
-  })
+      fontWeight: 700,
+    },
+  });
 });
 
 type TUrl = {
-  eventId?: string,
-  eventType: 'new' | 'info'
+  eventId?: string;
+  eventType: 'new' | 'info';
 };
 
 const EventInfo: FunctionComponent = () => {
@@ -46,14 +37,13 @@ const EventInfo: FunctionComponent = () => {
   const [eventData, setEventData] = useState<IEventForm | null>(null);
 
   async function getEventData(id: string) {
-    await eventsApi.getEventInfo(id)
-      .then((response) => {
-        setEventData(response);
-        setLoadingData(false);
-      });
+    await eventsApi.getEventInfo(id).then(response => {
+      setEventData(response);
+      setLoadingData(false);
+    });
   }
-  
-  useEffect(() => {   
+
+  useEffect(() => {
     switch (eventType) {
       case 'info':
         eventId && getEventData(eventId);
@@ -72,38 +62,26 @@ const EventInfo: FunctionComponent = () => {
 
   return (
     <>
-      {
-        loadingData ?
-          <Preloader /> :
-          <div className={classes.pageWrap}>
-            <Typography component="h1" className={classes.page_title}>
-              {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
-            </Typography>
-            <>
-              { 
-                eventType === 'info' &&
-                <>
-                  <Typography component="h4">Edit mode</Typography>
-                  <Switch
-                    checked={isEditMode}
-                    onChange={onSetIsEditMode}
-                    color="primary"
-                  />
-                </>
-              }
-              
-            </>
-            <EventForm 
-              eventId={eventId} 
-              eventType={eventType} 
-              isEditMode={isEditMode}
-              eventData={eventData}
-            />
-
-          </div>
-      }
+      {loadingData ? (
+        <Preloader />
+      ) : (
+        <div className={classes.pageWrap}>
+          <Typography component="h1" className={classes.page_title}>
+            {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
+          </Typography>
+          <>
+            {eventType === 'info' && (
+              <>
+                <Typography component="h4">Edit mode</Typography>
+                <Switch checked={isEditMode} onChange={onSetIsEditMode} color="primary" />
+              </>
+            )}
+          </>
+          <EventForm eventId={eventId} eventType={eventType} isEditMode={isEditMode} eventData={eventData} />
+        </div>
+      )}
     </>
-  )
-}
+  );
+};
 
 export default EventInfo;

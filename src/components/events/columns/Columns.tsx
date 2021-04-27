@@ -1,47 +1,45 @@
-import { SelectColumnFilter } from "../../common/table/filters/selectColumnFilter";
+import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
 import MenuIcon from '@material-ui/icons/Menu';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import InfoIcon from '@material-ui/icons/Info';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
-import { Button, createStyles, IconButton, makeStyles, Popover } from "@material-ui/core";
-import { useState, FunctionComponent, MouseEvent } from "react";
-import { useHistory } from "react-router";
-import { eventsApi } from "../../../api/api";
+import { Button, createStyles, IconButton, makeStyles, Popover } from '@material-ui/core';
+import { useState, FunctionComponent, MouseEvent } from 'react';
+import { useHistory } from 'react-router';
+import { eventsApi } from '../../../api/api';
 
 const useStyles = makeStyles(() => {
   return createStyles({
     button_wrap: {
       padding: 0,
-      color: '#000'
+      color: '#000',
     },
     popover_content_wrap: {
-      padding: 7
+      padding: 7,
     },
     popover_button: {
       padding: 5,
       width: '100%',
       '& .MuiButton-label': {
         alignItems: 'flex-start',
-        justifyContent: 'flex-start'
-      }
+        justifyContent: 'flex-start',
+      },
     },
     good_buttons: {
       borderBottom: '1px solid #000',
       marginBottom: 10,
-      paddingBottom: 10
+      paddingBottom: 10,
     },
-    bad_buttons: {
-
-    }
-  })
-})
+    bad_buttons: {},
+  });
+});
 
 type TFirstColumnSettings = {
-  rowId: number
-}
+  rowId: number;
+};
 
-const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({rowId}) => {
+const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId }) => {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -67,7 +65,7 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({rowId}) =
   };
 
   const showCandidates = () => {
-    console.log('showCandidates'); 
+    console.log('showCandidates');
   };
 
   const deleteEvent = () => {
@@ -83,7 +81,7 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({rowId}) =
         className={classes.button_wrap}
       >
         <MenuIcon />
-      </IconButton >
+      </IconButton>
       <Popover
         id={firstColumn}
         open={open}
@@ -99,36 +97,24 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({rowId}) =
         }}
       >
         <div className={classes.popover_content_wrap}>
-          <div className={classes.good_buttons}>  
+          <div className={classes.good_buttons}>
             <div>
-              <Button
-                className={classes.popover_button}
-                startIcon={<InfoIcon />}
-                onClick={showInfoEvent}
-              >
+              <Button className={classes.popover_button} startIcon={<InfoIcon />} onClick={showInfoEvent}>
                 Show info
               </Button>
-            </div>  
+            </div>
             <div>
-              <Button
-                className={classes.popover_button}
-                startIcon={<EditIcon />}
-                onClick={editInfoEvent}
-              >
+              <Button className={classes.popover_button} startIcon={<EditIcon />} onClick={editInfoEvent}>
                 Edit event
               </Button>
-            </div>  
+            </div>
             <div>
-              <Button
-                className={classes.popover_button}
-                startIcon={<PeopleAltIcon />}
-                onClick={showCandidates}
-              >
+              <Button className={classes.popover_button} startIcon={<PeopleAltIcon />} onClick={showCandidates}>
                 Show candidates
               </Button>
             </div>
-          </div>  
-          <div className={classes.bad_buttons}>   
+          </div>
+          <div className={classes.bad_buttons}>
             <div>
               <Button
                 color="secondary"
@@ -139,14 +125,12 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({rowId}) =
                 Delete event
               </Button>
             </div>
-          </div>         
+          </div>
         </div>
       </Popover>
     </>
-  )
-}
-
-
+  );
+};
 
 export const Columns = [
   {
@@ -156,10 +140,8 @@ export const Columns = [
     disableFilters: true,
     Cell: (props: any) => {
       const rowId = props.row.original.id;
-      return (
-        <FirstColumnSettings rowId={rowId} />
-      )
-    }
+      return <FirstColumnSettings rowId={rowId} />;
+    },
   },
   {
     Header: 'Id',
@@ -182,7 +164,7 @@ export const Columns = [
         Filter: SelectColumnFilter,
         filter: 'includes',
       },
-    ]
+    ],
   },
   {
     Header: 'Name and description',
@@ -195,8 +177,8 @@ export const Columns = [
             <>
               <p>В беке нету</p>
             </>
-          )
-        }
+          );
+        },
       },
       {
         Header: 'Body',
@@ -206,31 +188,31 @@ export const Columns = [
             <>
               <p>В беке нету</p>
             </>
-          )
-        }
-      }
-    ]
+          );
+        },
+      },
+    ],
   },
   {
     Header: 'Dates info',
     columns: [
       {
         Header: 'Event start',
-        accessor: 'startDate'
+        accessor: 'startDate',
       },
       {
         Header: 'Event finish',
-        accessor: 'deadline'
+        accessor: 'deadline',
       },
       {
         Header: 'Date end of acceptin',
-        accessor: 'dateOfEndAccept'
+        accessor: 'dateOfEndAccept',
       },
       {
         Header: 'Event duration',
         accessor: 'duration',
-      }
-    ]
+      },
+    ],
   },
   {
     Header: 'Image info',
@@ -244,15 +226,15 @@ export const Columns = [
             <>
               <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
             </>
-          )
-        }
+          );
+        },
       },
       {
         Header: 'Alt text',
         accessor: 'image.altText',
-        disableFilters: true
+        disableFilters: true,
       },
-    ]
+    ],
   },
   {
     Header: 'Requirements',
@@ -265,9 +247,9 @@ export const Columns = [
       },
       {
         Header: 'Technologies',
-        accessor: 'technologies'
-      }
-    ]
+        accessor: 'technologies',
+      },
+    ],
   },
   {
     Header: 'Location',
@@ -276,13 +258,13 @@ export const Columns = [
         Header: 'Country',
         accessor: 'country',
         Filter: SelectColumnFilter,
-        filter: 'includes'
+        filter: 'includes',
       },
       {
         Header: 'City',
-        accessor: 'city'
-      }
-    ]
+        accessor: 'city',
+      },
+    ],
   },
   {
     Header: 'Info create',
@@ -292,17 +274,13 @@ export const Columns = [
         accessor: 'creatorEvent',
         Cell: (props: any) => {
           const { cell } = props;
-          return (
-            <>
-              {`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}
-            </>
-          )
-        }
+          return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
+        },
       },
       {
         Header: 'Event created at',
         accessor: 'creatorEvent.createdAt',
       },
-    ]
-  }
+    ],
+  },
 ];

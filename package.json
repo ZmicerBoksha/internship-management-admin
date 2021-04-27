@@ -18,6 +18,7 @@
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
     "axios-hooks": "^2.6.1",
+    "classnames": "^2.3.1",
     "history": "4.10.1",
     "namor": "^1.1.2",
     "normalize-scss": "^7.0.1",
