@@ -6,6 +6,7 @@ import { eventsApi } from '../../api/api';
 import { Columns } from './columns/columns';
 import Preloader from '../common/preloader/preloader';
 import Table from '../common/table/table';
+import SnackbarInfo from '../common/snackbarInfo/snackbarInfo';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -26,16 +27,23 @@ interface IEvent {
 const Events: FunctionComponent = () => {
   const classes = useStyles();
   const [loadingData, setLoadingData] = useState<Boolean>(true);
+
+  const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
+  const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
+
   const columns = useMemo(() => Columns, []);
 
   const [data, setData] = useState([]);
+
+  async function getData() {
+    await eventsApi.getEvents().then(response => {
+      setData(response.content);
+      setLoadingData(false);
+    });
+  }
+
   useEffect(() => {
-    async function getData() {
-      await eventsApi.getEvents().then(response => {
-        setData(response.content);
-        setLoadingData(false);
-      });
-    }
     loadingData && getData();
   }, []);
 
@@ -47,15 +55,22 @@ const Events: FunctionComponent = () => {
 
   const editEvent = useCallback((instance: TableInstance<IEvent>) => {
     const eventID = instance.selectedFlatRows[0].original!.id;
-    history.push(`/events/info/${eventID}`);
+    history.push(`/events/info/${eventID}?mode=edit`);
   }, []);
 
   const deleteEvents = useCallback((instance: TableInstance<IEvent>) => {
     setLoadingData(true);
-    instance.selectedFlatRows.forEach(item => {
-      eventsApi.deleteEvent(Number(item.original.id));
+
+    const arrayDeletePromises = instance.selectedFlatRows.map(item => eventsApi.deleteEvent(Number(item.original.id)));
+
+    Promise.all(arrayDeletePromises).then(() => {
+      setLoadingData(false);
+      setopenSnackbar(true);
+      setAlertSeverity('success');
+      setAlertMessage('Events were deleted.');
+
+      getData();
     });
-    setLoadingData(false);
   }, []);
 
   return (
@@ -65,7 +80,7 @@ const Events: FunctionComponent = () => {
         <Preloader />
       ) : (
         <Table
-          name='Events table'
+          name="Events table"
           columns={columns}
           data={data}
           onAdd={addEvent}
@@ -73,6 +88,7 @@ const Events: FunctionComponent = () => {
           onDelete={deleteEvents}
         />
       )}
+      {openSnackbar && <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />}
     </div>
   );
 };

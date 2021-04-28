@@ -3,6 +3,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
 import Preloader from '../../common/preloader/preloader';
+import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
 
 const useStyles = makeStyles(() => {
@@ -29,6 +30,11 @@ type TUrl = {
 const EventInfo: FunctionComponent = () => {
   const classes = useStyles();
   const { eventId, eventType } = useParams<TUrl>();
+
+  const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
+  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
+  const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
+  // debugger;
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
   const [isEditMode, setIsEditMode] = useState<boolean>(mode === 'edit');
@@ -54,10 +60,16 @@ const EventInfo: FunctionComponent = () => {
       default:
         break;
     }
-  }, []);
+    // debugger;
+  }, [eventType]);
 
   const onSetIsEditMode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsEditMode(event.target.checked);
+    const isEditMode = event.target.checked;
+    setIsEditMode(isEditMode);
+
+    // setopenSnackbar(true);
+    // setAlertSeverity('success');
+    // setAlertMessage(`Edit mode turn ${isEditMode ? 'off' : 'off'}`);
   };
 
   return (
@@ -78,6 +90,10 @@ const EventInfo: FunctionComponent = () => {
             )}
           </>
           <EventForm eventId={eventId} eventType={eventType} isEditMode={isEditMode} eventData={eventData} />
+
+          {openSnackbar && (
+            <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />
+          )}
         </div>
       )}
     </>

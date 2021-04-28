@@ -5,7 +5,7 @@ export interface IEventForm {
   eventTab: string;
   format: 'ONLINE' | 'OFFLINE';
   title: string;
-  body: string;
+  description: string;
   country?: string;
   city?: string;
   englishLevel: string;
@@ -63,7 +63,7 @@ export const eventsApi = {
         eventType: 1,
       })
       .then(response => {
-        console.log(response);
+        return response;
       });
   },
   updateEvent(eventId: string, formData: IEventForm) {
@@ -88,12 +88,12 @@ export const eventsApi = {
         eventType: 1,
       })
       .then(response => {
-        console.log(response);
+        return response;
       });
   },
   deleteEvent(eventId: number) {
     return instance.delete(`/event/${eventId}`).then(response => {
-      console.log(response);
+      return response;
     });
   },
 };
