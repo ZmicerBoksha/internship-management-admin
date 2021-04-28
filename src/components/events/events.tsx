@@ -65,7 +65,7 @@ const Events: FunctionComponent = () => {
         <Preloader />
       ) : (
         <Table
-          name={'Events table'}
+          name='Events table'
           columns={columns}
           data={data}
           onAdd={addEvent}
