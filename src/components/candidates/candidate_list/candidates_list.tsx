@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import './styles.css';
 import useAxios from 'axios-hooks';
-import Table from '../../common/Table/Table';
-import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
+import Table from '../../common/table/table';
+import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
 
 /*type TEducation = {
   educational_institution: string;

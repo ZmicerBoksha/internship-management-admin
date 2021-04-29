@@ -17,9 +17,6 @@
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
-    "axios-hooks": "^2.6.1",
-    "history": "4.10.1",
-    "namor": "^1.1.2",
     "normalize-scss": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -55,6 +52,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",

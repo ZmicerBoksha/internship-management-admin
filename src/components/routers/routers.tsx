@@ -2,14 +2,14 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import Dashboard from '../dashboard/dashboard';
 import Events from '../events/events';
-import EventForm from '../events/EventForm/EventForm';
 import Authorization from '../authorization/authorization';
 import CandidatesPage from '../candidates/candidates_page';
 import CandidateCard from '../candidates/candidate_card/candidate_card';
 import Error from '../path_error/error';
+import TsTable from '../tsTable/tsTable';
 import HrTable from '../hrTable/hrTable';
 import StaffPage from '../staffPage/staffPage';
-import TsTable from '../tsTable/tsTable';
+import EventInfo from '../events/eventInfo/eventInfo';
 
 const Routers: React.FC = () => {
   return (
@@ -17,7 +17,8 @@ const Routers: React.FC = () => {
       <Switch>
         <Route exact path="/" component={Dashboard} />
         <Route path="/events" component={Events} />
-        <Route path="/event-form/:eventId?" component={EventForm} />
+        <Route exact path='/events' component={Events} />
+        <Route exact path='/events/:eventType?/:eventId?' component={EventInfo} />
         <Route exact path="/staff/hr" component={HrTable} />
         <Route exact path="/staff/ts" component={TsTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />
