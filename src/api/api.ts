@@ -29,8 +29,13 @@ const instance = axios.create({
 });
 
 export const eventsApi = {
-  getEvents() {
-    return instance.get(`/event/all`).then(response => {
+  getEvents(searchParam?: string) {
+    let urlForRequest = '/event/all';
+    if (searchParam) {
+      urlForRequest += `?search=${searchParam}`;
+    }
+
+    return instance.get(urlForRequest).then(response => {
       console.log(response);
       return response.data;
     });
@@ -47,16 +52,17 @@ export const eventsApi = {
       .post(`/event`, {
         // "title": "string",
         // "body": "very big string",
-        englishLevel: formData.englishLevel,
-        technologies: formData.technologies,
-        startDate: formData.startDate,
-        deadline: formData.deadline,
-        dateOfEndAccept: formData.dateOfEndAccept,
-        duration: formData.duration,
-        eventTab: formData.eventTab,
-        format: formData.format,
-        country: formData?.country,
-        city: formData?.city,
+        // englishLevel: formData.englishLevel,
+        // technologies: formData.technologies,
+        // startDate: formData.startDate,
+        // deadline: formData.deadline,
+        // dateOfEndAccept: formData.dateOfEndAccept,
+        // duration: formData.duration,
+        // eventTab: formData.eventTab,
+        // format: formData.format,
+        // country: formData?.country,
+        // city: formData?.city,
+        ...formData,
         image: 1,
         creatorEvent: 1,
         employee: 1,
@@ -72,16 +78,17 @@ export const eventsApi = {
       .put(`/event/${eventId}`, {
         // "title": "string",
         // "body": "very big string",
-        englishLevel: formData.englishLevel,
-        technologies: formData.technologies,
-        startDate: formData.startDate,
-        deadline: formData.deadline,
-        dateOfEndAccept: formData.dateOfEndAccept,
-        duration: formData.duration,
-        eventTab: formData.eventTab,
-        format: formData.format,
-        country: formData?.country,
-        city: formData?.city,
+        // englishLevel: formData.englishLevel,
+        // technologies: formData.technologies,
+        // startDate: formData.startDate,
+        // deadline: formData.deadline,
+        // dateOfEndAccept: formData.dateOfEndAccept,
+        // duration: formData.duration,
+        // eventTab: formData.eventTab,
+        // format: formData.format,
+        // country: formData?.country,
+        // city: formData?.city,
+        ...formData,
         image: 1,
         creatorEvent: 1,
         employee: 1,

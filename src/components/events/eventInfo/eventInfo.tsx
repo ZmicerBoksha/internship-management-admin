@@ -34,10 +34,10 @@ const EventInfo: FunctionComponent = () => {
   const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
   const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
-  // debugger;
+
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
-  const [isEditMode, setIsEditMode] = useState<boolean>(mode === 'edit');
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [eventData, setEventData] = useState<IEventForm | null>(null);
@@ -53,6 +53,7 @@ const EventInfo: FunctionComponent = () => {
     switch (eventType) {
       case 'info':
         eventId && getEventData(eventId);
+        setIsEditMode(mode === 'edit');
         break;
       case 'new':
         setLoadingData(false);
@@ -60,7 +61,6 @@ const EventInfo: FunctionComponent = () => {
       default:
         break;
     }
-    // debugger;
   }, [eventType]);
 
   const onSetIsEditMode = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,7 +89,14 @@ const EventInfo: FunctionComponent = () => {
               </>
             )}
           </>
-          <EventForm eventId={eventId} eventType={eventType} isEditMode={isEditMode} eventData={eventData} />
+          <EventForm
+            eventId={eventId}
+            eventType={eventType}
+            isEditMode={isEditMode}
+            eventData={eventData}
+            setLoadingData={setLoadingData}
+            setIsEditMode={setIsEditMode}
+          />
 
           {openSnackbar && (
             <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />

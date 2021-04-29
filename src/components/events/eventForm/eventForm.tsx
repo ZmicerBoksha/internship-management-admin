@@ -100,9 +100,18 @@ type TEventForm = {
   eventType: 'new' | 'info';
   isEditMode: boolean;
   eventData: IEventForm | null;
+  setLoadingData: (loadingData: boolean) => void;
+  setIsEditMode: (isEditMode: boolean) => void;
 };
 
-const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMode, eventData }) => {
+const EventForm: FunctionComponent<TEventForm> = ({
+  eventId,
+  eventType,
+  isEditMode,
+  eventData,
+  setLoadingData,
+  setIsEditMode,
+}) => {
   const classes = useStyles();
 
   const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
@@ -119,7 +128,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     setValue,
     unregister,
     clearErrors,
-    reset,
     formState: { errors },
   } = useForm<IEventForm>();
 
@@ -173,13 +181,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             setopenSnackbar(true);
             setAlertSeverity('success');
             setAlertMessage('Event create success');
-            // // Reset form
-            reset();
           }
 
           return response.data.id;
         })
         .then(newEventId => {
+          setLoadingData(true);
           history.push(`/events/info/${newEventId}?mode=edit`);
         });
 
@@ -198,6 +205,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
           return response.data.id;
         })
         .then(newEventId => {
+          setIsEditMode(false);
           history.push(`/events/info/${newEventId}`);
         });
   };
