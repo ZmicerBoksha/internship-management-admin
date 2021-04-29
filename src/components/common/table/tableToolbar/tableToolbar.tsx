@@ -1,11 +1,12 @@
 import { createStyles, IconButton, makeStyles, Theme, Toolbar, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { FunctionComponent, MouseEventHandler } from 'react';
 import { TableInstance } from 'react-table';
-import ColumnHidePage from '../ColumnHidePage/ColumnHidePage';
-import TableFilters from '../TableFilters/TableFilters';
-import GlobalFilter from '../filters/GlobalFilter';
+import ColumnHidePage from '../columnHidePage/columnHidePage';
+import TableFilters from '../tableFilters/tableFilters';
+import GlobalFilter from '../filters/globalFilter';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -35,9 +36,10 @@ type TableToolbarProps = {
   instance: TableInstance;
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
+  onDelete?: (instance: TableInstance) => void;
 };
 
-const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, onEdit }) => {
+const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, onEdit, onDelete }) => {
   const classes = useStyles();
   const { state } = instance;
 
@@ -66,6 +68,19 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
                 disabled={!(Object.keys(state.selectedRowIds).length === 1)}
               >
                 <EditIcon />
+              </IconButton>
+            </div>
+          </Tooltip>
+        )}
+        {onDelete && (
+          <Tooltip title="Delete event(s)">
+            <div>
+              <IconButton
+                onClick={() => onDelete(instance)}
+                aria-label="Delete event(s)"
+                disabled={!Object.keys(state.selectedRowIds).length}
+              >
+                <DeleteIcon />
               </IconButton>
             </div>
           </Tooltip>

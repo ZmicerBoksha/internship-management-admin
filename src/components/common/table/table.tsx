@@ -14,12 +14,12 @@ import {
   useSortBy,
   useTable,
 } from 'react-table';
-import DefaultColumnFilter from './filters/DefaultColumnFilter';
-import TablePagination from './TablePagination/TablePagination';
 import { createStyles, makeStyles, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import MaUTable from '@material-ui/core/Table';
-import TableToolbar from './TableToolbar/TableToolbar';
 import { selectionHook } from '../hooks/selectionHook';
+import DefaultColumnFilter from './filters/defaultColumnFilter';
+import TableToolbar from './tableToolbar/tableToolbar';
+import TablePagination from './tablePagination/tablePagination';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -105,9 +105,10 @@ type TableProps = {
   data: any;
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
+  onDelete?: (instance: TableInstance) => void;
 };
 
-const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit }) => {
+const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete }) => {
   const classes = useStyles();
 
   const filterTypes = {};
@@ -140,11 +141,11 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
     selectionHook,
   );
 
-  const { getTableProps, headerGroups, getTableBodyProps, page, prepareRow } = instance;
+  const { headerGroups, getTableBodyProps, page, prepareRow } = instance;
 
   return (
     <>
-      <TableToolbar instance={instance} {...{ onAdd, onEdit }} />
+      <TableToolbar instance={instance} {...{ onAdd, onEdit, onDelete }} />
       <div className={classes.table_wrap}>
         <MaUTable stickyHeader className={classes.table}>
           <TableHead>
@@ -193,66 +194,3 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
 };
 
 export default Table;
-
-{
-  /* <div {...getTableProps()} className={classes.table_wrap}>
-<div>
-  {
-    headerGroups.map(headerGroup => {
-      return (
-        <div {...headerGroup.getHeaderGroupProps()} className={classes.table_head_row}>
-          {
-            headerGroup.headers.map(column => {
-              return (
-                <div {...column.getHeaderProps(column.getSortByToggleProps())} className={classes.table_head_cell}>
-                  {column.canSort ? (
-                    <TableSortLabel
-                      active={column.isSorted}
-                      direction={column.isSortedDesc ? 'desc' : 'asc'}
-                      {...column.getSortByToggleProps()}
-                      className={classes.table_sort_label}
-                    >
-                      {column.render('Header')}
-                    </TableSortLabel>
-                  ) : (
-                    <div>
-                      {column.render('Header')}
-                    </div>
-                  )}
-                </div>
-              )
-            })
-          }
-        </div>
-      )
-    })
-  }
-</div>
-<div {...getTableBodyProps()} className={classes.table_body}>
-  {
-    page.map(row => {
-      prepareRow(row)
-      return (
-        <div {...row.getRowProps()} className={classes.table_row}>
-          {
-            row.cells.map(cell => {
-              return (
-                <div {...cell.getCellProps()} className={classes.table_cell}>
-                  {
-                    cell.isAggregated ? (
-                      cell.render('Aggregated')
-                    ) : cell.isPlaceholder ? null : (
-                      cell.render('Cell')
-                    )
-                  }
-                </div>
-              )
-            })
-          }
-        </div>
-      )
-    })
-  }
-</div>
-</div> */
-}
