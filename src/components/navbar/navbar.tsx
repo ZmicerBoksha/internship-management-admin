@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
@@ -53,13 +52,13 @@ const Navbar: React.FC = () => {
                             Events
                         </Link>
                     </li>
-                    <li onClick={() => currentLinkEdit("ts")}
-                        className={currentLink === "ts" ? "menu__item menu__item-link--active" : "menu__item"}>
+                    <li onClick={() => currentLinkEdit("tsTable")}
+                        className={currentLink === "tsTable" ? "menu__item menu__item-link--active" : "menu__item"}>
                         <Link
                             className="menu__item-link"
-                            to="/ts"
+                            to="/tsTable"
                         >
-                            TS
+                            TsTable
                         </Link>
                     </li>
                     <li onClick={() => currentLinkEdit("hrs")}

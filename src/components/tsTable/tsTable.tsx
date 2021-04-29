@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
-import Table from '../common/Table/Table';
 import useAxios from 'axios-hooks';
 import { PREFIX } from '../../constants';
+import Table from '../common/Table/Table';
 
-const HrTable: React.FC = () => {
-  const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}/employees`);
+const TsTable: React.FC = () => {
+  const [{ data: TSList }, sendRequest] = useAxios(`${PREFIX}/employees`);
 
-  const data = useMemo(() => hrList?.content || [], [hrList?.content]);
+  const data = useMemo(() => TSList?.content || [], [TSList?.content]);
   const columns = React.useMemo(
     () => [
       {
@@ -28,6 +28,7 @@ const HrTable: React.FC = () => {
           {
             Header: 'Country',
             accessor: 'locationCountry',
+            disableFilters: true,
           },
           {
             Header: 'City',
@@ -36,6 +37,10 @@ const HrTable: React.FC = () => {
           {
             Header: 'Time Zone',
             accessor: 'timezone',
+          },
+          {
+            Header: 'Primary skill',
+            accessor: 'primarySkill',
           },
           {
             Header: 'View',
@@ -60,6 +65,7 @@ const HrTable: React.FC = () => {
               <button
                 value={cell.row.id}
                 onClick={() => {
+                  console.log(cell.row.original.id);
                   sendRequest({
                     method: 'DELETE',
                     url: `${PREFIX}/employees/${cell.row.original.id}`,
@@ -77,7 +83,7 @@ const HrTable: React.FC = () => {
     [],
   );
 
-  return <Table name={'HR table'} columns={columns} data={data} />;
+  return <Table name={'TsTable table'} columns={columns} data={data} />;
 };
 
-export default HrTable;
+export default TsTable;

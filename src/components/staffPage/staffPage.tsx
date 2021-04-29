@@ -52,7 +52,7 @@ interface IUrl {
 }
 
 const StaffPage: React.FC = () => {
-  let history = useHistory();
+  let history: any = useHistory();
   let [edit, setEdit] = useState(false);
   let [addMode, setAddMode] = useState(false);
 
@@ -61,7 +61,6 @@ const StaffPage: React.FC = () => {
   useEffect(() => {
     createUrl.add === 'add' && setAddMode(true);
   }, []);
-  console.log(createUrl.add);
 
   const classes = useStyles();
 
@@ -73,12 +72,12 @@ const StaffPage: React.FC = () => {
     setValue,
   } = useForm();
 
-  const watchCountry = watch('empLocationCountry');
+  const watchCountry = watch('locationCountry');
 
   useEffect(() => {
     const timeZone = COUNTRY_LIST.get(watchCountry);
     if (Array.isArray(timeZone)) {
-      setValue('empTimezone', timeZone[0]);
+      setValue('timezone', timeZone[0]);
     }
   }, [watchCountry]);
 
@@ -91,13 +90,17 @@ const StaffPage: React.FC = () => {
   );
 
   const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/1`);
+  if (!addMode) {
+    refetch({
+      url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
+    });
+  }
 
   let staffData = addMode ? '' : data;
 
   const onSubmit = (data: any) => {
-
-    // @ts-ignore
-      addMode? history.push('/staff/hr') &&
+    addMode
+      ? history.push('/staff/hr') &&
         sendRequest({
           data: data,
           method: POST,
@@ -126,7 +129,7 @@ const StaffPage: React.FC = () => {
         <Typography variant="h6" className="switchLabel" noWrap>
           Edit mode
         </Typography>
-        {edit && <Button variant="contained">Save</Button> }
+        {edit && <Button variant="contained">Save</Button>}
       </Grid>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container justify="center" xs={12}>
@@ -138,9 +141,9 @@ const StaffPage: React.FC = () => {
               <Grid container spacing={2} alignItems="center">
                 <Grid item spacing={2} alignItems="center">
                   <Controller
-                    name="empFirstName"
+                    name="firstName"
                     control={control}
-                    defaultValue={staffData?.empFirstName}
+                    defaultValue={staffData?.firstName}
                     rules={{
                       required: true,
                       maxLength: MAX__LENGTH,
@@ -149,10 +152,10 @@ const StaffPage: React.FC = () => {
                       return (
                         <TextField
                           required={edit}
-                          error={errors.empFirstName}
+                          error={errors.firstName}
                           helperText={
-                            (errors.empFirstName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.empFirstName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.firstName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.firstName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           {...field}
                           id="firstName"
@@ -163,9 +166,9 @@ const StaffPage: React.FC = () => {
                     }}
                   />
                   <Controller
-                    name="empLastName"
+                    name="lastName"
                     control={control}
-                    defaultValue={staffData?.empLastName}
+                    defaultValue={staffData?.lastName}
                     rules={{
                       required: true,
                       maxLength: MAX__LENGTH,
@@ -174,13 +177,13 @@ const StaffPage: React.FC = () => {
                       return (
                         <TextField
                           helperText={
-                            (errors.empLastName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.empLastName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.lastName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.lastName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           required={edit}
-                          error={errors.empLastName}
+                          error={errors.lastName}
                           {...field}
-                          id="empLastName"
+                          id="lastName"
                           label="Last name:"
                           InputProps={{ readOnly: !edit }}
                         />
@@ -190,14 +193,14 @@ const StaffPage: React.FC = () => {
                 </Grid>
                 <Grid item spacing={2} alignItems="center">
                   <FormControl className={classes.formControl} disabled={!edit}>
-                    <InputLabel id="empLocationCountry">Country</InputLabel>
+                    <InputLabel id="locationCountry">Country</InputLabel>
                     <Controller
-                      name="empLocationCountry"
+                      name="locationCountry"
                       control={control}
-                      defaultValue={staffData?.empLocationCountry || Array.from(COUNTRY_LIST.keys())[0]}
+                      defaultValue={staffData?.locationCountry || Array.from(COUNTRY_LIST.keys())[0]}
                       render={({ field }) => {
                         return (
-                          <Select {...field} labelId="empLocationCountry" id="empLocationCountry">
+                          <Select {...field} labelId="locationCountry" id="locationCountry">
                             {Array.from(COUNTRY_LIST.keys()).map(country => (
                               <MenuItem value={country}>{country}</MenuItem>
                             ))}
@@ -208,17 +211,17 @@ const StaffPage: React.FC = () => {
                   </FormControl>
                   {watchCountry === 'US' || watchCountry === 'Russia' ? (
                     <FormControl className={classes.formControl} disabled={!edit}>
-                      <InputLabel id="empTimezone">Time zone</InputLabel>
+                      <InputLabel id="timezone">Time zone</InputLabel>
                       <Controller
-                        name="empTimezone"
+                        name="timezone"
                         control={control}
-                        defaultValue={staffData?.empTimezone}
+                        defaultValue={staffData?.timezone}
                         rules={{
                           required: true,
                         }}
                         render={({ field }) => {
                           return (
-                            <Select error={errors.empTimezone} {...field} labelId="empTimezone" id="empTimezone">
+                            <Select error={errors.timezone} {...field} labelId="timezone" id="timezone">
                               {Array.from(COUNTRY_LIST.get(watchCountry)).map((timeZone: any) => (
                                 <MenuItem value={timeZone}>{timeZone}</MenuItem>
                               ))}
@@ -229,9 +232,9 @@ const StaffPage: React.FC = () => {
                     </FormControl>
                   ) : (
                     <Controller
-                      name="empTimezone"
+                      name="timezone"
                       control={control}
-                      defaultValue={staffData?.empTimezone}
+                      defaultValue={staffData?.timezone}
                       render={({ field }) => {
                         return (
                           <TextField
@@ -239,7 +242,7 @@ const StaffPage: React.FC = () => {
                             id="timeZone"
                             label="Time zone:"
                             InputProps={{ readOnly: true }}
-                            value={COUNTRY_LIST.get(watchCountry) || staffData?.empTimezone}
+                            value={COUNTRY_LIST.get(watchCountry) || staffData?.timezone}
                           />
                         );
                       }}
@@ -247,9 +250,9 @@ const StaffPage: React.FC = () => {
                   )}
 
                   <Controller
-                    name="empLocationCity"
+                    name="locationCity"
                     control={control}
-                    defaultValue={staffData?.empLocationCity}
+                    defaultValue={staffData?.locationCity}
                     rules={{
                       required: true,
                       maxLength: MAX__LENGTH,
@@ -258,13 +261,13 @@ const StaffPage: React.FC = () => {
                       return (
                         <TextField
                           required={edit}
-                          error={errors.empLocationCity}
+                          error={errors.locationCity}
                           helperText={
-                            (errors.empLocationCity?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.empLocationCity?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.locationCity?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.locationCity?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           {...field}
-                          id="empLocationCity"
+                          id="locationCity"
                           label="City:"
                           InputProps={{ readOnly: !edit }}
                         />
@@ -283,9 +286,9 @@ const StaffPage: React.FC = () => {
             <Paper>
               <Grid>
                 <Controller
-                  name="empPhone"
+                  name="phone"
                   control={control}
-                  defaultValue={staffData?.empPhone}
+                  defaultValue={staffData?.phone}
                   rules={{
                     required: true,
                     maxLength: MAX__LENGTH,
@@ -296,9 +299,9 @@ const StaffPage: React.FC = () => {
                       <TextField
                         label="Phone:"
                         {...field}
-                        id="empPhone"
+                        id="phone"
                         InputProps={{ readOnly: !edit }}
-                        error={errors.empPhone}
+                        error={errors.phone}
                         required={edit}
                       >
                         <InputMask mask="(0)999 999 99 99" />
@@ -307,9 +310,9 @@ const StaffPage: React.FC = () => {
                   }}
                 />
                 <Controller
-                  name="empSkype"
+                  name="skype"
                   control={control}
-                  defaultValue={staffData?.empSkype}
+                  defaultValue={staffData?.skype}
                   rules={{
                     required: true,
                     maxLength: MAX__LENGTH,
@@ -318,13 +321,13 @@ const StaffPage: React.FC = () => {
                     return (
                       <TextField
                         required={edit}
-                        error={errors.empSkype}
+                        error={errors.skype}
                         helperText={
-                          (errors.empSkype?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                          (errors.empSkype?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                          (errors.skype?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.skype?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                         }
                         {...field}
-                        id="empSkype"
+                        id="skype"
                         label="Skype:"
                         InputProps={{ readOnly: !edit }}
                       />
@@ -341,20 +344,20 @@ const StaffPage: React.FC = () => {
                 />
               </Grid>
               <Controller
-                name="empEmail"
+                name="email"
                 control={control}
-                defaultValue={staffData?.empEmail}
+                defaultValue={staffData?.email}
                 render={({ field }) => {
                   return (
                     <TextField
                       required={edit}
-                      error={errors.empEmail}
+                      error={errors.email}
                       helperText={
-                        (errors.empEmail?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                        (errors.empEmail?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                        (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                        (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                       }
                       {...field}
-                      id="empEmail"
+                      id="email"
                       label="Email:"
                       InputProps={{ readOnly: !edit }}
                     />
@@ -366,7 +369,7 @@ const StaffPage: React.FC = () => {
           <input type="submit" />
         </Grid>
       </form>
-      {!addMode && <CandidateTrello timeZon={staffData?.empTimezone} />}
+      {!addMode && <CandidateTrello timeZon={staffData?.timezone} />}
     </Grid>
   );
 };

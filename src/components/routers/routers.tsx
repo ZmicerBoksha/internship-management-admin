@@ -9,6 +9,7 @@ import CandidateCard from '../candidates/candidate_card/candidate_card';
 import Error from '../path_error/error';
 import HrTable from '../hrTable/hrTable';
 import StaffPage from '../staffPage/staffPage';
+import TsTable from '../tsTable/tsTable';
 
 const Routers: React.FC = () => {
   return (
@@ -18,7 +19,7 @@ const Routers: React.FC = () => {
         <Route path="/events" component={Events} />
         <Route path="/event-form/:eventId?" component={EventForm} />
         <Route exact path="/staff/hr" component={HrTable} />
-        <Route exact path="/staff/ts" component={HrTable} />
+        <Route exact path="/staff/ts" component={TsTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />
         <Route exact path="/staff/:add?" component={StaffPage} />
         <Route path="/authorization" component={Authorization} />
