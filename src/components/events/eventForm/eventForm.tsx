@@ -139,23 +139,8 @@ const EventForm: FunctionComponent<TEventForm> = ({
   const watchSelectDateOfEndAccept = watch('dateOfEndAccept');
   const watchSelectDeadline = watch('deadline');
 
-  // const watchFields = watch(
-  //   [
-  //     'technologies',
-  //     'startDate',
-  //     'deadline',
-  //     'dateOfEndAccept',
-  //     'format',
-  //     'country',
-  //     'image',
-  //   ]
-  // );
-
   useEffect(() => {
     if (watchShowFormat === 'ONLINE' || eventData?.format === 'ONLINE') {
-      // clearErrors('country');
-      // clearErrors('city');
-
       unregister('country');
       unregister('city');
     }
@@ -215,7 +200,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
       {openSnackbar && <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />}
       <form className={classes.event_form} onSubmit={handleSubmit(onEventFormSubmit)}>
         <div className="left_side_form">
-          {/* ---------------  // ---------------- */}
           <div className={classes.form_block_wrap}>
             <div className="title">
               <Typography component="h2">Main values</Typography>
@@ -291,8 +275,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
               )}
             </div>
           </div>
-
-          {/* ---------------  // ---------------- */}
           <div className={classes.form_block_wrap}>
             <div className="title">
               <Typography component="h2">Requirements</Typography>
@@ -319,7 +301,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
                         }`}
                         disabled={readOnly}
                       >
-                        {/* <MenuItem value={'It doesn`t matter'}>It doesn`t matter</MenuItem> */}
                         <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
                         <MenuItem value={'ELEMENTARY'}>Elementary (A2)</MenuItem>
                         <MenuItem value={'PRE_INTERMEDIATE'}>Pre-Intermediate (A2/B1)</MenuItem>
@@ -373,8 +354,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
               )}
             </div>
           </div>
-
-          {/* ---------------  // ---------------- */}
           <div className={classes.form_block_wrap}>
             <div className="title">
               <Typography component="h2">Dates info</Typography>
@@ -499,7 +478,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
           </div>
         </div>
         <div className="right_side_form">
-          {/* ---------------  // ---------------- */}
           <div className={classes.form_block_wrap}>
             <div className="title">
               <Typography component="h2">Event custom info</Typography>
@@ -572,7 +550,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
               </FormControl>
             </div>
           </div>
-          {/* ---------------  // ---------------- */}
           {(watchShowFormat === 'OFFLINE' || eventData?.format === 'OFFLINE') && (
             <div className={classes.form_block_wrap} data-name="location-info">
               <div className="title">
@@ -638,7 +615,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
               )}
             </div>
           )}
-          {/* ---------------  // ---------------- */}
           <div className={classes.form_block_wrap}>
             <div className="title">
               <Typography component="h2">Image info</Typography>

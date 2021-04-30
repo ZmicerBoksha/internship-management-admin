@@ -62,6 +62,7 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
   const history = useHistory();
 
   const [value, setValue] = useState('');
+  // Comment delete after create filters
   // const onChangeInput = useAsyncDebounce(value => {
   //   setGlobalFilter(value || undefined);
   // }, 1000);
@@ -72,10 +73,7 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
     const newValue = event.target.value;
     setValue(newValue);
 
-    console.log(history);
-
     const searchParam = `global==${newValue}`;
-    console.log(searchParam);
     history.push({
       search: `${searchParam}`,
     });

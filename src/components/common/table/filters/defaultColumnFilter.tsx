@@ -11,14 +11,12 @@ interface DefaultColumnFilterProps {
 const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ columns, column }) => {
   const { filterValue, setFilter, render } = column;
 
+  // Coomit delete after create filters
   // let filterState = {};
   // columns.forEach(column => {
   //   const key = column.id;
   //   filterState[ key ] = ''
-  // })
-
-  console.log(column);
-  
+  // }) 
 
   const [value, setValue] = useState('');
   const history = useHistory();
@@ -30,8 +28,8 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
     setValue(event.target.value);
   };
 
+  // Coomit delete after create filters
   // const startSearch = (event: ChangeEvent<HTMLInputElement>) => {
-  //   console.log(column.id);
   //   history.push({
   //     search: `${column.id}=q=${event.target.value}`,
   //   });

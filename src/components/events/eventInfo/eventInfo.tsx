@@ -31,10 +31,6 @@ const EventInfo: FunctionComponent = () => {
   const classes = useStyles();
   const { eventId, eventType } = useParams<TUrl>();
 
-  const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
-  const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
-
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -66,10 +62,6 @@ const EventInfo: FunctionComponent = () => {
   const onSetIsEditMode = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isEditMode = event.target.checked;
     setIsEditMode(isEditMode);
-
-    // setopenSnackbar(true);
-    // setAlertSeverity('success');
-    // setAlertMessage(`Edit mode turn ${isEditMode ? 'off' : 'off'}`);
   };
 
   return (
@@ -97,10 +89,6 @@ const EventInfo: FunctionComponent = () => {
             setLoadingData={setLoadingData}
             setIsEditMode={setIsEditMode}
           />
-
-          {openSnackbar && (
-            <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />
-          )}
         </div>
       )}
     </>
