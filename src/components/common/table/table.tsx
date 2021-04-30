@@ -155,7 +155,7 @@ const Table: FunctionComponent<TableProps> = ({
       maxWidth: 200,
     }),
     [],
-  ); 
+  );
 
   const instance = useTable(
     {
