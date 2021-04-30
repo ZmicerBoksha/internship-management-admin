@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TCandidate } from '../components/candidates/candidate_list/candidates_list';
+import { TCandidate } from "../types/types";
 
 type PageParams = {
   page: number;

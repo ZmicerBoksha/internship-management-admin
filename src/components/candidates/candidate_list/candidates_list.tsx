@@ -7,23 +7,23 @@ import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilte
 import { candidateService } from "../../../api/api";
 
 
-export type TCandidate = {
+ type TCandidate = {
   institution: string;
   faculty: string;
   speciality: string;
   email: string;
   englishLevel: string;
+  otherSkills: string;
+  mainSkill: string;
   firstName: string;
   id: number;
-  experience: string;
-  expertise: string;
-  education: string;
-  location: string;
   lastName: string;
-  country: string;
   phone: string;
+  country: string;
+  city: string;
   rsmId: number;
   skype: string;
+  graduationDate: Date;
 };
 
 const CandidatesList: React.FC = () => {
@@ -38,10 +38,10 @@ const CandidatesList: React.FC = () => {
 
     candidateService
       .getAllCandidates(params)
-      .then(( {data} ) => {
+      .then(({ data }) => {
         setCandidatesList(data);
       })
-      .catch((err:any) => {
+      .catch(err => {
         console.log(err);
       });
   };
@@ -51,7 +51,7 @@ const CandidatesList: React.FC = () => {
   );
 
   const handleClick = (instance: any) => {
-    const candidateID = instance.rows[0].original.id;
+    const candidateID = instance.selectedFlatRows[0].original!.id;
     history.push(`/candidate/${candidateID}`);
   };
 
