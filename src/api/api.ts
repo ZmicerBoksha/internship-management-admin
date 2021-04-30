@@ -1,4 +1,17 @@
 import axios from 'axios';
+import { TCandidate } from '../components/candidates/candidate_list/candidates_list';
+
+type PageParams = {
+  page: number;
+  itemsPerPage: number;
+};
+
+type TStatusHistory = {
+  candidateId: number;
+  changeNote: string;
+  employeeId: number;
+  statusId: number;
+};
 
 export interface IEventForm {
   id: number;
@@ -96,4 +109,53 @@ export const eventsApi = {
       console.log(response);
     });
   },
+};
+
+const getAllCandidates = (params: PageParams) => {
+  return instance.get('/candidate', { params });
+};
+
+const getCandidate = (id: number) => {
+  return instance.get(`/candidate/${id}`);
+};
+
+const updateCandidate = (id: number, data: TCandidate) => {
+  return instance.put(`/candidate/${id}`, data);
+};
+
+const removeCandidate = (id: number) => {
+  return instance.delete(`/candidate/${id}`);
+};
+
+const getAllStatus = () => {
+  return instance.get('/status/all');
+};
+
+const getStatusHistory = (id: number) => {
+  return instance.get(`/status/history/${id}`);
+};
+
+const getStatusHistoryByCandidate = (candidateId: number) => {
+  return instance.get(`status/history/all?search=candidate.id==${candidateId}`);
+};
+
+const createStatusHistory = (data: TStatusHistory) => {
+  return instance.post('/status/history/', data);
+};
+
+export const candidateService = {
+  getAllCandidates,
+  getCandidate,
+  updateCandidate,
+  removeCandidate,
+};
+
+export const statusServer = {
+  getAllStatus,
+};
+
+export const statusHistoryServer = {
+  getStatusHistory,
+  createStatusHistory,
+  getStatusHistoryByCandidate,
 };
