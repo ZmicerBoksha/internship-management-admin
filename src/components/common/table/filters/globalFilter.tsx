@@ -66,6 +66,8 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
   //   setGlobalFilter(value || undefined);
   // }, 1000);
 
+  
+
   const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setValue(newValue);
