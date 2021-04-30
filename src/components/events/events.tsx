@@ -26,7 +26,7 @@ interface IEvent {
 
 const Events: FunctionComponent = () => {
   const classes = useStyles();
-  const [loadingData, setLoadingData] = useState<Boolean>(true);
+  const [loadingData, setLoadingData] = useState<boolean>(true);
 
   const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
   const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);

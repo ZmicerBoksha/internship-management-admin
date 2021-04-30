@@ -23,7 +23,6 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
       search: `${column.id}=q=${event.target.value}`,
     });
   };
-
   // ensure that reset loads the new value
   useEffect(() => {
     setValue(filterValue || '');
