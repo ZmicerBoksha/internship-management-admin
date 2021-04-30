@@ -27,7 +27,7 @@ const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance, fe
   } = instance;
 
   useEffect(() => {
-    fetchRequest && fetchRequest(pageSize, pageIndex);
+    fetchRequest?.(pageSize, pageIndex);
   }, [pageIndex, pageSize]);
 
   const handleChangeRowsPerPage = useCallback(
