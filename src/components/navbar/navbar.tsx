@@ -174,28 +174,9 @@ export default function Navbar() {
             handleClick();
           }}
         >
-          {open ? <ExpandLess style={{ marginRight: '5px' }} /> : <EventIcon style={{ marginRight: '5px' }} />}
+          <EventIcon style={{ marginRight: '5px' }} />
           Events
         </MenuItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <MenuList disablePadding>
-            {['Planned', 'In progress', 'Archive'].map((category, index) => {
-              return (
-                <MenuItem
-                  key={index}
-                  button
-                  className={classes.nested}
-                  component={Link}
-                  to={`/events/${index}`}
-                  selected={selectedIndex === index + 2}
-                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 2)}
-                >
-                  {category}
-                </MenuItem>
-              );
-            })}
-          </MenuList>
-        </Collapse>
         {/*temporary*/}
         <MenuItem
           component={Link}
