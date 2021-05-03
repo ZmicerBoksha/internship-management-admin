@@ -27,7 +27,7 @@ const areEqual = (prevProps: any, nextProps: any) => {
 //   const classes = useStyles();
 
 //   return (
-//     <Checkbox
+//     <checkbox
 //       className={classes.custom_checkbox}
 //       color="primary"
 //     />
@@ -43,7 +43,7 @@ const areEqual = (prevProps: any, nextProps: any) => {
 //   const classes = useStyles();
 
 //   return (
-//     <Checkbox
+//     <checkbox
 //       className={classes.custom_checkbox}
 //       color="primary"
 //     />

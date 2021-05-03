@@ -77,7 +77,7 @@ export const eventsApi = {
 };
 
 const getAllCandidates = (params: PageParams) => {
-  return instance.get('/candidate', { params });
+  return instance.get<TCandidate[]>('/candidate', { params });
 };
 
 const getCandidate = (id: number) => {
