@@ -186,6 +186,18 @@ const getTsEmployees = (skill: string) => instance.get(`/employees?search=primar
 const getStatusHistoryByCandidate = (candidateId: number) =>
   instance.get(`status/history/all?search=candidate.id==${candidateId}`);
 
+const getResume = (id: number) => {
+  return instance.get(`/resume/${id}`);
+};
+
+const getHrEmployees = () => {
+  return instance.get(`/employees?search=type==HR`);
+};
+
+const getTsEmployees = (skill: string) => {
+  return instance.get(`/employees?search=primaryTechnology==${skill}`);
+};
+
 export const candidateService = {
   getAllCandidates,
   getCandidate,

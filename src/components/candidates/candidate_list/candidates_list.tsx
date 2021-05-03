@@ -28,7 +28,7 @@ const CandidatesList: React.FC = () => {
 
   const handleClick = (instance: any) => {
     console.log(instance);
-    const candidateID = instance.rows[0].original.id;
+    const candidateID = instance.selectedFlatRows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };
 
