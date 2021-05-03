@@ -181,6 +181,18 @@ const createStatusHistory = (data: TStatusHistory) => {
   return instance.post('/status/history/', data);
 };
 
+const getResume = (id: number) => {
+  return instance.get(`/resume/${id}`);
+};
+
+const getHrEmployees = () => {
+  return instance.get(`/employees?search=type==HR`);
+};
+
+const getTsEmployees = (skill: string) => {
+  return instance.get(`/employees?search=primaryTechnology==${skill}`);
+};
+
 export const candidateService = {
   getAllCandidates,
   getCandidate,
@@ -196,4 +208,13 @@ export const statusHistoryServer = {
   getStatusHistory,
   createStatusHistory,
   getStatusHistoryByCandidate,
+};
+
+export const resumeServer = {
+  getResume,
+};
+
+export const employeeServer = {
+  getHrEmployees,
+  getTsEmployees,
 };

@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import { DialogActions, DialogContent, DialogTitle, Dialog, TextField, DialogContentText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { Context } from '../candidate_card';
 
 type TSoftSkillsProps = {
   skill: string;
   skillsDescription: string;
   handleSkillsDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmitReview?: any;
+  handleSubmitReview?: () => void;
+  statusId: number;
 };
 
 const CandidateSkills: React.FC<TSoftSkillsProps> = ({
@@ -15,8 +17,10 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({
   skillsDescription,
   handleSkillsDescription,
   handleSubmitReview,
+  statusId,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
+  const { activeStep, handleNextStep } = useContext<any>(Context);
 
   const handleClose = () => {
     setOpen(false);
@@ -50,8 +54,9 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({
           </Button>
           <Button
             onClick={() => {
-              handleSubmitReview();
+              handleSubmitReview && handleSubmitReview();
               handleClose();
+              handleNextStep(statusId);
             }}
             color="primary"
           >

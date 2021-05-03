@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TCandidate } from '../../candidate_list/candidates_list';
+import { TCandidate } from '../../../../types/types';
 import SaveIcon from '@material-ui/icons/Save';
 import { TextField, Paper, Grid, Button, Typography, MenuItem, Switch } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-
-const EMAIL_PATTERN = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-const PHONE_PATTERN = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
-const YEAR_PATTERN = /^(19|20)\d{2}$/;
+import { COUNTRIES_LIST, ENGLISH_LEVELS, MAIN_SKILL, PHONE_PATTERN, EMAIL_PATTERN } from '../../../common/const/const';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,30 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export type TSelect = {
-  value: string;
-  label: string;
-};
-
 type TCandidateInfoProps = {
   updateCandidateInfo: any;
   candidateInfo: TCandidate;
-  editCandidateData: (data: any) => void;
-  englishLevel: TSelect[];
-  countriesList: TSelect[];
-  mainSkill: TSelect[];
-  preferredTime: TSelect[];
+  editCandidateData: (data: TCandidate) => void;
 };
 
-const CandidateInfo: React.FC<TCandidateInfoProps> = ({
-  candidateInfo,
-  englishLevel,
-  countriesList,
-  mainSkill,
-  preferredTime,
-  editCandidateData,
-  updateCandidateInfo,
-}) => {
+const CandidateInfo: React.FC<TCandidateInfoProps> = ({ candidateInfo, editCandidateData, updateCandidateInfo }) => {
   const classes = useStyles();
   const [active, setActive] = useState<boolean>(false);
   const errorMessageRequired = 'This field is required';
@@ -66,18 +46,30 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
     setActive(event.target.checked);
   };
 
+  const [candidateResume, setCandidateResume] = useState<any>({});
+  useEffect(() => {
+    fetch(`http://localhost:8085/api/resume/${candidateInfo.rsmId}`)
+      .then(response => response.json())
+      .then(result => setCandidateResume(result))
+      .catch(err => console.log(err));
+  }, [candidateInfo]);
 
   const defaultValues = {
     firstName: candidateInfo.firstName,
     lastName: candidateInfo.lastName,
-    education: candidateInfo.education,
+    institution: candidateInfo.institution,
+    faculty: candidateInfo.faculty,
+    speciality: candidateInfo.speciality,
     email: candidateInfo.email,
     englishLevel: candidateInfo.englishLevel,
-    experience: candidateInfo.experience,
-    expertise: candidateInfo.expertise,
-    location: candidateInfo.location,
+    otherSkills: candidateInfo.otherSkills,
+    mainSkill: candidateInfo.mainSkill,
+    country: candidateInfo.country,
+    city: candidateInfo.city,
     phone: candidateInfo.phone,
     skype: candidateInfo.skype,
+    graduationDate: new Date(candidateInfo.graduationDate).getFullYear(),
+    resume: candidateResume.link,
   };
 
   const onSubmit = (data: TCandidate) => {
@@ -88,7 +80,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<TCandidate>({
+  } = useForm({
     defaultValues,
   });
 
@@ -159,18 +151,18 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                       readOnly: !active,
                     }}
                   >
-                    {countriesList.map((option: TSelect) => (
+                    {COUNTRIES_LIST.map(option => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
                     ))}
                   </TextField>
                 )}
-                name="location"
+                name="country"
                 control={control}
               />
               <Controller
-                name="location"
+                name="city"
                 control={control}
                 rules={{ required: true, maxLength: 20 }}
                 render={({ field }) => (
@@ -181,10 +173,10 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                     }}
                     label="City"
                     helperText={
-                      (errors.location?.type === 'required' && errorMessageRequired) ||
-                      (errors.location?.type === 'maxLength' && printErrorMessageMaxLength(20))
+                      (errors.city?.type === 'required' && errorMessageRequired) ||
+                      (errors.city?.type === 'maxLength' && printErrorMessageMaxLength(20))
                     }
-                    error={!!errors.location}
+                    error={!!errors.city}
                   />
                 )}
               />
@@ -261,7 +253,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
             <Paper className={classes.paper}>
               <h2 className="card__form-title">Skills</h2>
               <Controller
-                name="expertise"
+                name="mainSkill"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -272,7 +264,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                       readOnly: !active,
                     }}
                   >
-                    {mainSkill.map((option: TSelect) => (
+                    {MAIN_SKILL.map(option => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
@@ -281,7 +273,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                 )}
               />
               <Controller
-                name="experience"
+                name="otherSkills"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -305,7 +297,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                       readOnly: !active,
                     }}
                   >
-                    {englishLevel.map((option: TSelect) => (
+                    {ENGLISH_LEVELS.map(option => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
@@ -313,31 +305,20 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                   </TextField>
                 )}
               />
-              {/*<Controller
-                            name="cv"
-                            control={control}
-                            defaultValue={candidateInfo.cv}
-                            render={({field}) =>
-                                <TextField
-                                    InputProps={{
-                                        readOnly: !active,
-                                    }}
-                                    {...field}
-                                    label="CV"
-                                />
-                            }
-                        />
-                        {errors.cv &&
-                        <Typography className={classes.typography}
-                                    variant="subtitle2">{errorMessageRequired}</Typography>
-                        }*/}
+              <TextField
+                InputProps={{
+                  readOnly: !active,
+                }}
+                label="Resume"
+                defaultValue={candidateResume.link}
+              />
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper className={classes.paper}>
               <h2 className="card__form-title">Education</h2>
               <Controller
-                name="education"
+                name="institution"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -346,68 +327,48 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                     }}
                     {...field}
                     label="Institution"
-                    helperText={errors.education?.type === 'required' && errorMessageRequired}
-                    error={!!errors.education}
                   />
                 )}
               />
-              {/*<Controller
-                            name="education.faculty"
-                            control={control}
-                            defaultValue={candidateInfo.education.faculty}
-                            render={({field}) =>
-                                <TextField
-                                    InputProps={{
-                                        readOnly: !active,
-                                    }}
-                                    {...field}
-                                    label="Faculty"
-                                />
-                            }
-                        />
-                        {errors.education?.faculty &&
-                        <Typography className={classes.typography}
-                                    variant="subtitle2">{errorMessageRequired}</Typography>
-                        }
-                        <Controller
-                            name="education.speciality"
-                            control={control}
-                            defaultValue={candidateInfo.education.speciality}
-                            render={({field}) =>
-                                <TextField
-                                    InputProps={{
-                                        readOnly: !active,
-                                    }}
-                                    {...field}
-                                    label="Speciality"
-                                />
-                            }
-                        />
-                        {errors.education?.speciality &&
-                        <Typography className={classes.typography}
-                                    variant="subtitle2">{errorMessageRequired}</Typography>
-                        }
-                        <Controller
-                            name="graduation_date"
-                            control={control}
-                            defaultValue={candidateInfo.graduation_date}
-                            rules={{
-                                pattern: YEAR_PATTERN
-                            }}
-                            render={({field}) =>
-                                <TextField
-                                    InputProps={{
-                                        readOnly: !active,
-                                    }}
-                                    {...field}
-                                    label="Graduation Date"
-                                />
-                            }
-                        />
-                        {errors.graduation_date?.type === 'pattern' &&
-                        <Typography className={classes.typography} variant="subtitle2">Check correct of date
-                            format</Typography>
-                        }*/}
+              <Controller
+                name="faculty"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                    {...field}
+                    label="Faculty"
+                  />
+                )}
+              />
+              <Controller
+                name="speciality"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                    {...field}
+                    label="Speciality"
+                  />
+                )}
+              />
+              <Controller
+                name="graduationDate"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    InputProps={{
+                      readOnly: !active,
+                    }}
+                    {...field}
+                    label="Graduation date"
+                  />
+                )}
+              />
             </Paper>
           </Grid>
           <Grid item xs={4}>
@@ -422,7 +383,7 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
                             }}
                             defaultValue={candidateInfo.time}
                         >
-                            {preferredTime.map((option: TSelect) => (
+                            {PREFERRED_TIME.map((option: TSelect) => (
                                 <MenuItem key={option.value} value={option.value}>
                                     {option.label}
                                 </MenuItem>
