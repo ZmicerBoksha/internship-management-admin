@@ -90,11 +90,7 @@ const StaffPage: React.FC = () => {
   );
 
   const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/1`);
-  if (!addMode) {
-    refetch({
-      url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
-    });
-  }
+
 
   let staffData = addMode ? '' : data;
 

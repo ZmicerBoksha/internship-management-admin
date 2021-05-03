@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import Table from '../common/Table/Table';
+import Table from '../common/table/table';
 import useAxios from 'axios-hooks';
 import { PREFIX } from '../../constants';
 

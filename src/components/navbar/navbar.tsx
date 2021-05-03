@@ -104,6 +104,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [open, setOpen] = React.useState(true);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [staffOpen, setStaffOpen] = React.useState(true);
 
   const handleListItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);

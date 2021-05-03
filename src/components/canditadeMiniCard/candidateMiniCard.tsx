@@ -1,20 +1,28 @@
 import React from 'react';
 import './candidateMiniCard.scss';
 import { Card, CardContent, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import { useHistory } from "react-router-dom";
 type CandidateMiniCardProps = {
   timeZon: string;
+  candidate:any;
 };
-const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon }) => {
-  const date = new Date('2012-05-24');
+
+
+const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate }) => {
+  const history = useHistory();
+
+  const handleClick = (instance: any) => {
+    history.push(`/candidate/${candidate?.id}`)
+  };
 
   return (
-    <Card className="miniCard">
+    <Card onClick={handleClick} className="miniCard">
       <Grid container>
         <Typography variant="h6" className="columnName" noWrap>
           Name:
         </Typography>
         <Typography variant="h6" noWrap>
-          Ivan Ivanovich
+          {candidate.firstName}
         </Typography>
       </Grid>
       <Divider variant="middle" />
@@ -38,7 +46,7 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon }) => {
               minute: 'numeric',
               second: 'numeric',
               timeZone: timeZon,
-            }).format(date)}
+            }).format( new Date(candidate.interviewDate))}
           </Typography>
         </div>
         <div className="wrapperCard">
@@ -46,7 +54,7 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon }) => {
             Technology:
           </Typography>
           <Typography variant="h6" noWrap>
-            JS
+            {candidate.primaryTechnology}
           </Typography>
         </div>
       </Grid>

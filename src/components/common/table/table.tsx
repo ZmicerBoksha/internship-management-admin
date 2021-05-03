@@ -1,4 +1,4 @@
-import { FunctionComponent, MouseEventHandler, useMemo } from 'react';
+import React, { FunctionComponent, MouseEventHandler, useMemo } from 'react';
 import {
   TableInstance,
   useBlockLayout,
@@ -17,9 +17,10 @@ import {
 import { createStyles, makeStyles, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import MaUTable from '@material-ui/core/Table';
 import { selectionHook } from '../hooks/selectionHook';
-import DefaultColumnFilter from './filters/defaultColumnFilter';
-import TableToolbar from './tableToolbar/tableToolbar';
-import TablePagination from './tablePagination/tablePagination';
+import TablePagination from "./tablePagination/tablePagination";
+import DefaultColumnFilter from "./filters/defaultColumnFilter";
+import TableToolbar from "./tableToolbar/tableToolbar";
+
 
 const useStyles = makeStyles(() => {
   return createStyles({

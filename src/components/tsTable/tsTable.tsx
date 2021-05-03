@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import useAxios from 'axios-hooks';
 import { PREFIX } from '../../constants';
-import Table from '../common/Table/Table';
+import Table from '../common/table/table';
 
 const TsTable: React.FC = () => {
   const [{ data: TSList }, sendRequest] = useAxios(`${PREFIX}/employees`);
