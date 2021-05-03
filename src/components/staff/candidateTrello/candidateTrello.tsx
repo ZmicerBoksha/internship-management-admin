@@ -29,7 +29,7 @@ interface IStatusHistoryData {
 
 const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) => {
 
-  const [intreviewTimeData, setintreviewTimeData] = useState([]);
+  const [intreviewTimeData, setintreviewTimeData] = useState<IIntreviewTimeData[]>([]);
   const [candidatetsData, setCandidatetsData] = useState<ICandidatetsData[]>([]);
   const [statusHistoryData, setStatusHistoryData] = useState<IStatusHistoryData[]>([]);
 
@@ -37,7 +37,7 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
     async function getData() {
       await getCandidateIdByEmpolee(staffId).then(response => {
         setintreviewTimeData(response);
-        return response.map((item: any) => item.cnId);
+        return response.map((item: any) => item.cnId).sort();
       }).then(condidateIds => {
         getCandidateById(condidateIds).then(response => {
           setCandidatetsData(response);
@@ -55,7 +55,7 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
 
   let mass: any[] = [];
 
-  intreviewTimeData?.forEach((item: IIntreviewTimeData) => {
+  intreviewTimeData?.forEach((item) => {
     mass.push({
       ["id"]: item.cnId, ["interviewDate"]: item.beginDate
     });
@@ -66,14 +66,12 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
     mass[index]["lastName"] = candidatetsData[index].lastName;
     mass[index]["primaryTechnology"] = candidatetsData[index].mainSkill;
   });
-  console.log(candidatetsData);
 
 
   statusHistoryData.forEach((item, index) => {
     mass[index]["status"] = statusHistoryData[index].status.name;
   });
-
-  let notRevived = mass.filter(item =>
+ let notRevived = mass.filter(item =>
     item.status === "Status name 1");
   let revived = mass.filter(item =>
     item.status === "Status name 2"

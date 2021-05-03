@@ -66,7 +66,6 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({
     setActive(event.target.checked);
   };
 
-  console.log(updateCandidateInfo);
 
   const defaultValues = {
     firstName: candidateInfo.firstName,

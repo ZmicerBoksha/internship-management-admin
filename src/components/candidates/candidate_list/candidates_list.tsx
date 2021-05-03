@@ -38,7 +38,7 @@ const CandidatesList: React.FC = () => {
 
     candidateService
       .getAllCandidates(params)
-      .then(( data:any ) => {
+      .then(( {data} ) => {
         setCandidatesList(data);
       })
       .catch((err:any) => {
@@ -51,7 +51,6 @@ const CandidatesList: React.FC = () => {
   );
 
   const handleClick = (instance: any) => {
-    console.log(instance);
     const candidateID = instance.rows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };

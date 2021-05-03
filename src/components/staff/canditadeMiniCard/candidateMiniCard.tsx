@@ -1,18 +1,18 @@
-import React from 'react';
-import './candidateMiniCard.scss';
-import { Card, CardContent, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import React from "react";
+import "./candidateMiniCard.scss";
+import { Card, CardContent, Divider, Grid, Paper, Typography } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+
 type CandidateMiniCardProps = {
   timeZon: string;
-  candidate:any;
+  candidate: any;
 };
 
 
-const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate }) => {
+const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon, candidate }) => {
   const history = useHistory();
-
-  const handleClick = (instance: any) => {
-    history.push(`/candidate/${candidate.id}`)
+  const handleClick = () => {
+    history.push(`/candidate/${candidate.id}`);
   };
 
   return (
@@ -49,11 +49,11 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate
             Сall date:
           </Typography>
           <Typography variant="h6" noWrap>
-            {new Intl.DateTimeFormat('en-GB', {
-              hour: 'numeric',
-              minute: 'numeric',
-              second: 'numeric',
-              timeZone: timeZon,
+            {new Intl.DateTimeFormat("en-GB", {
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+              timeZone: timeZon
             }).format(new Date(candidate.interviewDate))}
           </Typography>
         </div>
