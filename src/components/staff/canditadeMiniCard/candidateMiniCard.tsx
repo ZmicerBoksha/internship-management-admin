@@ -12,7 +12,7 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate
   const history = useHistory();
 
   const handleClick = (instance: any) => {
-    history.push(`/candidate/${candidate?.id}`)
+    history.push(`/candidate/${candidate.id}`)
   };
 
   return (
@@ -23,6 +23,14 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate
         </Typography>
         <Typography variant="h6" noWrap>
           {candidate.firstName}
+        </Typography>
+      </Grid>
+      <Grid container>
+        <Typography variant="h6" className="columnName" noWrap>
+          Last Name:
+        </Typography>
+        <Typography variant="h6" noWrap>
+          {candidate.lastName}
         </Typography>
       </Grid>
       <Divider variant="middle" />
@@ -46,7 +54,7 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon,candidate
               minute: 'numeric',
               second: 'numeric',
               timeZone: timeZon,
-            }).format( new Date(candidate.interviewDate))}
+            }).format(new Date(candidate.interviewDate))}
           </Typography>
         </div>
         <div className="wrapperCard">

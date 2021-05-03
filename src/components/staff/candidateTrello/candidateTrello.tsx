@@ -86,14 +86,14 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
           Not reviewed candidates
         </Typography>
         <div>
-          {notRevived.map((cadidate, i) => (<CandidateMiniCard key={i} timeZon={timeZon} candidate={cadidate} />))}
+          {notRevived.map((candidate, i) => (<CandidateMiniCard key={i} timeZon={timeZon} candidate={candidate} />))}
         </div>
       </Grid>
       <Grid item xs={6}>
         <Typography variant="h5" className="subtitle subtitle--revived" noWrap>
           Reviewed candidates
         </Typography>
-        {revived.map((cadidate, i) => (<CandidateMiniCard key={i} timeZon={timeZon} candidate={cadidate} />))}
+        {revived.map((candidate, i) => (<CandidateMiniCard key={i} timeZon={timeZon} candidate={candidate} />))}
       </Grid>
     </Grid>
   );

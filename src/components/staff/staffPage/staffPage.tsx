@@ -366,7 +366,6 @@ const StaffPage: React.FC = () => {
           <input type="submit" />
         </Grid>
       </form>
-      {staffData.id}
       {!addMode && <CandidateTrello timeZon={staffData?.timezone} staffId={staffData.id} />}
     </Grid>
   );
