@@ -22,7 +22,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import InputMask from 'react-input-mask';
-import CandidateTrello from '../candidateTrello/candidateTrello';
+
 import {
   COUNTRY_LIST,
   PREFIX,
@@ -33,7 +33,8 @@ import {
   ADD_PATH,
   POST,
   PUT,
-} from '../../constants';
+} from '../../../constants';
+import CandidateTrello from "../candidateTrello/candidateTrello";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -89,7 +90,7 @@ const StaffPage: React.FC = () => {
     { manual: true },
   );
 
-  const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/1`);
+  const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`);
 
 
   let staffData = addMode ? '' : data;
@@ -365,7 +366,8 @@ const StaffPage: React.FC = () => {
           <input type="submit" />
         </Grid>
       </form>
-      {!addMode && <CandidateTrello timeZon={staffData?.timezone} />}
+      {staffData.id}
+      {!addMode && <CandidateTrello timeZon={staffData?.timezone} staffId={staffData.id} />}
     </Grid>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
-import Table from '../common/table/table';
+import Table from '../../common/table/table';
 import useAxios from 'axios-hooks';
-import { PREFIX } from '../../constants';
+import { PREFIX } from '../../../constants';
 
 const HrTable: React.FC = () => {
   const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}/employees`);

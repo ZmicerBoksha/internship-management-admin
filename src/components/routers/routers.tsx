@@ -6,9 +6,9 @@ import Authorization from '../authorization/authorization';
 import CandidatesPage from '../candidates/candidates_page';
 import CandidateCard from '../candidates/candidate_card/candidate_card';
 import Error from '../path_error/error';
-import TsTable from '../tsTable/tsTable';
-import HrTable from '../hrTable/hrTable';
-import StaffPage from '../staffPage/staffPage';
+import TsTable from '../staff/tsTable/tsTable';
+import HrTable from '../staff/hrTable/hrTable';
+import StaffPage from '../staff/staffPage/staffPage';
 import EventInfo from '../events/eventInfo/eventInfo';
 
 const Routers: React.FC = () => {

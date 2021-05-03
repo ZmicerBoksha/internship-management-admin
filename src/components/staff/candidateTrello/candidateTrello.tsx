@@ -1,12 +1,11 @@
 import { Grid, Typography } from "@material-ui/core";
 import CandidateMiniCard from "../canditadeMiniCard/candidateMiniCard";
 import React, { useEffect, useState } from "react";
-import useAxios from "axios-hooks";
-import { POST, PREFIX } from "../../constants";
 import { getCandidateById, getCandidateIdByEmpolee, getStatusCandidateById } from "./api";
 
 type CandidateTrelloProps = {
   timeZon: string;
+  staffId: number;
 };
 
 interface IIntreviewTimeData {
@@ -20,15 +19,15 @@ interface ICandidatetsData {
   mainSkill: string,
 }
 
-const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon }) => {
+const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon,staffId }) => {
 
   const [intreviewTimeData, setintreviewTimeData] = useState([]);
-  const [candidatetsData, setCandidatetsData] = useState([]);
+  const [candidatetsData, setCandidatetsData] = useState<ICandidatetsData[]>([]);
   const [statusHistoryData, setStatusHistoryData] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      await getCandidateIdByEmpolee(2).then(response => {
+      await getCandidateIdByEmpolee(staffId).then(response => {
         setintreviewTimeData(response);
         return response.map((item: any) => item.cnId);
       }).then(condidateIds => {
@@ -53,31 +52,19 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon }) => {
       ["id"]: item.cnId, ["interviewDate"]: item.beginDate
     });
   });
-  console.log(intreviewTimeData);
 
- /* candidatetsData?.forEach((item:ICandidatetsData, index: number) => {
+  candidatetsData.forEach((item, index) => {
       mass[index]["firstName"] = candidatetsData[index].firstName;
       mass[index]["lastName"] = candidatetsData[index].lastName;
       mass[index]["primaryTechnology"] = candidatetsData[index].mainSkill;
   });
   console.log(candidatetsData);
 
-  */
 
-
-  for (let i = 0; i < candidatetsData?.length; i++) {
+  statusHistoryData.forEach((item, index) => {
     // @ts-ignore
-    mass[i]["firstName"] = candidatetsData[i].firstName;
-    // @ts-ignore
-    mass[i]["lastName"] = candidatetsData[i].lastName;
-    // @ts-ignore
-    mass[i]["primaryTechnology"] = candidatetsData[i].mainSkill;
-  }
-
-  for (let i = 0; i < statusHistoryData?.length; i++) {
-    // @ts-ignore
-    mass[i]["status"] = statusHistoryData[i].status.name;
-  }
+    mass[index]["status"] = statusHistoryData[index].status.name;
+  });
 
   let notRevived = mass.filter(item =>
     item.status === "Status name 1");
