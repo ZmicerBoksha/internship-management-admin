@@ -4,7 +4,8 @@ import './styles.css';
 import useAxios from 'axios-hooks';
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
-import { candidateService } from '../../../api/api';
+import { candidateService } from "../../../api/api";
+
 
 export type TCandidate = {
   institution: string;
@@ -12,17 +13,17 @@ export type TCandidate = {
   speciality: string;
   email: string;
   englishLevel: string;
-  otherSkills: string;
-  mainSkill: string;
   firstName: string;
   id: number;
+  experience: string;
+  expertise: string;
+  education: string;
+  location: string;
   lastName: string;
   country: string;
-  city: string;
   phone: string;
   rsmId: number;
   skype: string;
-  graduationDate: Date;
 };
 
 const CandidatesList: React.FC = () => {
@@ -37,10 +38,10 @@ const CandidatesList: React.FC = () => {
 
     candidateService
       .getAllCandidates(params)
-      .then(({ data }) => {
+      .then(( data:any ) => {
         setCandidatesList(data);
       })
-      .catch(err => {
+      .catch((err:any) => {
         console.log(err);
       });
   };

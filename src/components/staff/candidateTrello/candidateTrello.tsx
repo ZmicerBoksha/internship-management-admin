@@ -19,11 +19,19 @@ interface ICandidatetsData {
   mainSkill: string,
 }
 
-const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon,staffId }) => {
+interface IStatus {
+  name: string,
+}
+
+interface IStatusHistoryData {
+  status: IStatus
+}
+
+const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) => {
 
   const [intreviewTimeData, setintreviewTimeData] = useState([]);
   const [candidatetsData, setCandidatetsData] = useState<ICandidatetsData[]>([]);
-  const [statusHistoryData, setStatusHistoryData] = useState([]);
+  const [statusHistoryData, setStatusHistoryData] = useState<IStatusHistoryData[]>([]);
 
   useEffect(() => {
     async function getData() {
@@ -47,22 +55,21 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon,staffId }) =>
 
   let mass: any[] = [];
 
-  intreviewTimeData?.forEach((item:IIntreviewTimeData) => {
+  intreviewTimeData?.forEach((item: IIntreviewTimeData) => {
     mass.push({
       ["id"]: item.cnId, ["interviewDate"]: item.beginDate
     });
   });
 
   candidatetsData.forEach((item, index) => {
-      mass[index]["firstName"] = candidatetsData[index].firstName;
-      mass[index]["lastName"] = candidatetsData[index].lastName;
-      mass[index]["primaryTechnology"] = candidatetsData[index].mainSkill;
+    mass[index]["firstName"] = candidatetsData[index].firstName;
+    mass[index]["lastName"] = candidatetsData[index].lastName;
+    mass[index]["primaryTechnology"] = candidatetsData[index].mainSkill;
   });
   console.log(candidatetsData);
 
 
   statusHistoryData.forEach((item, index) => {
-    // @ts-ignore
     mass[index]["status"] = statusHistoryData[index].status.name;
   });
 
