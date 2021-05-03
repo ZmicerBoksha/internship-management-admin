@@ -1,4 +1,4 @@
-import React, { FunctionComponent, MouseEventHandler, useMemo } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import {
   TableInstance,
   useBlockLayout,
@@ -17,10 +17,9 @@ import {
 import { createStyles, makeStyles, TableBody, TableCell, TableHead, TableRow, TableSortLabel } from '@material-ui/core';
 import MaUTable from '@material-ui/core/Table';
 import { selectionHook } from '../hooks/selectionHook';
-import TablePagination from "./tablePagination/tablePagination";
-import DefaultColumnFilter from "./filters/defaultColumnFilter";
-import TableToolbar from "./tableToolbar/tableToolbar";
-
+import DefaultColumnFilter from './filters/defaultColumnFilter';
+import TableToolbar from './tableToolbar/tableToolbar';
+import TablePagination from './tablePagination/tablePagination';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -107,9 +106,10 @@ type TableProps = {
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
   onDelete?: (instance: TableInstance) => void;
+  fetchRequest?: (pageSize: number, pageIndex: number) => void;
 };
 
-const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete }) => {
+const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete, fetchRequest }) => {
   const classes = useStyles();
 
   const filterTypes = {};
@@ -189,7 +189,7 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
           </TableBody>
         </MaUTable>
       </div>
-      <TablePagination instance={instance} />
+      <TablePagination instance={instance} fetchRequest={fetchRequest} />
     </>
   );
 };

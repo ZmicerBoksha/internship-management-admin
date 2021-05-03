@@ -3,6 +3,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
 import Preloader from '../../common/preloader/preloader';
+import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
 
 const useStyles = makeStyles(() => {
@@ -29,9 +30,10 @@ type TUrl = {
 const EventInfo: FunctionComponent = () => {
   const classes = useStyles();
   const { eventId, eventType } = useParams<TUrl>();
+
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
-  const [isEditMode, setIsEditMode] = useState<boolean>(mode === 'edit');
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [eventData, setEventData] = useState<IEventForm | null>(null);
@@ -47,6 +49,7 @@ const EventInfo: FunctionComponent = () => {
     switch (eventType) {
       case 'info':
         eventId && getEventData(eventId);
+        setIsEditMode(mode === 'edit');
         break;
       case 'new':
         setLoadingData(false);
@@ -54,10 +57,11 @@ const EventInfo: FunctionComponent = () => {
       default:
         break;
     }
-  }, []);
+  }, [eventType]);
 
   const onSetIsEditMode = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsEditMode(event.target.checked);
+    const isEditMode = event.target.checked;
+    setIsEditMode(isEditMode);
   };
 
   return (
@@ -77,7 +81,14 @@ const EventInfo: FunctionComponent = () => {
               </>
             )}
           </>
-          <EventForm eventId={eventId} eventType={eventType} isEditMode={isEditMode} eventData={eventData} />
+          <EventForm
+            eventId={eventId}
+            eventType={eventType}
+            isEditMode={isEditMode}
+            eventData={eventData}
+            setLoadingData={setLoadingData}
+            setIsEditMode={setIsEditMode}
+          />
         </div>
       )}
     </>

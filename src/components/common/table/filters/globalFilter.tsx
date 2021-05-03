@@ -1,7 +1,8 @@
 import { createStyles, fade, InputBase, makeStyles, Theme } from '@material-ui/core';
-import { FunctionComponent, useState } from 'react';
+import { ChangeEvent, FunctionComponent, useState } from 'react';
 import { TableInstance, useAsyncDebounce } from 'react-table';
 import SearchIcon from '@material-ui/icons/Search';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -58,10 +59,25 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
 
   const { globalFilter, setGlobalFilter } = instance;
 
-  const [value, setValue] = useState(globalFilter);
-  const onChangeInput = useAsyncDebounce(value => {
-    setGlobalFilter(value || undefined);
-  }, 1000);
+  const history = useHistory();
+
+  const [value, setValue] = useState('');
+  // Comment delete after create filters
+  // const onChangeInput = useAsyncDebounce(value => {
+  //   setGlobalFilter(value || undefined);
+  // }, 1000);
+
+  
+
+  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setValue(newValue);
+
+    const searchParam = `global==${newValue}`;
+    history.push({
+      search: `${searchParam}`,
+    });
+  };
 
   return (
     <div className={classes.search}>
@@ -74,10 +90,7 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
           root: classes.inputRoot,
           input: classes.inputInput,
         }}
-        onChange={event => {
-          setValue(event.target.value);
-          onChangeInput(event.target.value);
-        }}
+        onChange={onChangeInput}
         value={value}
         inputProps={{ 'aria-label': 'search' }}
       />
