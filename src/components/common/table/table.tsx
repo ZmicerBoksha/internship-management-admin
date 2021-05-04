@@ -1,4 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import classNames from 'classnames';
 import {
   TableInstance,
   useBlockLayout,
@@ -27,6 +28,7 @@ const useStyles = makeStyles(() => {
     table_wrap: {
       overflowX: 'auto',
       overflowY: 'hidden',
+      padding: 0,
     },
     table: {
       overflow: 'hidden',
@@ -84,7 +86,6 @@ const useStyles = makeStyles(() => {
       },
     },
     table_cell: {
-      padding: 10,
       fontSize: 14,
       textAlign: 'left',
       fontWeight: 400,
@@ -97,12 +98,34 @@ const useStyles = makeStyles(() => {
         objectFit: 'cover',
       },
     },
+    resizeHandle: {
+      position: 'absolute',
+      cursor: 'col-resize',
+      zIndex: 100,
+      opacity: 0,
+      borderLeft: `1px solid #000`,
+      borderRight: `1px solid #000`,
+      height: '50%',
+      top: '25%',
+      transition: 'all linear 100ms',
+      right: -2,
+      width: 3,
+      '&.handleActive': {
+        opacity: '1',
+        border: 'none',
+        backgroundColor: '#D90000',
+        height: 'calc(100% - 4px)',
+        top: '2px',
+        right: -1,
+        width: 1,
+      },
+    },
   });
 });
 
 type TableProps = {
   name: string;
-  columns: any;
+  columns: any[];
   data: any;
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
@@ -127,14 +150,22 @@ const Table: FunctionComponent<TableProps> = ({
     () => ({
       Filter: DefaultColumnFilter,
       filter: 'searchLike',
+      minWidth: 45,
+      width: 150,
+      maxWidth: 200,
     }),
     [],
   );
+
+  const initialState = {
+    hiddenColumns: [],
+  };
 
   const instance = useTable(
     {
       columns,
       data,
+      initialState,
       manualFilters: true,
       manualGlobalFilter: true,
       defaultColumn,
@@ -153,7 +184,11 @@ const Table: FunctionComponent<TableProps> = ({
     selectionHook,
   );
 
-  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+
+  // useEffect(() => {
+  //   console.log(allColumns.map(column => column.hasOwnProperty('startHide') && column.id ));
+  // }, [])
 
   const history = useHistory();
 
@@ -216,6 +251,16 @@ const Table: FunctionComponent<TableProps> = ({
                       </TableSortLabel>
                     ) : (
                       <>{column.render('Header')}</>
+                    )}
+                    {column.canResize && (
+                      <div
+                        {...column.getResizerProps()}
+                        style={{ cursor: 'col-resize' }} // override the useResizeColumns default
+                        className={classNames({
+                          [classes.resizeHandle]: true,
+                          handleActive: column.isResizing,
+                        })}
+                      />
                     )}
                   </TableCell>
                 ))}

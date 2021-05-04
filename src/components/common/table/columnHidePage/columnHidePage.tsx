@@ -59,7 +59,7 @@ const ColumnHidePage: FunctionComponent<ColumnHidePageProps> = ({ instance }) =>
   };
 
   const hideableColumns = allColumns.filter(column => !column.hasOwnProperty('alwaysVisible'));
-  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.isVisible ? 0 : 1), 0);
+  const checkedCount = hideableColumns.reduce((countVisible, column) => countVisible + (column.isVisible ? 0 : 1), 0);
 
   const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length;
 

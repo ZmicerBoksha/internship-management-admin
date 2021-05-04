@@ -148,9 +148,13 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
 
 export const Columns = [
   {
-    width: 45,
+    minWidth: 60,
+    width: 60,
+    maxWidth: 60,
     Header: '',
     accessor: 'actions',
+    disableResizing: true,
+    disableGroupBy: true,
     disableFilters: true,
     disableGlobalFilter: true,
     alwaysVisible: true,
@@ -162,6 +166,7 @@ export const Columns = [
   {
     Header: 'Id',
     accessor: 'id',
+    startHide: true,
   },
   {
     Header: 'Event custom info',
@@ -171,12 +176,15 @@ export const Columns = [
         accessor: 'eventTab',
         Filter: SelectColumnFilter,
         filter: 'includes',
+        isVisible: true,
+        startHide: true,
       },
       {
         Header: 'Format',
         accessor: 'format',
         Filter: SelectColumnFilter,
         filter: 'includes',
+        startHide: true,
       },
     ],
   },
@@ -190,6 +198,7 @@ export const Columns = [
       {
         Header: 'Description',
         accessor: 'description',
+        startHide: true,
       },
     ],
   },
@@ -213,10 +222,12 @@ export const Columns = [
         accessor: 'dateOfEndAccept',
         Filter: BetweenDatesFilter,
         filter: 'betweenDates',
+        startHide: true,
       },
       {
         Header: 'Event duration',
         accessor: 'duration',
+        startHide: true,
       },
     ],
   },
@@ -239,6 +250,7 @@ export const Columns = [
         Header: 'Alt text',
         accessor: 'image.altText',
         disableFilters: true,
+        startHide: true,
       },
     ],
   },
@@ -265,10 +277,12 @@ export const Columns = [
         accessor: 'country',
         Filter: SelectColumnFilter,
         filter: 'includes',
+        startHide: true,
       },
       {
         Header: 'City',
         accessor: 'city',
+        startHide: true,
       },
     ],
   },
@@ -278,6 +292,7 @@ export const Columns = [
       {
         Header: 'Who created event (userId)',
         accessor: 'creatorEvent',
+        startHide: true,
         Cell: (props: any) => {
           const { cell } = props;
           return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
@@ -286,6 +301,7 @@ export const Columns = [
       {
         Header: 'Event created at',
         accessor: 'creatorEvent.createdAt',
+        startHide: true,
       },
     ],
   },

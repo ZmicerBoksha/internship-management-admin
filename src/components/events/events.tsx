@@ -13,11 +13,16 @@ import { PreloaderContext, SnackbarContext, TPreloaderContext, TSnackbar } from 
 const useStyles = makeStyles(() => {
   return createStyles({
     pageWrap: {
+      maxWidth: '100%',
       position: 'relative',
+      padding: 0,
       paddingLeft: 25,
       paddingRight: 25,
       marginTop: 35,
       marginBottom: 35,
+      '& div': {
+        padding: 0,
+      },
     },
   });
 });
