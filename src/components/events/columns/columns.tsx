@@ -166,12 +166,27 @@ export const Columns = [
   {
     Header: 'Id',
     accessor: 'id',
+    startHide: true,
   },
   {
-    Header: 'Alt text',
-    accessor: 'image.altText',
-    disableFilters: true,
-    startHide: true,
+    Header: 'Event custom info',
+    columns: [
+      {
+        Header: 'Tab',
+        accessor: 'eventTab',
+        Filter: SelectColumnFilter,
+        filter: 'includes',
+        isVisible: true,
+        startHide: true,
+      },
+      {
+        Header: 'Format',
+        accessor: 'format',
+        Filter: SelectColumnFilter,
+        filter: 'includes',
+        startHide: true,
+      },
+    ],
   },
   {
     Header: 'Name and description',
@@ -183,6 +198,7 @@ export const Columns = [
       {
         Header: 'Description',
         accessor: 'description',
+        startHide: true,
       },
     ],
   },
@@ -206,20 +222,37 @@ export const Columns = [
         accessor: 'dateOfEndAccept',
         Filter: BetweenDatesFilter,
         filter: 'betweenDates',
+        startHide: true,
       },
       {
         Header: 'Event duration',
         accessor: 'duration',
+        startHide: true,
       },
     ],
   },
   {
-    Header: 'Country',
-    accessor: 'country',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-    startHide: true,
-    selectValues: countries,
+    Header: 'Image info',
+    columns: [
+      {
+        Header: 'Src',
+        accessor: 'image',
+        disableFilters: true,
+        Cell: (props: any) => {
+          return (
+            <>
+              <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
+            </>
+          );
+        },
+      },
+      {
+        Header: 'Alt text',
+        accessor: 'image.altText',
+        disableFilters: true,
+        startHide: true,
+      },
+    ],
   },
   {
     Header: 'City',
@@ -227,17 +260,39 @@ export const Columns = [
     startHide: true,
   },
   {
-    Header: 'Who created event (userId)',
-    accessor: 'creatorEvent',
-    startHide: true,
-    Cell: (props: any) => {
-      const { cell } = props;
-      return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
-    },
+    Header: 'Location',
+    columns: [
+      {
+        Header: 'Country',
+        accessor: 'country',
+        Filter: SelectColumnFilter,
+        filter: 'includes',
+        startHide: true,
+      },
+      {
+        Header: 'City',
+        accessor: 'city',
+        startHide: true,
+      },
+    ],
   },
   {
-    Header: 'Event created at',
-    accessor: 'creatorEvent.createdAt',
-    startHide: true,
+    Header: 'Info create',
+    columns: [
+      {
+        Header: 'Who created event (userId)',
+        accessor: 'creatorEvent',
+        startHide: true,
+        Cell: (props: any) => {
+          const { cell } = props;
+          return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
+        },
+      },
+      {
+        Header: 'Event created at',
+        accessor: 'creatorEvent.createdAt',
+        startHide: true,
+      },
+    ],
   },
 ];

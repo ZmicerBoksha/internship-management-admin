@@ -1,4 +1,5 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import classNames from 'classnames';
 import {
   TableInstance,
   useBlockLayout,
@@ -149,14 +150,22 @@ const Table: FunctionComponent<TableProps> = ({
     () => ({
       Filter: DefaultColumnFilter,
       filter: 'searchLike',
+      minWidth: 45,
+      width: 150,
+      maxWidth: 200,
     }),
     [],
   ); 
+
+  const initialState = {
+    hiddenColumns: [],
+  };
 
   const instance = useTable(
     {
       columns,
       data,
+      initialState,
       manualFilters: true,
       manualGlobalFilter: true,
       defaultColumn,
@@ -175,7 +184,11 @@ const Table: FunctionComponent<TableProps> = ({
     selectionHook,
   );
 
-  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+
+  // useEffect(() => {
+  //   console.log(allColumns.map(column => column.hasOwnProperty('startHide') && column.id ));
+  // }, [])
 
   const history = useHistory();
 
@@ -242,7 +255,7 @@ const Table: FunctionComponent<TableProps> = ({
                     {column.canResize && (
                       <div
                         {...column.getResizerProps()}
-                        style={{ cursor: 'col-resize' }}
+                        style={{ cursor: 'col-resize' }} // override the useResizeColumns default
                         className={classNames({
                           [classes.resizeHandle]: true,
                           handleActive: column.isResizing,
