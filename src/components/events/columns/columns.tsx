@@ -7,13 +7,9 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { Button, createStyles, IconButton, makeStyles, Popover } from '@material-ui/core';
 import { useState, FunctionComponent, MouseEvent } from 'react';
 import { useHistory } from 'react-router';
-import { englishLevels, eventFormats, eventsApi, eventTabs } from '../../../api/api';
+import { eventsApi } from '../../../api/api';
 import BetweenDatesFilter from '../../common/table/filters/betweenDatesFilter';
-import { usePreloaderContext } from '../../common/preloader/preloaderContext';
-import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
-import { technologies } from '../../common/technologies/technologies';
-import { countries } from '../../common/countries/countries';
-import { SelectColumnFilterEvents } from '../../common/table/filters/selectColumnFilterEvents';
+import { usePreloaderContext, useSnackbarContext } from '../eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -170,69 +166,6 @@ export const Columns = [
   {
     Header: 'Id',
     accessor: 'id',
-    startHide: true,
-  },
-  {
-    Header: 'Tab',
-    accessor: 'eventTab',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-    isVisible: true,
-    startHide: true,
-    selectValues: eventTabs.map(value => value.backName),
-  },
-  {
-    Header: 'Format',
-    accessor: 'format',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-    startHide: true,
-    selectValues: eventFormats.map(value => value.backName),
-  },
-  {
-    Header: 'Title',
-    accessor: 'title',
-  },
-  {
-    Header: 'Description',
-    accessor: 'description',
-    startHide: true,
-  },
-  {
-    Header: 'Event start',
-    accessor: 'startDate',
-    Filter: BetweenDatesFilter,
-    filter: 'betweenDates',
-  },
-  {
-    Header: 'Event finish',
-    accessor: 'deadline',
-    Filter: BetweenDatesFilter,
-    filter: 'betweenDates',
-  },
-  {
-    Header: 'Date end of acceptin',
-    accessor: 'dateOfEndAccept',
-    Filter: BetweenDatesFilter,
-    filter: 'betweenDates',
-    startHide: true,
-  },
-  {
-    Header: 'Event duration',
-    accessor: 'duration',
-    startHide: true,
-  },
-  {
-    Header: 'Src',
-    accessor: 'image',
-    disableFilters: true,
-    Cell: (props: any) => {
-      return (
-        <>
-          <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
-        </>
-      );
-    },
   },
   {
     Header: 'Alt text',
@@ -241,16 +174,44 @@ export const Columns = [
     startHide: true,
   },
   {
-    Header: 'English level',
-    accessor: 'englishLevel',
-    Filter: SelectColumnFilter,
-    filter: 'includes',
-    selectValues: englishLevels.map(value => value.backName),
+    Header: 'Name and description',
+    columns: [
+      {
+        Header: 'Title',
+        accessor: 'title',
+      },
+      {
+        Header: 'Description',
+        accessor: 'description',
+      },
+    ],
   },
   {
-    Header: 'Technologies',
-    accessor: 'technologies',
-    selectValues: technologies,
+    Header: 'Dates info',
+    columns: [
+      {
+        Header: 'Event start',
+        accessor: 'startDate',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
+      },
+      {
+        Header: 'Event finish',
+        accessor: 'deadline',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
+      },
+      {
+        Header: 'Date end of acceptin',
+        accessor: 'dateOfEndAccept',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
+      },
+      {
+        Header: 'Event duration',
+        accessor: 'duration',
+      },
+    ],
   },
   {
     Header: 'Country',

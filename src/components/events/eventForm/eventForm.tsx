@@ -21,8 +21,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Controller, useForm } from 'react-hook-form';
 import { eventsRules } from '../rules/rules';
 import { useHistory } from 'react-router';
-import { usePreloaderContext } from '../../common/preloader/preloaderContext';
-import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
+import { usePreloaderContext, useSnackbarContext } from '../eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({

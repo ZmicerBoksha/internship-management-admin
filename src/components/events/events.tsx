@@ -8,8 +8,7 @@ import Preloader from '../common/preloader/preloader';
 import Table from '../common/table/table';
 import SnackbarInfo from '../common/snackbarInfo/snackbarInfo';
 import { IEvent } from './events-config';
-import { SnackbarContext, TSnackbar } from '../common/snackbarInfo/snackbarContext';
-import { PreloaderContext } from '../common/preloader/preloaderContext';
+import { PreloaderContext, SnackbarContext, TPreloaderContext, TSnackbar } from './eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({

@@ -26,6 +26,7 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
       name={id}
       label={render('Header')}
       value={value}
+      variant="outlined"
       onChange={handleChange}
       onBlur={event => {
         setFilter(() => [filter, event.target.value || undefined]);

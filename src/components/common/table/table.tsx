@@ -1,5 +1,4 @@
 import { FunctionComponent, useEffect, useMemo, useState } from 'react';
-import classNames from 'classnames';
 import {
   TableInstance,
   useBlockLayout,
@@ -150,9 +149,6 @@ const Table: FunctionComponent<TableProps> = ({
     () => ({
       Filter: DefaultColumnFilter,
       filter: 'searchLike',
-      minWidth: 45,
-      width: 150,
-      maxWidth: 200,
     }),
     [],
   ); 
@@ -179,11 +175,7 @@ const Table: FunctionComponent<TableProps> = ({
     selectionHook,
   );
 
-  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
-
-  useEffect(() => {
-    instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(column => column.id)
-  }, [])
+  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
 
   const history = useHistory();
 
