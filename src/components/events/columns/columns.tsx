@@ -8,6 +8,8 @@ import { Button, createStyles, IconButton, makeStyles, Popover } from '@material
 import { useState, FunctionComponent, MouseEvent } from 'react';
 import { useHistory } from 'react-router';
 import { eventsApi } from '../../../api/api';
+import BetweenDatesFilter from '../../common/table/filters/betweenDatesFilter';
+import { usePreloaderContext, useSnackbarContext } from '../eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -42,6 +44,9 @@ type TFirstColumnSettings = {
 const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId }) => {
   const classes = useStyles();
 
+  const { loadingData, setLoadingData } = usePreloaderContext();
+  const { snackbar, setSnackbar } = useSnackbarContext();
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const openRowPopover = (event: MouseEvent<HTMLButtonElement>) => {
@@ -69,7 +74,16 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
   };
 
   const deleteEvent = () => {
-    eventsApi.deleteEvent(Number(rowId));
+    eventsApi
+      .deleteEvent(Number(rowId))
+      .then(() => {
+        setSnackbar({
+          isOpen: true,
+          alertSeverity: 'success',
+          alertMessage: 'Event was delete.',
+        });
+      })
+      .then(() => setLoadingData(true));
   };
 
   return (
@@ -138,6 +152,8 @@ export const Columns = [
     Header: '',
     accessor: 'actions',
     disableFilters: true,
+    disableGlobalFilter: true,
+    alwaysVisible: true,
     Cell: (props: any) => {
       const rowId = props.row.original.id;
       return <FirstColumnSettings rowId={rowId} />;
@@ -146,8 +162,6 @@ export const Columns = [
   {
     Header: 'Id',
     accessor: 'id',
-    disableFilters: true,
-    // alwaysShow: true,
   },
   {
     Header: 'Event custom info',
@@ -171,25 +185,11 @@ export const Columns = [
     columns: [
       {
         Header: 'Title',
-        accessor: 'eventTitle',
-        Cell: (props: any) => {
-          return (
-            <>
-              <p>В беке нету</p>
-            </>
-          );
-        },
+        accessor: 'title',
       },
       {
-        Header: 'Body',
-        accessor: 'eventBody',
-        Cell: (props: any) => {
-          return (
-            <>
-              <p>В беке нету</p>
-            </>
-          );
-        },
+        Header: 'Description',
+        accessor: 'description',
       },
     ],
   },
@@ -199,14 +199,20 @@ export const Columns = [
       {
         Header: 'Event start',
         accessor: 'startDate',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
       },
       {
         Header: 'Event finish',
         accessor: 'deadline',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
       },
       {
         Header: 'Date end of acceptin',
         accessor: 'dateOfEndAccept',
+        Filter: BetweenDatesFilter,
+        filter: 'betweenDates',
       },
       {
         Header: 'Event duration',

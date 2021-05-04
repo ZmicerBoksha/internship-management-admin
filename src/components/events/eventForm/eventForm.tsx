@@ -21,7 +21,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Controller, useForm } from 'react-hook-form';
 import { eventsRules } from '../rules/rules';
 import { useHistory } from 'react-router';
-import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
+import { usePreloaderContext, useSnackbarContext } from '../eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -100,23 +100,14 @@ type TEventForm = {
   eventType: 'new' | 'info';
   isEditMode: boolean;
   eventData: IEventForm | null;
-  setLoadingData: (loadingData: boolean) => void;
   setIsEditMode: (isEditMode: boolean) => void;
 };
 
-const EventForm: FunctionComponent<TEventForm> = ({
-  eventId,
-  eventType,
-  isEditMode,
-  eventData,
-  setLoadingData,
-  setIsEditMode,
-}) => {
+const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMode, eventData, setIsEditMode }) => {
   const classes = useStyles();
 
-  const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
-  const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
+  const { loadingData, setLoadingData } = usePreloaderContext();
+  const { snackbar, setSnackbar } = useSnackbarContext();
 
   const readOnly = eventType === 'new' ? false : !isEditMode;
   const history = useHistory();
@@ -127,7 +118,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
     handleSubmit,
     setValue,
     unregister,
-    clearErrors,
     formState: { errors },
   } = useForm<IEventForm>();
 
@@ -163,9 +153,11 @@ const EventForm: FunctionComponent<TEventForm> = ({
         .then(response => {
           const status = response.status;
           if (status >= 200 && status <= 299) {
-            setopenSnackbar(true);
-            setAlertSeverity('success');
-            setAlertMessage('Event create success');
+            setSnackbar({
+              isOpen: true,
+              alertSeverity: 'success',
+              alertMessage: 'Event create success',
+            });
           }
 
           return response.data.id;
@@ -177,27 +169,27 @@ const EventForm: FunctionComponent<TEventForm> = ({
 
     eventType === 'info' &&
       eventId &&
-      eventsApi
-        .updateEvent(eventId, data)
-        .then(response => {
-          const status = response.status;
-          if (status >= 200 && status <= 299) {
-            setopenSnackbar(true);
-            setAlertSeverity('success');
-            setAlertMessage('Event update success');
-          }
+      eventsApi.updateEvent(eventId, data).then(response => {
+        const status = response.status;
+        if (status >= 200 && status <= 299) {
+          setSnackbar({
+            isOpen: true,
+            alertSeverity: 'success',
+            alertMessage: 'Event update success',
+          });
+        }
 
-          return response.data.id;
-        })
-        .then(newEventId => {
-          setIsEditMode(false);
-          history.push(`/events/info/${newEventId}`);
-        });
+        history.push('/events');
+        // return response.data.id;
+      });
+    // .then(newEventId => {
+    //   setIsEditMode(false);
+    //   history.push(`/events/info/${newEventId}`);
+    // });
   };
 
   return (
     <>
-      {openSnackbar && <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />}
       <form className={classes.event_form} onSubmit={handleSubmit(onEventFormSubmit)}>
         <div className="left_side_form">
           <div className={classes.form_block_wrap}>
