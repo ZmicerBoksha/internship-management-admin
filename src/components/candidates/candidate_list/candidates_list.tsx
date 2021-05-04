@@ -23,6 +23,10 @@ export type TCandidate = {
   rsmId: number;
   skype: string;
   graduationDate: Date;
+  education: any;
+  experience: any;
+  expertise: any;
+  location: any;
 };
 
 const CandidatesList: React.FC = () => {

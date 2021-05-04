@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useEffect, useMemo, useState } from 'react';
 import {
   TableInstance,
   useBlockLayout,
@@ -20,6 +20,7 @@ import { selectionHook } from '../hooks/selectionHook';
 import DefaultColumnFilter from './filters/defaultColumnFilter';
 import TableToolbar from './tableToolbar/tableToolbar';
 import TablePagination from './tablePagination/tablePagination';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -107,16 +108,25 @@ type TableProps = {
   onEdit?: (instance: TableInstance) => void;
   onDelete?: (instance: TableInstance) => void;
   fetchRequest?: (pageSize: number, pageIndex: number) => void;
+  setSearchParams?: (searchParams: string) => void;
 };
 
-const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete, fetchRequest }) => {
+const Table: FunctionComponent<TableProps> = ({
+  name,
+  columns,
+  data,
+  onAdd,
+  onEdit,
+  onDelete,
+  fetchRequest,
+  setSearchParams,
+}) => {
   const classes = useStyles();
-
-  const filterTypes = {};
 
   const defaultColumn = useMemo(
     () => ({
       Filter: DefaultColumnFilter,
+      filter: 'searchLike',
     }),
     [],
   );
@@ -125,7 +135,8 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
     {
       columns,
       data,
-      filterTypes,
+      manualFilters: true,
+      manualGlobalFilter: true,
       defaultColumn,
     },
     useColumnOrder,
@@ -142,7 +153,47 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
     selectionHook,
   );
 
-  const { headerGroups, getTableBodyProps, page, prepareRow } = instance;
+  const { headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+
+  const history = useHistory();
+
+  useEffect(() => {
+    let filterParametrs = '';
+    const filterValues = state.filters;
+    filterValues &&
+      filterValues.forEach(item => {
+        switch (item.value[0]) {
+          case 'includes':
+            filterParametrs += item.value[1] ? `${item.id}=="${item.value[1]}";` : '';
+            break;
+          case 'betweenDates':
+            filterParametrs += item.value[1] ? `${item.id}=ge="${item.value[1]}";` : '';
+            filterParametrs += item.value[2] ? `${item.id}=le="${item.value[2]}";` : '';
+            break;
+          default:
+            filterParametrs += item.value[1] ? `${item.id}=="${item.value[1]}*";` : '';
+            break;
+        }
+      });
+
+    filterValues &&
+      history.push({
+        search: filterParametrs.substring(0, filterParametrs.length - 1),
+      });
+
+    setSearchParams && setSearchParams(filterParametrs.substring(0, filterParametrs.length - 1));
+  }, [state.filters]);
+
+  useEffect(() => {
+    let globalFilterParametrs = '';
+
+    instance.allColumns.forEach(column => {
+      if (!column.disableGlobalFilter)
+        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*";` : '';
+    });
+
+    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 1));
+  }, [state.globalFilter]);
 
   return (
     <>

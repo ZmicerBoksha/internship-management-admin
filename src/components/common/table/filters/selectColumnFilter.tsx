@@ -6,7 +6,7 @@ interface SelectColumnFilterProps {
 }
 
 export const SelectColumnFilter: FunctionComponent<SelectColumnFilterProps> = ({ column }) => {
-  const { filterValue, preFilteredRows, setFilter, id, render } = column;
+  const { filterValue = [], preFilteredRows, setFilter, id, render, filter } = column;
   const options = useMemo(() => {
     const options = new Set<string | number>();
     preFilteredRows.forEach((row: any) => {
@@ -19,9 +19,10 @@ export const SelectColumnFilter: FunctionComponent<SelectColumnFilterProps> = ({
       <TextField
         select
         label={render('Header')}
-        value={filterValue || ''}
-        onChange={e => {
-          setFilter(e.target.value || undefined);
+        value={filterValue[1] || ''}
+        onChange={event => {
+          const valueForSearch = event.target.value;
+          setFilter(() => [filter, valueForSearch || undefined]);
         }}
       >
         <MenuItem value={''}>All</MenuItem>
