@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { TSnackbar } from '../../events/events-config';
+import { TSnackbar } from './snackbarContext';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

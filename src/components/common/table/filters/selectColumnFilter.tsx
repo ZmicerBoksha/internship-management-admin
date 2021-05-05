@@ -8,8 +8,9 @@ interface SelectColumnFilterProps {
 }
 
 export const SelectColumnFilter: FunctionComponent<SelectColumnFilterProps> = ({ column }) => {
-  const { filterValue = [], preFilteredRows, setFilter, id, render, filter } = column;
-  const options = useMemo(() => {
+  const { filterValue = [], preFilteredRows, setFilter, id, render, filter, selectValues } = column;
+
+  const frontSelectValues = useMemo(() => {
     const options = new Set<string | number>();
     preFilteredRows.forEach((row: any) => {
       options.add(row.values[id]);
@@ -20,13 +21,10 @@ export const SelectColumnFilter: FunctionComponent<SelectColumnFilterProps> = ({
 
   return (
     <>
-      <TextField
-        select
-        label={render('Header')}
+      <Autocomplete
         value={filterValue[1] || ''}
-        onChange={event => {
-          const valueForSearch = event.target.value;
-          setFilter(() => [filter, valueForSearch || undefined]);
+        onChange={(event, newValue: string | null) => {
+          setFilter(() => [filter, newValue || undefined]);
         }}
         options={selectValues || frontSelectValues}
         renderInput={params => <TextField {...params} label={render('Header')} />}

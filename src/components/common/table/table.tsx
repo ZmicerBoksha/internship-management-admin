@@ -157,15 +157,10 @@ const Table: FunctionComponent<TableProps> = ({
     [],
   ); 
 
-  const initialState = {
-    hiddenColumns: [],
-  };
-
   const instance = useTable(
     {
       columns,
       data,
-      initialState,
       manualFilters: true,
       manualGlobalFilter: true,
       defaultColumn,
@@ -186,9 +181,9 @@ const Table: FunctionComponent<TableProps> = ({
 
   const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
 
-  // useEffect(() => {
-  //   console.log(allColumns.map(column => column.hasOwnProperty('startHide') && column.id ));
-  // }, [])
+  useEffect(() => {
+    instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(column => column.id)
+  }, [])
 
   const history = useHistory();
 
@@ -255,7 +250,7 @@ const Table: FunctionComponent<TableProps> = ({
                     {column.canResize && (
                       <div
                         {...column.getResizerProps()}
-                        style={{ cursor: 'col-resize' }} // override the useResizeColumns default
+                        style={{ cursor: 'col-resize' }}
                         className={classNames({
                           [classes.resizeHandle]: true,
                           handleActive: column.isResizing,
