@@ -3,9 +3,10 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
 import Preloader from '../../common/preloader/preloader';
+import { PreloaderContext } from '../../common/preloader/preloaderContext';
+import { SnackbarContext, TSnackbar } from '../../common/snackbarInfo/snackbarContext';
 import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
-import { PreloaderContext, SnackbarContext, TSnackbar } from '../eventsContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
