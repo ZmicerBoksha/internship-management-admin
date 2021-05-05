@@ -20,7 +20,7 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({
   statusId,
 }) => {
   const [open, setOpen] = useState<boolean>(false);
-  const { activeStep, handleNextStep } = useContext<any>(Context);
+  const { handleNextStep } = useContext(Context);
 
   const handleClose = () => {
     setOpen(false);
@@ -56,7 +56,7 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({
             onClick={() => {
               handleSubmitReview && handleSubmitReview();
               handleClose();
-              handleNextStep(statusId);
+              handleNextStep?.(statusId);
             }}
             color="primary"
           >

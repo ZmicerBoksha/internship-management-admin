@@ -8,6 +8,7 @@ import CandidateProgress from './candidate_progress/candidate_progress';
 import { makeStyles, Typography } from '@material-ui/core';
 import CandidateInterview from './candidate_interview/candidate_interview';
 import { statusHistoryServer } from '../../../api/api';
+import CandidateSchedule from "./candidate_schedule/candidate_schedule";
 
 const useStyles = makeStyles({
   root: {
@@ -22,7 +23,12 @@ const useStyles = makeStyles({
   },
 });
 
-export const Context = React.createContext({});
+interface IContext {
+  activeStep: number;
+  handleNextStep: (statusId: number) => void;
+}
+
+export const Context = React.createContext<Partial<IContext>>({});
 
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
@@ -53,6 +59,10 @@ const CandidateCard: React.FC = () => {
   };
 
   const [{ data: getCandidateInfo /*loading: getLoading, error: getError*/ }] = useAxios(url);
+
+  /*
+  const [{ data: example /!*loading: getLoading, error: getError*!/ }] = useAxios('/status/history/1');
+*/
 
   const [{ data: updateCandidateInfo /*loading: putLoading, error: putError */ }, executePut] = useAxios(
     {
@@ -93,8 +103,8 @@ const CandidateCard: React.FC = () => {
     setActiveStep((prevState: number) => prevState + 1);
   };
 
-  return getCandidateInfo && (
-    <Context.Provider value={{ activeStep, setActiveStep, handleNextStep }}>
+  return getCandidateInfo ? (
+    <Context.Provider value={{ activeStep, handleNextStep }}>
       <div className="card">
         <div className="card__container" style={{ backgroundColor: statusColor }}>
           <Typography variant="h2" className={classes.typography}>
@@ -113,10 +123,11 @@ const CandidateCard: React.FC = () => {
           />
           <CandidateInterview candidateInfo={getCandidateInfo} />
           <CandidateReview getCandidateInfo={getCandidateInfo} />
+          <CandidateSchedule/>
         </div>
       </div>
     </Context.Provider>
-  );
+  ) : null;
 };
 
 export default CandidateCard;

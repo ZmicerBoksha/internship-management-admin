@@ -155,7 +155,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
 
   const onEventFormSubmit = (data: IEventForm) => {
     data.description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    
+
     let technologyList: string[] = [];
 
     data.technologies &&

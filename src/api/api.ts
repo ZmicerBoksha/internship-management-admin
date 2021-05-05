@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TCandidate } from "../types/types";
+import { IEventForm, TCandidate, TInterviewTime, TResume, TStatusHistory, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
   page: number;
@@ -149,49 +149,42 @@ export const eventsApi = {
   },
 };
 
-const getAllCandidates = (params: PageParams) => {
-  return instance.get<TCandidate[]>('/candidate', { params });
+export const getCandidateIdByEmpolee = (id: number) => {
+  return instance.get<TInterviewTime[]>(`interviewtime?search=empId==${id}`).then(response => response.data);
 };
 
-const getCandidate = (id: number) => {
-  return instance.get(`/candidate/${id}`);
+export const getCandidateById = (candidateIds: number[]) => {
+  return instance.get<TCandidate[]>(`candidate?search=id=in=(${candidateIds.join()})`).then(response => response.data);
 };
 
-const updateCandidate = (id: number, data: TCandidate) => {
-  return instance.put(`/candidate/${id}`, data);
+export const getStatusCandidateById = (candidateIds: number[]) => {
+  return instance
+    .get<TStatusHistory[]>(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`)
+    .then(response => response.data);
 };
 
-const removeCandidate = (id: number) => {
-  return instance.delete(`/candidate/${id}`);
-};
+const getAllCandidates = (params: PageParams) => instance.get<TCandidate[]>('/candidate', { params });
 
-const getAllStatus = () => {
-  return instance.get('/status/all');
-};
+const getCandidate = (id: number) => instance.get<TCandidate>(`/candidate/${id}`);
 
-const getStatusHistory = (id: number) => {
-  return instance.get(`/status/history/${id}`);
-};
+const updateCandidate = (id: number, data: TCandidate) => instance.put(`/candidate/${id}`, data);
 
-const getStatusHistoryByCandidate = (candidateId: number) => {
-  return instance.get(`status/history/all?search=candidate.id==${candidateId}`);
-};
+const removeCandidate = (id: number) => instance.delete(`/candidate/${id}`);
 
-const createStatusHistory = (data: TStatusHistory) => {
-  return instance.post('/status/history/', data);
-};
+const getAllStatus = () => instance.get('/status/all');
 
-const getResume = (id: number) => {
-  return instance.get(`/resume/${id}`);
-};
+const getStatusHistory = (id: number) => instance.get<TStatusHistory>(`/status/history/${id}`);
 
-const getHrEmployees = () => {
-  return instance.get(`/employees?search=type==HR`);
-};
+const createStatusHistory = (data: TStatusHistoryPost) => instance.post<TStatusHistoryPost>('/status/history/', data);
 
-const getTsEmployees = (skill: string) => {
-  return instance.get(`/employees?search=primaryTechnology==${skill}`);
-};
+const getResume = (id: number) => instance.get<TResume>(`/resume/${id}`);
+
+const getHrEmployees = () => instance.get(`/employees?search=type==HR`);
+
+const getTsEmployees = (skill: string) => instance.get(`/employees?search=primaryTechnology==${skill}`);
+
+const getStatusHistoryByCandidate = (candidateId: number) =>
+  instance.get(`status/history/all?search=candidate.id==${candidateId}`);
 
 export const candidateService = {
   getAllCandidates,

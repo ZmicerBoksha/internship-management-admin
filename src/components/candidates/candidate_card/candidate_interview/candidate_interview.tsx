@@ -49,9 +49,9 @@ type CandidateInterviewProps = {
 const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }) => {
   const classes = useStyles();
   const errorMessageRequired = 'This field is required';
-  const [hr, setHr] = useState<any>([]);
-  const [ts, setTs] = useState<any>([]);
-  const { handleNextStep } = useContext<any>(Context);
+  const [hr, setHr] = useState<TEmployee[]>([]);
+  const [ts, setTs] = useState<TEmployee[]>([]);
+  const { handleNextStep } = useContext(Context);
 
   const onSubmitHr = (data: TCandidate) => {
     console.log(data);
@@ -64,7 +64,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<any>();
+  } = useForm();
 
   useEffect(() => {
     employeeServer
@@ -154,7 +154,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
                 color="primary"
                 type="submit"
                 className={classes.button}
-                onClick={() => handleNextStep(1)}
+                onClick={() =>handleNextStep?.(1) }
               >
                 Approve
               </Button>
@@ -226,7 +226,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
                 color="primary"
                 type="submit"
                 className={classes.button}
-                onClick={() => handleNextStep(3)}
+                onClick={() => handleNextStep?.(3)}
               >
                 Approve
               </Button>

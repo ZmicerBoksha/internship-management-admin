@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { statusHistoryServer, statusServer } from '../../../../api/api';
 import { Context } from '../candidate_card';
-import { TCandidate } from '../../../../types/types';
+import { TCandidate, TStatus } from "../../../../types/types";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,11 +76,11 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
   updateCandidateInfo,
   setCandidatesStatusColor,
 }) => {
-  const [status, setStatus] = useState<any>([]);
+  const [status, setStatus] = useState<TStatus[]>([]);
   const classes = useStyles();
   const steps = getSteps();
   const { activeStep } = useContext<any>(Context);
-  const [currentStep, setCurrentStep] = useState<any>();
+  const [currentStep, setCurrentStep] = useState<number>();
 
   function getSteps() {
     return status.map((item: any) => item.name);
@@ -95,11 +95,11 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
   useEffect(() => {
     statusServer
       .getAllStatus()
-      .then(response => {
-        setStatus(response.data.content);
+      .then(({ data }) => {
+        setStatus(data.content);
       })
-      .catch(e => {
-        console.log(e);
+      .catch(err => {
+        console.log(err);
       });
   }, []);
 

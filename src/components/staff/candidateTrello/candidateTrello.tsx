@@ -1,50 +1,32 @@
 import { Grid, Typography } from "@material-ui/core";
 import CandidateMiniCard from "../canditadeMiniCard/candidateMiniCard";
 import React, { useEffect, useState } from "react";
-import { getCandidateById, getCandidateIdByEmpolee, getStatusCandidateById } from "./api";
+import { getCandidateById, getCandidateIdByEmpolee, getStatusCandidateById } from "../../../api/api";
+import { TCandidate, TInterviewTime, TStatusHistory } from "../../../types/types";
 
 type CandidateTrelloProps = {
   timeZon: string;
   staffId: number;
 };
 
-interface IIntreviewTimeData {
-  cnId: number | string,
-  beginDate: string
-}
-
-interface ICandidatetsData {
-  firstName: string,
-  lastName: string,
-  mainSkill: string,
-}
-
-interface IStatus {
-  name: string,
-}
-
-interface IStatusHistoryData {
-  status: IStatus
-}
-
 const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) => {
 
-  const [intreviewTimeData, setintreviewTimeData] = useState<IIntreviewTimeData[]>([]);
-  const [candidatetsData, setCandidatetsData] = useState<ICandidatetsData[]>([]);
-  const [statusHistoryData, setStatusHistoryData] = useState<IStatusHistoryData[]>([]);
+  const [intreviewTimeData, setintreviewTimeData] = useState<TInterviewTime[]>([]);
+  const [candidatetsData, setCandidatetsData] = useState<TCandidate[]>([]);
+  const [statusHistoryData, setStatusHistoryData] = useState<TStatusHistory[]>([]);
 
   useEffect(() => {
     async function getData() {
       await getCandidateIdByEmpolee(staffId).then(response => {
         setintreviewTimeData(response);
-        return response.map((item: any) => item.cnId).sort();
+        return response.map(item => item.cnId).sort();
       }).then(condidateIds => {
         getCandidateById(condidateIds).then(response => {
           setCandidatetsData(response);
-          return response.map((item: any) => item.id);
+          return response.map(item => item.id);
         }).then(condidateIds => {
           getStatusCandidateById(condidateIds).then(response => {
-            setStatusHistoryData(response.content);
+            setStatusHistoryData(response);
           });
         });
       });

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { TCandidate } from '../../../../types/types';
+import { TCandidate, TResume } from "../../../../types/types";
 import SaveIcon from '@material-ui/icons/Save';
 import { TextField, Paper, Grid, Button, Typography, MenuItem, Switch } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { COUNTRIES_LIST, ENGLISH_LEVELS, MAIN_SKILL, PHONE_PATTERN, EMAIL_PATTERN } from '../../../common/const/const';
+import { resumeServer } from "../../../../api/api";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,11 +48,15 @@ const CandidateInfo: React.FC<TCandidateInfoProps> = ({ candidateInfo, editCandi
   };
 
   const [candidateResume, setCandidateResume] = useState<any>({});
+
   useEffect(() => {
-    fetch(`http://localhost:8085/api/resume/${candidateInfo.rsmId}`)
-      .then(response => response.json())
-      .then(result => setCandidateResume(result))
-      .catch(err => console.log(err));
+    resumeServer.getResume(candidateInfo.rsmId)
+      .then(({data}) => {
+      setCandidateResume(data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }, [candidateInfo]);
 
   const defaultValues = {
