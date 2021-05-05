@@ -13,15 +13,88 @@ type TStatusHistory = {
   statusId: number;
 };
 
+export type TEventFormat = 'ONLINE' | 'OFFLINE';
+export type TEnglishLevel =
+  | 'ADVANCED'
+  | 'BEGINNER'
+  | 'ELEMENTARY'
+  | 'INTERMEDIATE'
+  | 'PRE_INTERMEDIATE'
+  | 'PROFICIENCY'
+  | 'UPPER_INTERMEDIATE';
+export type TEventTab = 'ARCHIVE' | 'IN_PROGRESS' | 'PLANNED';
+
+export type TBackendModelWithGoodText = {
+  backName: TEventFormat | TEnglishLevel | TEventTab;
+  showAs: string;
+};
+
+export const eventFormats: TBackendModelWithGoodText[] = [
+  {
+    backName: 'ONLINE',
+    showAs: 'Online',
+  },
+  {
+    backName: 'OFFLINE',
+    showAs: 'Offline',
+  },
+];
+
+export const englishLevels: TBackendModelWithGoodText[] = [
+  {
+    backName: 'BEGINNER',
+    showAs: 'Beginner (A1)',
+  },
+  {
+    backName: 'ELEMENTARY',
+    showAs: 'Elementary (A2)',
+  },
+  {
+    backName: 'PRE_INTERMEDIATE',
+    showAs: 'Pre-Intermediate (A2/B1)',
+  },
+  {
+    backName: 'INTERMEDIATE',
+    showAs: 'Intermediate (B1)',
+  },
+  {
+    backName: 'UPPER_INTERMEDIATE',
+    showAs: 'Upper-Intermediate (B2)',
+  },
+  {
+    backName: 'ADVANCED',
+    showAs: 'Advanced (C1)',
+  },
+  {
+    backName: 'PROFICIENCY',
+    showAs: 'Proficiency (C2)',
+  },
+];
+
+export const eventTabs: TBackendModelWithGoodText[] = [
+  {
+    backName: 'ARCHIVE',
+    showAs: 'Archive',
+  },
+  {
+    backName: 'IN_PROGRESS',
+    showAs: 'In progress',
+  },
+  {
+    backName: 'PLANNED',
+    showAs: 'Planned',
+  },
+];
+
 export interface IEventForm {
   id: number;
-  eventTab: string;
-  format: 'ONLINE' | 'OFFLINE';
+  eventTab: TEventTab;
+  format: TEventFormat;
   title: string;
   description: string;
   country?: string;
   city?: string;
-  englishLevel: string;
+  englishLevel: TEnglishLevel;
   technologies: string;
   startDate: Date;
   deadline: Date;

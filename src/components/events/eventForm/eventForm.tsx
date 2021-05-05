@@ -12,16 +12,17 @@ import {
 } from '@material-ui/core';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { eventsApi, IEventForm } from '../../../api/api';
-import { Countries } from '../../common/countries/countries';
-import { Technologies } from '../../common/technologies/technologies';
+import { englishLevels, eventFormats, eventsApi, eventTabs, IEventForm } from '../../../api/api';
+import { countries } from '../../common/countries/countries';
+import { technologies } from '../../common/technologies/technologies';
 import SaveIcon from '@material-ui/icons/Save';
 import UpdateIcon from '@material-ui/icons/Update';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Controller, useForm } from 'react-hook-form';
 import { eventsRules } from '../rules/rules';
 import { useHistory } from 'react-router';
-import { usePreloaderContext, useSnackbarContext } from '../eventsContext';
+import { usePreloaderContext } from '../../common/preloader/preloaderContext';
+import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -293,13 +294,18 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         }`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
+                        {/* <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
                         <MenuItem value={'ELEMENTARY'}>Elementary (A2)</MenuItem>
                         <MenuItem value={'PRE_INTERMEDIATE'}>Pre-Intermediate (A2/B1)</MenuItem>
                         <MenuItem value={'INTERMEDIATE'}>Intermediate (B1)</MenuItem>
                         <MenuItem value={'UPPER_INTERMEDIATE'}>Upper-Intermediate (B2)</MenuItem>
                         <MenuItem value={'ADVANCED'}>Advanced (C1)</MenuItem>
-                        <MenuItem value={'PROFICIENCY'}>Proficiency (C2)</MenuItem>
+                        <MenuItem value={'PROFICIENCY'}>Proficiency (C2)</MenuItem> */}
+                        {englishLevels.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -323,7 +329,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                   return (
                     <Autocomplete
                       multiple
-                      options={Technologies}
+                      options={technologies}
                       getOptionLabel={option => option}
                       defaultValue={eventData?.technologies.split(',').map(technology => technology.trim())}
                       onChange={(event, data) => {
@@ -494,9 +500,11 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         className={`${!!errors.eventTab && classes.error_field} ${readOnly && classes.disabled_field}`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'PLANNED'}>Planned</MenuItem>
-                        <MenuItem value={'IN_PROGRESS'}>In-progress</MenuItem>
-                        <MenuItem value={'ARCHIVE'}>Archive</MenuItem>
+                        {eventTabs.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -528,8 +536,11 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         className={`${!!errors.format && classes.error_field} ${readOnly && classes.disabled_field}`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'ONLINE'}>Online</MenuItem>
-                        <MenuItem value={'OFFLINE'}>Offline</MenuItem>
+                        {eventFormats.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -559,7 +570,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                     return (
                       <Autocomplete
                         {...field}
-                        options={Countries}
+                        options={countries}
                         getOptionLabel={option => option}
                         onChange={(event, data) => field.onChange(data)}
                         className={`${!!errors.country && classes.error_field} ${readOnly && classes.disabled_field}`}
