@@ -24,14 +24,6 @@ export type TCandidate = {
   phone: string;
   rsmId: number;
   skype: string;
-<<<<<<< HEAD
-=======
-  graduationDate: Date;
-  education: any;
-  experience: any;
-  expertise: any;
-  location: any;
->>>>>>> 5808b14000d0f7bc6bd0aeac45d108f1854135f0
 };
 
 const CandidatesList: React.FC = () => {
