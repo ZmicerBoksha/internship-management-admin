@@ -23,6 +23,11 @@ import { eventsRules } from '../rules/rules';
 import { useHistory } from 'react-router';
 import { usePreloaderContext } from '../../common/preloader/preloaderContext';
 import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -110,6 +115,17 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   const { loadingData, setLoadingData } = usePreloaderContext();
   const { snackbar, setSnackbar } = useSnackbarContext();
 
+  const [editorState, setEditorState] = useState(
+    !!eventData?.description
+      ? EditorState.createWithContent(
+          ContentState.createFromBlockArray(htmlToDraft(eventData.description).contentBlocks),
+        )
+      : EditorState.createEmpty(),
+  );
+  const onEditorStateChange = (editorState: EditorState) => {
+    setEditorState(editorState);
+  };
+
   const readOnly = eventType === 'new' ? false : !isEditMode;
   const history = useHistory();
 
@@ -138,6 +154,8 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   }, [watchShowFormat]);
 
   const onEventFormSubmit = (data: IEventForm) => {
+    data.description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+    
     let technologyList: string[] = [];
 
     data.technologies &&
@@ -242,16 +260,13 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 }}
                 render={({ field }) => {
                   return (
-                    <TextareaAutosize
+                    <Editor
                       {...field}
-                      id="description"
-                      aria-label="Event description"
-                      rowsMin={8}
-                      placeholder="Enter event description text"
-                      className={`${classes.full_width} ${!!errors.description && classes.error_field} ${
-                        readOnly && classes.disabled_field
-                      }`}
-                      disabled={readOnly}
+                      readOnly={readOnly}
+                      editorState={editorState}
+                      wrapperClassName='demo-wrapper'
+                      editorClassName='demo-editor'
+                      onEditorStateChange={onEditorStateChange}
                     />
                   );
                 }}
