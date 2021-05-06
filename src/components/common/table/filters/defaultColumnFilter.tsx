@@ -1,6 +1,5 @@
 import { TextField } from '@material-ui/core';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
 import { ColumnInstance } from 'react-table';
 
 interface DefaultColumnFilterProps {
@@ -9,54 +8,30 @@ interface DefaultColumnFilterProps {
 }
 
 const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ columns, column }) => {
-  const { filterValue, setFilter, render } = column;
+  const { id, filterValue = [], setFilter, render, filter } = column;
 
-  // Coomit delete after create filters
-  // let filterState = {};
-  // columns.forEach(column => {
-  //   const key = column.id;
-  //   filterState[ key ] = ''
-  // }) 
+  const [value, setValue] = useState(filterValue[1] || '');
+  console.log(value);
 
-  const [value, setValue] = useState('');
-  const history = useHistory();
-  const [filtersValue, setFiltersValue] = useState({
-    // ...filterState
-  })
-
-  const handleFilterChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  // Coomit delete after create filters
-  // const startSearch = (event: ChangeEvent<HTMLInputElement>) => {
-  //   history.push({
-  //     search: `${column.id}=q=${event.target.value}`,
-  //   });
-  // };
-
-  // ensure that reset loads the new value
   // useEffect(() => {
-  //   setValue(filterValue || '');
-  // }, [filterValue]);
+  //   setValue(filterValue[1] || '')
+  // }, [filterValue])
 
   return (
-    <>
-      <TextField
-        value={value}
-        onChange={handleFilterChange}
-        // onBlur={e => {
-        //   // setFilter(e.target.value || undefined);
-        // }}
-        onBlur={event => {
-          history.push({
-            search: `${column.id}=q=${event.target.value}`,
-          });
-        }}
-        label={render('Header')}
-        type="search"
-      />
-    </>
+    <TextField
+      name={id}
+      label={render('Header')}
+      value={value}
+      onChange={handleChange}
+      onBlur={event => {
+        setFilter(() => [filter, event.target.value || undefined]);
+      }}
+      type="search"
+    />
   );
 };
 

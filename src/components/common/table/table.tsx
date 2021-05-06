@@ -1,4 +1,5 @@
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, useEffect, useMemo, useState } from 'react';
+import classNames from 'classnames';
 import {
   TableInstance,
   useBlockLayout,
@@ -20,12 +21,14 @@ import { selectionHook } from '../hooks/selectionHook';
 import DefaultColumnFilter from './filters/defaultColumnFilter';
 import TableToolbar from './tableToolbar/tableToolbar';
 import TablePagination from './tablePagination/tablePagination';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles(() => {
   return createStyles({
     table_wrap: {
       overflowX: 'auto',
       overflowY: 'hidden',
+      padding: 0,
     },
     table: {
       overflow: 'hidden',
@@ -83,7 +86,6 @@ const useStyles = makeStyles(() => {
       },
     },
     table_cell: {
-      padding: 10,
       fontSize: 14,
       textAlign: 'left',
       fontWeight: 400,
@@ -96,36 +98,71 @@ const useStyles = makeStyles(() => {
         objectFit: 'cover',
       },
     },
+    resizeHandle: {
+      position: 'absolute',
+      cursor: 'col-resize',
+      zIndex: 100,
+      opacity: 0,
+      borderLeft: `1px solid #000`,
+      borderRight: `1px solid #000`,
+      height: '50%',
+      top: '25%',
+      transition: 'all linear 100ms',
+      right: -2,
+      width: 3,
+      '&.handleActive': {
+        opacity: '1',
+        border: 'none',
+        backgroundColor: '#D90000',
+        height: 'calc(100% - 4px)',
+        top: '2px',
+        right: -1,
+        width: 1,
+      },
+    },
   });
 });
 
 type TableProps = {
   name: string;
-  columns: any;
+  columns: any[];
   data: any;
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
   onDelete?: (instance: TableInstance) => void;
   fetchRequest?: (pageSize: number, pageIndex: number) => void;
+  setSearchParams?: (searchParams: string) => void;
 };
 
-const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEdit, onDelete, fetchRequest }) => {
+const Table: FunctionComponent<TableProps> = ({
+  name,
+  columns,
+  data,
+  onAdd,
+  onEdit,
+  onDelete,
+  fetchRequest,
+  setSearchParams,
+}) => {
   const classes = useStyles();
-
-  const filterTypes = {};
 
   const defaultColumn = useMemo(
     () => ({
       Filter: DefaultColumnFilter,
+      filter: 'searchLike',
+      minWidth: 45,
+      width: 150,
+      maxWidth: 200,
     }),
     [],
-  );
+  ); 
 
   const instance = useTable(
     {
       columns,
       data,
-      filterTypes,
+      manualFilters: true,
+      manualGlobalFilter: true,
       defaultColumn,
     },
     useColumnOrder,
@@ -142,7 +179,51 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
     selectionHook,
   );
 
-  const { headerGroups, getTableBodyProps, page, prepareRow } = instance;
+  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+
+  useEffect(() => {
+    instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(column => column.id)
+  }, [])
+
+  const history = useHistory();
+
+  useEffect(() => {
+    let filterParametrs = '';
+    const filterValues = state.filters;
+    filterValues &&
+      filterValues.forEach(item => {
+        switch (item.value[0]) {
+          case 'includes':
+            filterParametrs += item.value[1] ? `${item.id}=="${item.value[1]}";` : '';
+            break;
+          case 'betweenDates':
+            filterParametrs += item.value[1] ? `${item.id}=ge="${item.value[1]}";` : '';
+            filterParametrs += item.value[2] ? `${item.id}=le="${item.value[2]}";` : '';
+            break;
+          default:
+            filterParametrs += item.value[1] ? `${item.id}=="${item.value[1]}*";` : '';
+            break;
+        }
+      });
+
+    filterValues &&
+      history.push({
+        search: filterParametrs.substring(0, filterParametrs.length - 1),
+      });
+
+    setSearchParams && setSearchParams(filterParametrs.substring(0, filterParametrs.length - 1));
+  }, [state.filters]);
+
+  useEffect(() => {
+    let globalFilterParametrs = '';
+
+    instance.allColumns.forEach(column => {
+      if (!column.disableGlobalFilter)
+        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*";` : '';
+    });
+
+    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 1));
+  }, [state.globalFilter]);
 
   return (
     <>
@@ -165,6 +246,16 @@ const Table: FunctionComponent<TableProps> = ({ name, columns, data, onAdd, onEd
                       </TableSortLabel>
                     ) : (
                       <>{column.render('Header')}</>
+                    )}
+                    {column.canResize && (
+                      <div
+                        {...column.getResizerProps()}
+                        style={{ cursor: 'col-resize' }}
+                        className={classNames({
+                          [classes.resizeHandle]: true,
+                          handleActive: column.isResizing,
+                        })}
+                      />
                     )}
                   </TableCell>
                 ))}

@@ -3,6 +3,8 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
 import Preloader from '../../common/preloader/preloader';
+import { PreloaderContext } from '../../common/preloader/preloaderContext';
+import { SnackbarContext, TSnackbar } from '../../common/snackbarInfo/snackbarContext';
 import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
 
@@ -31,11 +33,12 @@ const EventInfo: FunctionComponent = () => {
   const classes = useStyles();
   const { eventId, eventType } = useParams<TUrl>();
 
+  const [loadingData, setLoadingData] = useState<boolean>(true);
+  const [snackbar, setSnackbar] = useState<TSnackbar>({});
+
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
-
-  const [loadingData, setLoadingData] = useState<boolean>(true);
   const [eventData, setEventData] = useState<IEventForm | null>(null);
 
   async function getEventData(id: string) {
@@ -65,33 +68,41 @@ const EventInfo: FunctionComponent = () => {
   };
 
   return (
-    <>
-      {loadingData ? (
-        <Preloader />
-      ) : (
-        <div className={classes.pageWrap}>
-          <Typography component="h1" className={classes.page_title}>
-            {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
-          </Typography>
-          <>
-            {eventType === 'info' && (
-              <>
-                <Typography component="h4">Edit mode</Typography>
-                <Switch checked={isEditMode} onChange={onSetIsEditMode} color="primary" />
-              </>
-            )}
-          </>
-          <EventForm
-            eventId={eventId}
-            eventType={eventType}
-            isEditMode={isEditMode}
-            eventData={eventData}
-            setLoadingData={setLoadingData}
-            setIsEditMode={setIsEditMode}
+    <SnackbarContext.Provider value={{ snackbar, setSnackbar }}>
+      <PreloaderContext.Provider value={{ loadingData, setLoadingData }}>
+        {loadingData ? (
+          <Preloader />
+        ) : (
+          <div className={classes.pageWrap}>
+            <Typography component="h1" className={classes.page_title}>
+              {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
+            </Typography>
+            <>
+              {eventType === 'info' && (
+                <>
+                  <Typography component="h4">Edit mode</Typography>
+                  <Switch checked={isEditMode} onChange={onSetIsEditMode} color="primary" />
+                </>
+              )}
+            </>
+            <EventForm
+              eventId={eventId}
+              eventType={eventType}
+              isEditMode={isEditMode}
+              eventData={eventData}
+              setIsEditMode={setIsEditMode}
+            />
+          </div>
+        )}
+        {snackbar?.isOpen && (
+          <SnackbarInfo
+            isOpen={snackbar.isOpen}
+            alertSeverity={snackbar.alertSeverity}
+            alertMessage={snackbar.alertMessage}
           />
-        </div>
-      )}
-    </>
+        )}
+      </PreloaderContext.Provider>
+    </SnackbarContext.Provider>
   );
 };
 

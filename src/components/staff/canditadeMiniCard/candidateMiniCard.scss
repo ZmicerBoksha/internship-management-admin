@@ -6,5 +6,6 @@
 .wrapperCard {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   border-bottom: 2px solid #ef9588;
 }

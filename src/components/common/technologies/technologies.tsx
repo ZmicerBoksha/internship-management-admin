@@ -1,1 +1,1 @@
-export const Technologies: string[] = ['JavaScript', 'Java', 'Jave core', 'Git', 'MySQL', 'React', 'Angular', 'Docker'];
+export const technologies: string[] = ['JavaScript', 'Java', 'Jave core', 'Git', 'MySQL', 'React', 'Angular', 'Docker'];

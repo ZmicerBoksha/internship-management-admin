@@ -16,7 +16,6 @@ const Routers: React.FC = () => {
     <div className="wrapper">
       <Switch>
         <Route exact path="/" component={Dashboard} />
-        <Route path="/events" component={Events} />
         <Route exact path='/events' component={Events} />
         <Route exact path='/events/:eventType?/:eventId?' component={EventInfo} />
         <Route exact path="/staff/hr" component={HrTable} />
