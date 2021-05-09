@@ -8,7 +8,7 @@ import CandidateProgress from './candidate_progress/candidate_progress';
 import { makeStyles, Typography } from '@material-ui/core';
 import CandidateInterview from './candidate_interview/candidate_interview';
 import { statusHistoryServer } from '../../../api/api';
-import CandidateSchedule from "./candidate_schedule/candidate_schedule";
+import CandidateSchedule from './candidate_schedule/candidate_schedule';
 
 const useStyles = makeStyles({
   root: {
@@ -33,7 +33,7 @@ export const Context = React.createContext<Partial<IContext>>({});
 const CandidateCard: React.FC = () => {
   const classes = useStyles();
   const { url } = useRouteMatch();
-  const [activeStep, setActiveStep] = React.useState<number>(0);
+  const [activeStep, setActiveStep] = useState<number>(0);
   const [statusColor, setStatusColor] = useState<string>('#fafbfd');
 
   const setCandidatesStatusColor = (color: string) => {
@@ -47,7 +47,7 @@ const CandidateCard: React.FC = () => {
         setStatusColor('#FDDCE0FF');
         break;
       case green:
-        setStatusColor('#BEE7CBFF');
+        setStatusColor('#d6fae2');
         break;
       case yellow:
         setStatusColor('#FDFBCBFF');
@@ -123,7 +123,7 @@ const CandidateCard: React.FC = () => {
           />
           <CandidateInterview candidateInfo={getCandidateInfo} />
           <CandidateReview getCandidateInfo={getCandidateInfo} />
-          <CandidateSchedule/>
+          <CandidateSchedule />
         </div>
       </div>
     </Context.Provider>

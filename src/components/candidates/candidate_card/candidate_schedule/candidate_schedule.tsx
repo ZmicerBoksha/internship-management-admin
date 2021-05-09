@@ -1,41 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, FunctionComponent } from 'react';
+import Axios from 'axios';
+import LRU from 'lru-cache';
+import { configure } from 'axios-hooks';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import 'react-big-calendar/lib/sass/styles.scss';
+import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
 
-const localizer = momentLocalizer(moment);
+const axios = Axios.create({
+  baseURL: 'http://localhost:8085/api',
+});
+const cache = new LRU({ max: 10 });
 
-const CandidateSchedule = () => {
-  let arr = [
-    {
-      start: moment().toDate(),
-      end: moment().add(1, 'days').toDate(),
-      title: 'Some title',
-    },
-  ];
-  const [events, setEvents] = useState(arr);
+configure({ axios, cache });
 
-  const handleSelect = ({ start, end }: any) => {
-    const title = window.prompt('New Event name');
-    if (title) {
-      setEvents([...events, { start, end, title }]);
-    }
+const localizer = momentLocalizer(moment)
+
+/*1 студент выбирает доступное время
+2 тс выбирает доступное время
+3 hr букает собес
+
+student [{10.20.21, accepted: 'tsId'}]
+
+ts  [{10.20.21, accepted: 'userId'}]
+ts  [{10.20.21, accepted: 'userId'}]
+ts  [{10.20.21, accepted: 'userId'}]
+
+hr backend work with above 2
+
+student [{10.20.21, accepted: 'tsId'}]
+student [{10.20.21, accepted: 'tsId'}]
+student [{10.20.21, accepted: 'tsId'}]
+
+ts  [{10.20.21, accepted: 'userId'}]
+
+
+hr backend work with above 2*/
+
+const CandidateSchedule: React.FC = () => {
+  type Event = {
+    start: string;
+    end: string;
+    title: string;
+    meta: string;
   };
+  const initialEvents: Event[] = []
+
+  const [listOfEvents, setListOfEvents] = useState(initialEvents);
+  const handleSelect  = (e: any): void => {
+    const title = window.prompt('New Event name')
+    console.log(e.slots);//используем слоты а не ренджи
+
+    if (title){
+      setListOfEvents([...listOfEvents, {start: e.start, end: e.end, title: title, meta: 'some meta'}])
+    }
+  }
+
+  console.log(listOfEvents)
 
   return (
-    <div className="App">
+    <div style={{backgroundColor: 'white'}}>
       <Calendar
-        selectable
+        selectable={true}
+        views={['week']}
+        defaultView={'week'}
+        onNavigate={e=>console.log('надо сохранить если мы переключаем неделю')}
         localizer={localizer}
-        events={events}
-        scrollToTime={new Date(1970, 1, 1, 6)}
-        defaultDate={new Date(2015, 3, 12)}
-        onSelectEvent={event => alert(event.title)}
-        onSelectSlot={handleSelect}
-        style={{ height: '100vh' }}
+        events={listOfEvents}
+        startAccessor="start"
+        onSelectEvent={(event => console.log(event))}
+        onSelectSlot={e => handleSelect(e)}
+        endAccessor="end"
+        style={{ height: 940 }}
       />
     </div>
-  );
-};
+  )
+}
 
 export default CandidateSchedule;

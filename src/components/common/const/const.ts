@@ -105,3 +105,7 @@ export const PREFERRED_TIME = [
 export const EMAIL_PATTERN = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 
 export const PHONE_PATTERN = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
+
+export const SUITABLE = 'SUITABLE'
+export const NOT_SUITABLE = 'NOT_SUITABLE'
+export const IN_PROGRESS = 'IN_PROGRESS'

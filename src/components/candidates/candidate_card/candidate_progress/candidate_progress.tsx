@@ -7,7 +7,8 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { statusHistoryServer, statusServer } from '../../../../api/api';
 import { Context } from '../candidate_card';
-import { TCandidate, TStatus } from "../../../../types/types";
+import { TCandidate, TStatus } from '../../../../types/types';
+import { IN_PROGRESS, NOT_SUITABLE, SUITABLE } from '../../../common/const/const';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,8 +80,8 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
   const [status, setStatus] = useState<TStatus[]>([]);
   const classes = useStyles();
   const steps = getSteps();
-  const { activeStep } = useContext<any>(Context);
-  const [currentStep, setCurrentStep] = useState<number>();
+  const { activeStep } = useContext(Context);
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
   function getSteps() {
     return status.map((item: any) => item.name);
@@ -92,6 +93,11 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
     });
   }
 
+  const setCandidateStatus = (statusName: string) => {
+    editCandidateData({ status: statusName });
+    setCandidatesStatusColor(statusName);
+  };
+
   useEffect(() => {
     statusServer
       .getAllStatus()
@@ -101,6 +107,8 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
       .catch(err => {
         console.log(err);
       });
+
+    setCandidatesStatusColor(candidateInfo.status);
   }, []);
 
   useEffect(() => {
@@ -114,11 +122,6 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
       });
   }, [candidateInfo.id, activeStep]);
 
-  const setCandidateStatus = (statusName: string) => {
-    editCandidateData({ status: statusName });
-    setCandidatesStatusColor(statusName);
-  };
-
   return (
     <div className={classes.root}>
       <Stepper className={classes.stepper} activeStep={currentStep} alternativeLabel>
@@ -129,35 +132,33 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
         ))}
       </Stepper>
       <div>
+        <h2 className={classes.instructions}>{getStepContent(currentStep)}</h2>
         {currentStep === steps.length ? (
-          <div className={classes.info}>
-            <Typography>All steps completed. Please accept or reject this candidate.</Typography>
-            {candidateInfo.status ? (
-              ''
-            ) : (
-              <div className={classes.buttonWrapper} style={updateCandidateInfo && { display: 'none' }}>
-                <Button className={classes.reject} onClick={() => setCandidateStatus('NOT_SUITABLE')}>
-                  Reject
-                </Button>
-                <Button className={classes.pending} onClick={() => setCandidateStatus('IN_PROGRESS')}>
-                  Pending
-                </Button>
-                <Button className={classes.approve} onClick={() => setCandidateStatus('SUITABLE')}>
-                  Approve
-                </Button>
-              </div>
+          <div className={classes.info} style={updateCandidateInfo && { display: 'none' }}>
+            {(!candidateInfo.status || candidateInfo.status === IN_PROGRESS) && (
+              <>
+                <Typography>All steps completed. Please accept or reject this candidate.</Typography>
+                <div className={classes.buttonWrapper}>
+                  <Button className={classes.reject} onClick={() => setCandidateStatus(NOT_SUITABLE)}>
+                    Reject
+                  </Button>
+                  <Button className={classes.pending} onClick={() => setCandidateStatus(IN_PROGRESS)}>
+                    Pending
+                  </Button>
+                  <Button className={classes.approve} onClick={() => setCandidateStatus(SUITABLE)}>
+                    Approve
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         ) : (
           <div>
-            <h2 className={classes.instructions}>{getStepContent(activeStep)}</h2>
             <div className={classes.buttonWrapper}>
-              {candidateInfo.status ? (
-                ''
-              ) : (
+              {!candidateInfo.status && (
                 <Button
                   className={classes.reject}
-                  onClick={() => setCandidateStatus('NOT_SUITABLE')}
+                  onClick={() => setCandidateStatus(NOT_SUITABLE)}
                   style={updateCandidateInfo && { display: 'none' }}
                 >
                   Reject
