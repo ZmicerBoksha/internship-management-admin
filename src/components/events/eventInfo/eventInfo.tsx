@@ -7,7 +7,7 @@ import { PreloaderContext } from '../../common/preloader/preloaderContext';
 import { SnackbarContext, TSnackbar } from '../../common/snackbarInfo/snackbarContext';
 import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
-import { IEventForm } from "../../../types/types";
+import { IEventForm } from '../../../api/api';
 
 const useStyles = makeStyles(() => {
   return createStyles({

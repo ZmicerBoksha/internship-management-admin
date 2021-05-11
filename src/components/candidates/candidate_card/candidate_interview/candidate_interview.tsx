@@ -154,7 +154,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
                 color="primary"
                 type="submit"
                 className={classes.button}
-                onClick={() =>handleNextStep?.(1) }
+                onClick={() => handleNextStep?.(1)}
               >
                 Approve
               </Button>

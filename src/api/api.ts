@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IEventForm, TCandidate, TInterviewTime, TResume, TStatusHistory, TStatusHistoryPost } from '../types/types';
+import {  TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
   page: number;
@@ -159,7 +159,7 @@ export const getCandidateById = (candidateIds: number[]) => {
 
 export const getStatusCandidateById = (candidateIds: number[]) => {
   return instance
-    .get<TStatusHistory[]>(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`)
+    .get(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`)
     .then(response => response.data);
 };
 
@@ -185,18 +185,6 @@ const getTsEmployees = (skill: string) => instance.get(`/employees?search=primar
 
 const getStatusHistoryByCandidate = (candidateId: number) =>
   instance.get(`status/history/all?search=candidate.id==${candidateId}`);
-
-const getResume = (id: number) => {
-  return instance.get(`/resume/${id}`);
-};
-
-const getHrEmployees = () => {
-  return instance.get(`/employees?search=type==HR`);
-};
-
-const getTsEmployees = (skill: string) => {
-  return instance.get(`/employees?search=primaryTechnology==${skill}`);
-};
 
 export const candidateService = {
   getAllCandidates,
