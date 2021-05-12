@@ -66,8 +66,8 @@ function getSteps() {
     'An interview with HR is scheduled',
     'An interview with HR is finished',
     'The level of English is checked',
-    'An interview with TS is scheduled',
-    'An interview with TS is finished',
+    'An interview with TsTable is scheduled',
+    'An interview with TsTable is finished',
   ];
 }
 

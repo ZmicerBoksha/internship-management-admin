@@ -1,5 +1,5 @@
 import { CellProps, HeaderProps, Hooks } from 'react-table';
-import { HeaderCheckbox, RowCheckbox } from '../Checkbox/Checkbox';
+import { HeaderCheckbox, RowCheckbox } from '../checkbox/checkbox';
 
 export const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push(columns => [
@@ -8,6 +8,9 @@ export const selectionHook = (hooks: Hooks<any>) => {
       id: '_selector',
       disableResizing: true,
       disableGroupBy: true,
+      disableFilters: true,
+      disableGlobalFilter: true,
+      alwaysVisible: true,
       minWidth: 45,
       width: 45,
       maxWidth: 45,

@@ -1,3 +1,49 @@
+
+/*
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+const Navbar: React.FC = () => {
+  return (
+    <aside className="aside">
+      <nav className="menu">
+        <ul className="menu__list">
+          <li className="menu__item">
+            <Link className="menu__item-link" to="/">
+              Dashboard
+            </Link>
+          </li>
+          <li className="menu__item">
+            <Link className="menu__item-link" to="/authorization">
+              Authorization
+            </Link>
+          </li>
+          <li className="menu__item">
+            <Link className="menu__item-link" to="/events">
+              Events
+            </Link>
+          </li>
+          <li className="menu__item">
+            <Link className="menu__item-link" to="/staff">
+              Staff
+            </Link>
+          </li>
+          <li className="menu__item">
+            <Link className="menu__item-link" to="/candidate">
+              Candidates
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
+};
+
+export default Navbar;
+
+*/
+
+
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
@@ -15,79 +61,6 @@ import DashboardIcon from '@material-ui/icons/Dashboard';
 import StaffIcon from '@material-ui/icons/Group';
 import CandidateIcon from '@material-ui/icons/PeopleOutline';
 import Routers from '../routers/routers';
-import './navBarStyle.scss';
-
-/*
-const Navbar: React.FC = () => {
-    let [currentLink, currentLinkEdit] = useState<string>('dashboard');
-    return (
-        <aside className="aside">
-            <nav className="menu">
-                <ul className="menu__list">
-
-                    <li onClick={() => {currentLinkEdit("dashboard")}}
-                        className={currentLink === "dashboard" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/"
-                        >
-                            Dashboard
-                        </Link>
-                    </li>
-                    <li onClick={() => currentLinkEdit("authorization")}
-                        className={currentLink === "authorization" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/authorization"
-                        >
-                            Authorization
-                        </Link>
-                    </li>
-                    <li onClick={() => currentLinkEdit("events")}
-                        className={currentLink === "events" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/events"
-                        >
-                            Events
-                        </Link>
-                    </li>
-                    <li onClick={() => currentLinkEdit("ts")}
-                        className={currentLink === "ts" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/ts"
-                        >
-                            TS
-                        </Link>
-                    </li>
-                    <li onClick={() => currentLinkEdit("hrs")}
-                        className={currentLink === "hrs" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/hrs"
-                        >
-                            HR
-                        </Link>
-                    </li>
-                    <li onClick={() => currentLinkEdit("add")}
-                        className={currentLink === "add" ? "menu__item menu__item-link--active" : "menu__item"}>
-                        <Link
-                            className="menu__item-link"
-                            to="/staff/add"
-                        >
-                            Staff add
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-        </aside>
-    );
-};
-
-export default Navbar;
-
-*/
 
 const drawerWidth = 240;
 
@@ -132,8 +105,8 @@ export default function Navbar() {
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [open, setOpen] = React.useState(true);
-  const [staffOpen, setStaffOpen] = React.useState(true);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [staffOpen, setStaffOpen] = React.useState(true);
 
   const handleListItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
@@ -173,28 +146,9 @@ export default function Navbar() {
             handleClick();
           }}
         >
-          {open ? <ExpandLess style={{ marginRight: '5px' }} /> : <EventIcon style={{ marginRight: '5px' }} />}
+          <EventIcon style={{ marginRight: '5px' }} />
           Events
         </MenuItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <MenuList disablePadding>
-            {['Planned', 'In progress', 'Archive'].map((category, index) => {
-              return (
-                <MenuItem
-                  key={index}
-                  button
-                  className={classes.nested}
-                  component={Link}
-                  to={`/events/${index}`}
-                  selected={selectedIndex === index + 2}
-                  onClick={(event: React.MouseEvent<HTMLElement>) => handleListItemClick(event, index + 2)}
-                >
-                  {category}
-                </MenuItem>
-              );
-            })}
-          </MenuList>
-        </Collapse>
         {/*temporary*/}
         <MenuItem
           component={Link}

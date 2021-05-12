@@ -1,26 +1,26 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './styles.css';
 import useAxios from 'axios-hooks';
-import Table from '../../common/Table/Table';
-import { SelectColumnFilter } from '../../common/Table/filters/SelectColumnFilter';
+import Table from '../../common/table/table';
+import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
+import { candidateService } from "../../../api/api";
 
-/*type TEducation = {
-  educational_institution: string;
-  faculty: string;
-  speciality: string;
-};*/
 
 export type TCandidate = {
-  education: string;
+  institution: string;
+  faculty: string;
+  speciality: string;
   email: string;
   englishLevel: string;
-  experience: string;
-  expertise: string;
   firstName: string;
   id: number;
-  lastName: string;
+  experience: string;
+  expertise: string;
+  education: string;
   location: string;
+  lastName: string;
+  country: string;
   phone: string;
   rsmId: number;
   skype: string;
@@ -28,15 +28,30 @@ export type TCandidate = {
 
 const CandidatesList: React.FC = () => {
   const history = useHistory();
+  const [candidatesList, setCandidatesList] = useState<TCandidate[]>([]);
 
-  const [{ data: candidatesList /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios(
-    '/candidate',
+  const fetchCandidatesList = (size: number, page: number) => {
+    let params = {
+      itemsPerPage: size,
+      page: page,
+    };
+
+    candidateService
+      .getAllCandidates(params)
+      .then(( {data} ) => {
+        setCandidatesList(data);
+      })
+      .catch((err:any) => {
+        console.log(err);
+      });
+  };
+
+  const [{ data: candidateResume /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios(
+    `/resume?search=`,
   );
 
-  console.log(candidatesList);
-
   const handleClick = (instance: any) => {
-    const candidateID = instance.selectedFlatRows[0].original!.id;
+    const candidateID = instance.rows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };
 
@@ -79,7 +94,7 @@ const CandidatesList: React.FC = () => {
         columns: [
           {
             Header: 'Country',
-            accessor: 'location',
+            accessor: 'country',
             Filter: SelectColumnFilter,
             filter: 'includes',
           },
@@ -94,13 +109,13 @@ const CandidatesList: React.FC = () => {
         columns: [
           {
             Header: 'Main skill',
-            accessor: 'expertise',
+            accessor: 'mainSkill',
             Filter: SelectColumnFilter,
             filter: 'includes',
           },
           {
             Header: 'Other technologies',
-            accessor: 'experience',
+            accessor: 'otherSkills',
           },
         ],
       },
@@ -109,18 +124,15 @@ const CandidatesList: React.FC = () => {
         columns: [
           {
             Header: 'Institute',
-            accessor: 'education',
-            disableFilters: true,
+            accessor: 'institution',
           },
           {
             Header: 'Faculty',
-            accessor: 'education.faculty',
-            disableFilters: true,
+            accessor: 'faculty',
           },
           {
             Header: 'Speciality',
-            accessor: 'education.speciality',
-            disableFilters: true,
+            accessor: 'speciality',
           },
         ],
       },
@@ -135,7 +147,7 @@ const CandidatesList: React.FC = () => {
           },
           {
             Header: 'CV',
-            accessor: 'cv',
+            accessor: `candidateResume.name`,
             disableFilters: true,
           },
           {
@@ -150,7 +162,15 @@ const CandidatesList: React.FC = () => {
     [],
   );
 
-  return <Table name={'Candidates table'} columns={columns} data={data} onEdit={handleClick} />;
+  return (
+    <Table
+      name={'Candidates table'}
+      columns={columns}
+      data={data}
+      onEdit={handleClick}
+      fetchRequest={fetchCandidatesList}
+    />
+  );
 };
 
 export default CandidatesList;
