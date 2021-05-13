@@ -231,7 +231,7 @@ const Table: FunctionComponent<TableProps> = ({
         globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*",` : '';
     });
 
-    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 1));
+    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 4));
   }, [state.globalFilter]);
 
   return (
