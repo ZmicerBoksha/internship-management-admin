@@ -13,43 +13,42 @@ const useStyles = makeStyles(() => {
   });
 });
 
-type TablePaginationProps = {
-  instance: TableInstance;
-  fetchRequest?: (pageSize: number, pageIndex: number) => void;
-};
+export const rowsPerPageOptions: number[] = [1, 15, 25, 50];
 
 type TTablePagination = {
   countRows?: number;
-  countPages?: number;
+  page?: number;
+  setPage?: (page: number) => void;
+  rowsPerPage?: number;
+  setItemsPerPage?: (itemsPerPage: number) => void;
 };
 
-const TablePagination: FunctionComponent<TTablePagination> = ({ countRows, countPages }) => {
+const TablePagination: FunctionComponent<TTablePagination> = ({
+  countRows,
+  page,
+  setPage,
+  rowsPerPage,
+  setItemsPerPage,
+}) => {
   const classes = useStyles();
 
-  const [page, setPage] = useState<number>(0);
-  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
+    setPage && setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setItemsPerPage && setItemsPerPage(parseInt(event.target.value, 10));
+    setPage && setPage(0);
   };
 
   return (
     <MyTablePagination
       className={classes.custom_pagination}
       component="div"
-      rowsPerPageOptions={[10, 15, 25, 50]}
+      rowsPerPageOptions={rowsPerPageOptions}
       count={countRows || 0}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      SelectProps={{
-        inputProps: { 'aria-label': 'rows per page' },
-        native: true,
-      }}
+      rowsPerPage={rowsPerPage || rowsPerPageOptions[0]}
+      page={page || 0}
       onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
     />

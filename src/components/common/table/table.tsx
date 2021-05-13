@@ -133,7 +133,10 @@ type TableProps = {
   fetchRequest?: (pageSize: number, pageIndex: number) => void;
   setSearchParams?: (searchParams: string) => void;
   countRows?: number;
-  countPages?: number;
+  pageNumberForBack?: number;
+  setPage?: (page: number) => void;
+  rowsPerPage?: number;
+  setItemsPerPage?: (itemsPerPage: number) => void;
 };
 
 const Table: FunctionComponent<TableProps> = ({
@@ -143,10 +146,12 @@ const Table: FunctionComponent<TableProps> = ({
   onAdd,
   onEdit,
   onDelete,
-  fetchRequest,
   setSearchParams,
   countRows,
-  countPages,
+  pageNumberForBack,
+  setPage,
+  rowsPerPage,
+  setItemsPerPage,
 }) => {
   const classes = useStyles();
 
@@ -286,7 +291,13 @@ const Table: FunctionComponent<TableProps> = ({
           </TableBody>
         </MaUTable>
       </div>
-      <TablePagination countRows={countRows} countPages={countPages} />
+      <TablePagination
+        countRows={countRows}
+        page={pageNumberForBack}
+        setPage={setPage}
+        rowsPerPage={rowsPerPage}
+        setItemsPerPage={setItemsPerPage}
+      />
     </>
   );
 };
