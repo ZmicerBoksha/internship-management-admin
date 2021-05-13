@@ -130,8 +130,8 @@ export const eventsApi = {
       .post(`/event`, {
         ...formData,
         image: 1,
-        creatorEvent: 1,
-        employee: 1,
+        creatorEvent: -1,
+        employee: -1,
         eventType: 1,
       })
       .then(response => response);
