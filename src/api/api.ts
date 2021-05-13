@@ -111,15 +111,12 @@ const instance = axios.create({
 });
 
 export const eventsApi = {
-  getEvents(searchParam?: string, page?: number, itemsPerPage?: number) {
+  getEvents(page: number, itemsPerPage: number, searchParam?: string) {
     let urlForRequest = '/event/all';
-    // if (searchParam) {
-    //   urlForRequest += `?search=${searchParam}`;
-    // }
+    arguments.length && (urlForRequest += '?');
 
-    searchParam && (urlForRequest += `?search=${searchParam}`);
-    page && (urlForRequest += `?page=${page}`);
-    itemsPerPage && (urlForRequest += `?itemsPerPage=${itemsPerPage}`);
+    urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
+    searchParam && (urlForRequest += `&search=${searchParam}`);
 
     return instance.get(urlForRequest).then(response => response.data);
   },
@@ -131,8 +128,8 @@ export const eventsApi = {
       .post(`/event`, {
         ...formData,
         image: 1,
-        creatorEvent: -1,
-        employee: -1,
+        creatorEvent: 1,
+        employee: 1,
         eventType: 1,
       })
       .then(response => response);

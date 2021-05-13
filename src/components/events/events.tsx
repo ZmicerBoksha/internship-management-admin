@@ -10,6 +10,7 @@ import SnackbarInfo from '../common/snackbarInfo/snackbarInfo';
 import { IEvent } from './events-config';
 import { SnackbarContext, TSnackbar } from '../common/snackbarInfo/snackbarContext';
 import { PreloaderContext } from '../common/preloader/preloaderContext';
+import { rowsPerPageOptions } from '../common/table/tablePagination/tablePagination';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -39,20 +40,20 @@ const Events: FunctionComponent = () => {
 
   const [data, setData] = useState([]);
   const [countRows, setCountRows] = useState<number>(0);
-  const [countPages, setCountPages] = useState<number>(1);
 
-  async function getData(searchParam?: string) {
+  const [page, setPage] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(rowsPerPageOptions[0]);
+
+  async function getData(page: number, itemsPerPage: number, searchParam?: string) {
     await eventsApi
-      .getEvents(searchParam)
+      .getEvents(page, itemsPerPage, searchParam)
       .then(response => {
-        debugger;
         setData(response.content);
 
         return response;
       })
       .then(response => {
-        setCountRows(response.size);
-        setCountPages(response.totalPages);
+        setCountRows(response.totalElements);
         return response;
       })
       .then(() => {
@@ -70,12 +71,12 @@ const Events: FunctionComponent = () => {
   }
 
   useEffect(() => {
-    loadingData && getData();
+    loadingData && getData(page, itemsPerPage);
   }, [loadingData]);
 
   useEffect(() => {
-    getData(searchParams);
-  }, [searchParams]);
+    getData(page, itemsPerPage, searchParams);
+  }, [page, itemsPerPage, searchParams]);
 
   const history = useHistory();
 
@@ -118,7 +119,10 @@ const Events: FunctionComponent = () => {
               onDelete={deleteEvents}
               setSearchParams={setSearchParams}
               countRows={countRows}
-              countPages={countPages}
+              pageNumberForBack={page}
+              setPage={setPage}
+              rowsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
             />
           )}
           {snackbar?.isOpen && (
