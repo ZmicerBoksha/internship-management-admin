@@ -132,6 +132,8 @@ type TableProps = {
   onDelete?: (instance: TableInstance) => void;
   fetchRequest?: (pageSize: number, pageIndex: number) => void;
   setSearchParams?: (searchParams: string) => void;
+  countRows?: number;
+  countPages?: number;
 };
 
 const Table: FunctionComponent<TableProps> = ({
@@ -143,6 +145,8 @@ const Table: FunctionComponent<TableProps> = ({
   onDelete,
   fetchRequest,
   setSearchParams,
+  countRows,
+  countPages,
 }) => {
   const classes = useStyles();
 
@@ -155,7 +159,7 @@ const Table: FunctionComponent<TableProps> = ({
       maxWidth: 200,
     }),
     [],
-  ); 
+  );
 
   const instance = useTable(
     {
@@ -182,8 +186,10 @@ const Table: FunctionComponent<TableProps> = ({
   const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
 
   useEffect(() => {
-    instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(column => column.id)
-  }, [])
+    instance.state.hiddenColumns = allColumns
+      .filter(column => column.hasOwnProperty('startHide'))
+      .map(column => column.id);
+  }, []);
 
   const history = useHistory();
 
@@ -201,7 +207,7 @@ const Table: FunctionComponent<TableProps> = ({
             filterParametrs += item.value[2] ? `${item.id}=le="${item.value[2]}";` : '';
             break;
           default:
-            filterParametrs += item.value[1] ? `${item.id}=="${item.value[1]}*";` : '';
+            filterParametrs += item.value ? `${item.id}=="${item.value}*";` : '';
             break;
         }
       });
@@ -212,17 +218,17 @@ const Table: FunctionComponent<TableProps> = ({
       });
 
     setSearchParams && setSearchParams(filterParametrs.substring(0, filterParametrs.length - 1));
-  }, [state.filters]);
+  }, [state.filters, countRows]);
 
   useEffect(() => {
     let globalFilterParametrs = '';
 
     instance.allColumns.forEach(column => {
       if (!column.disableGlobalFilter)
-        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*";` : '';
+        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*" or ` : '';
     });
 
-    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 1));
+    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 4));
   }, [state.globalFilter]);
 
   return (
@@ -280,7 +286,7 @@ const Table: FunctionComponent<TableProps> = ({
           </TableBody>
         </MaUTable>
       </div>
-      <TablePagination instance={instance} fetchRequest={fetchRequest} />
+      <TablePagination countRows={countRows} countPages={countPages} />
     </>
   );
 };

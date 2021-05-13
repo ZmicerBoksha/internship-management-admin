@@ -2,6 +2,8 @@ import { createStyles, makeStyles, Switch, Typography } from '@material-ui/core'
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
+import ModalErrorContent from '../../common/modalError/modalError';
+import { ModalErrorContext, TModalError } from '../../common/modalError/modalErrorContext';
 import Preloader from '../../common/preloader/preloader';
 import { PreloaderContext } from '../../common/preloader/preloaderContext';
 import { SnackbarContext, TSnackbar } from '../../common/snackbarInfo/snackbarContext';
@@ -35,6 +37,7 @@ const EventInfo: FunctionComponent = () => {
 
   const [loadingData, setLoadingData] = useState<boolean>(true);
   const [snackbar, setSnackbar] = useState<TSnackbar>({});
+  const [modalError, setModalError] = useState<TModalError>({});
 
   const mode = new URLSearchParams(useLocation().search).get('mode');
 
@@ -70,37 +73,47 @@ const EventInfo: FunctionComponent = () => {
   return (
     <SnackbarContext.Provider value={{ snackbar, setSnackbar }}>
       <PreloaderContext.Provider value={{ loadingData, setLoadingData }}>
-        {loadingData ? (
-          <Preloader />
-        ) : (
-          <div className={classes.pageWrap}>
-            <Typography component="h1" className={classes.page_title}>
-              {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
-            </Typography>
-            <>
-              {eventType === 'info' && (
-                <>
-                  <Typography component="h4">Edit mode</Typography>
-                  <Switch checked={isEditMode} onChange={onSetIsEditMode} color="primary" />
-                </>
-              )}
-            </>
-            <EventForm
-              eventId={eventId}
-              eventType={eventType}
-              isEditMode={isEditMode}
-              eventData={eventData}
-              setIsEditMode={setIsEditMode}
+        <ModalErrorContext.Provider value={{ modalError, setModalError }}>
+          {loadingData ? (
+            <Preloader />
+          ) : (
+            <div className={classes.pageWrap}>
+              <Typography component="h1" className={classes.page_title}>
+                {eventId ? `Edit event (id = ${eventData!.id})` : `Add event`}
+              </Typography>
+              <>
+                {eventType === 'info' && (
+                  <>
+                    <Typography component="h4">Edit mode</Typography>
+                    <Switch checked={isEditMode} onChange={onSetIsEditMode} color="primary" />
+                  </>
+                )}
+              </>
+              <EventForm
+                eventId={eventId}
+                eventType={eventType}
+                isEditMode={isEditMode}
+                eventData={eventData}
+                setIsEditMode={setIsEditMode}
+              />
+            </div>
+          )}
+          {snackbar?.isOpen && (
+            <SnackbarInfo
+              isOpen={snackbar.isOpen}
+              alertSeverity={snackbar.alertSeverity}
+              alertMessage={snackbar.alertMessage}
             />
-          </div>
-        )}
-        {snackbar?.isOpen && (
-          <SnackbarInfo
-            isOpen={snackbar.isOpen}
-            alertSeverity={snackbar.alertSeverity}
-            alertMessage={snackbar.alertMessage}
-          />
-        )}
+          )}
+          {modalError?.isOpen && (
+            <ModalErrorContent
+              isOpen={modalError.isOpen}
+              errorTitle={modalError.errorTitle}
+              errorText={modalError.errorText}
+              // closeModalError={() => setModalError({isOpen: false})}
+            />
+          )}
+        </ModalErrorContext.Provider>
       </PreloaderContext.Provider>
     </SnackbarContext.Provider>
   );
