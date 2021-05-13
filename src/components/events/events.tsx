@@ -48,7 +48,6 @@ const Events: FunctionComponent = () => {
     await eventsApi
       .getEvents(page, itemsPerPage, searchParam)
       .then(response => {
-        debugger;
         setData(response.content);
 
         return response;
