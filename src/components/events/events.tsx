@@ -38,15 +38,34 @@ const Events: FunctionComponent = () => {
   const columns = useMemo(() => Columns, []);
 
   const [data, setData] = useState([]);
+  const [countRows, setCountRows] = useState<number>(0);
+  const [countPages, setCountPages] = useState<number>(1);
 
   async function getData(searchParam?: string) {
     await eventsApi
       .getEvents(searchParam)
       .then(response => {
+        debugger;
         setData(response.content);
+
+        return response;
+      })
+      .then(response => {
+        setCountRows(response.size);
+        setCountPages(response.totalPages);
+        return response;
       })
       .then(() => {
         setLoadingData(false);
+      })
+      .catch(err => {
+        err.request.readyState === 4 &&
+          err.request.status === 0 &&
+          setSnackbar({
+            isOpen: true,
+            alertSeverity: 'error',
+            alertMessage: 'Server is not available. Please try again later',
+          });
       });
   }
 
@@ -98,6 +117,8 @@ const Events: FunctionComponent = () => {
               onEdit={editEvent}
               onDelete={deleteEvents}
               setSearchParams={setSearchParams}
+              countRows={countRows}
+              countPages={countPages}
             />
           )}
           {snackbar?.isOpen && (

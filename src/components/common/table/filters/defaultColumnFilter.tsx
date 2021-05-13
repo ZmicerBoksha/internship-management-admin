@@ -8,18 +8,19 @@ interface DefaultColumnFilterProps {
 }
 
 const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ columns, column }) => {
-  const { id, filterValue = [], setFilter, render, filter } = column;
+  const { id, filterValue, setFilter, render, filter } = column;
 
-  const [value, setValue] = useState(filterValue[1] || '');
+  console.log(filterValue);
+  const [value, setValue] = useState(filterValue || '');
   console.log(value);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
   };
 
-  // useEffect(() => {
-  //   setValue(filterValue[1] || '')
-  // }, [filterValue])
+  useEffect(() => {
+    setValue(filterValue || '')
+  }, [filterValue])
 
   return (
     <TextField
@@ -28,7 +29,7 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
       value={value}
       onChange={handleChange}
       onBlur={event => {
-        setFilter(() => [filter, event.target.value || undefined]);
+        setFilter(() => [event.target.value || undefined]);
       }}
       type="search"
     />

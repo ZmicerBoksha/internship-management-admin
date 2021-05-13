@@ -74,7 +74,7 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
   };
 
   const showCandidates = () => {
-    console.log('showCandidates');
+    history.push(`/candidate?search=event.id==${rowId}`);
   };
 
   const deleteEvent = () => {
