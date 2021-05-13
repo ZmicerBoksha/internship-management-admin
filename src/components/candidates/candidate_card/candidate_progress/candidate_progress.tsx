@@ -67,8 +67,8 @@ const useStyles = makeStyles((theme: Theme) =>
 type CandidateProgressProps = {
   candidateInfo: TCandidate;
   editCandidateData: (data: { status: string }) => void;
-  updateCandidateInfo: any;
-  setCandidatesStatusColor: any;
+  updateCandidateInfo: TCandidate;
+  setCandidatesStatusColor: (color: string) => void;
 };
 
 const CandidateProgress: React.FC<CandidateProgressProps> = ({
@@ -84,11 +84,11 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   function getSteps() {
-    return status.map((item: any) => item.name);
+    return status.map((item: TStatus) => item.name);
   }
 
   function getStepContent(stepIndex: number) {
-    return status.map((item: any, index: number) => {
+    return status.map((item: TStatus, index: number) => {
       return stepIndex === index ? item.description : '';
     });
   }
@@ -101,8 +101,8 @@ const CandidateProgress: React.FC<CandidateProgressProps> = ({
   useEffect(() => {
     statusServer
       .getAllStatus()
-      .then(({ data }) => {
-        setStatus(data.content);
+      .then(({ data: { content } }) => {
+        setStatus(content);
       })
       .catch(err => {
         console.log(err);

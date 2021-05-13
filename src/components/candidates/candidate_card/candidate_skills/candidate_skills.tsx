@@ -54,7 +54,7 @@ const CandidateSkills: React.FC<TSoftSkillsProps> = ({
           </Button>
           <Button
             onClick={() => {
-              handleSubmitReview && handleSubmitReview();
+              handleSubmitReview?.();
               handleClose();
               handleNextStep?.(statusId);
             }}

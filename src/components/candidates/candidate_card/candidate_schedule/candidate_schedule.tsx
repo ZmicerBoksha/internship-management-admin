@@ -92,7 +92,7 @@ const CandidateSchedule = () => {
         events={listOfEvents}
         startAccessor="start"
         onSelectEvent={event => console.log(event)}
-        onSelectSlot={e => handleSelect(e)}
+        onSelectSlot={handleSelect}
         endAccessor="end"
         style={{ height: 600, width: '100%' }}
       />

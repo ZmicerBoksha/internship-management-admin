@@ -42,8 +42,8 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
 
   intreviewTimeData?.forEach(item => {
     mass.push({
-      ['id']: item.cnId,
-      ['interviewDate']: item.beginDate,
+      id: item.cnId,
+      interviewDate: item.beginDate,
     });
   });
 
@@ -54,10 +54,10 @@ const CandidateTrello: React.FC<CandidateTrelloProps> = ({ timeZon, staffId }) =
   });
 
   statusHistoryData.forEach((item, index) => {
-    mass[index]['status'] = statusHistoryData[index].status.name;
+    mass[index].status = statusHistoryData[index].status.name;
   });
-  let notRevived = mass.filter(item => item.status === 'Status name 1');
-  let revived = mass.filter(item => item.status === 'Status name 2');
+  const notRevived = mass.filter(item => item.status === 'Status name 1');
+  const revived = mass.filter(item => item.status === 'Status name 2');
 
   return (
     <Grid container xs={12} justify="center">

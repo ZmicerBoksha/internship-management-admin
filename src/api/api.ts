@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {  TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
+import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
   page: number;
@@ -150,17 +150,15 @@ export const eventsApi = {
 };
 
 export const getCandidateIdByEmpolee = (id: number) => {
-  return instance.get<TInterviewTime[]>(`interviewtime?search=empId==${id}`).then(response => response.data);
+  return instance.get<TInterviewTime[]>(`interviewtime?search=empId==${id}`).then(({ data }) => data);
 };
 
 export const getCandidateById = (candidateIds: number[]) => {
-  return instance.get<TCandidate[]>(`candidate?search=id=in=(${candidateIds.join()})`).then(response => response.data);
+  return instance.get<TCandidate[]>(`candidate?search=id=in=(${candidateIds.join()})`).then(({ data }) => data);
 };
 
 export const getStatusCandidateById = (candidateIds: number[]) => {
-  return instance
-    .get(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`)
-    .then(response => response.data);
+  return instance.get(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`).then(({ data }) => data);
 };
 
 const getAllCandidates = (params: PageParams) => instance.get<TCandidate[]>('/candidate', { params });
