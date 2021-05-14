@@ -22,6 +22,7 @@ const Routers: React.FC = () => {
         <Route exact path="/staff/hr" component={HrTable} />
         <Route exact path="/staff/ts" component={TsTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />
+        <Route exact path="/staff/ts/:id" component={StaffPage} />
         <Route exact path="/staff/:add?" component={StaffPage} />
         <Route path="/authorization" component={Authorization} />
         <Route exact path="/candidate" component={CandidatesPage} />

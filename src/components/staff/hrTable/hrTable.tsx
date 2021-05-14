@@ -1,10 +1,31 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import Table from '../../common/table/table';
 import useAxios from 'axios-hooks';
-import { PREFIX } from '../../../constants';
+import { PREFIX, HR } from "../../../constants";
+import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
+import { useHistory } from 'react-router';
 
 const HrTable: React.FC = () => {
-  const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}/employees`);
+  const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}employees?search=type==${HR}`);
+
+  const history = useHistory();
+
+  const addStaff = useCallback(() => {
+    history.push(`/staff/add`);
+  }, []);
+
+  const editStaff = (instance: any) => {
+    const StaffID = instance.rows[0].original.id;
+    history.push(`/staff/${StaffID}`);
+  };
+
+  const deleteStaff=(instance: any)=>{
+    const StaffID = instance.rows[0].original.id;
+    sendRequest({
+      method: 'DELETE',
+      url: `${PREFIX}employees/${StaffID}`,
+    });
+  }
 
   const data = useMemo(() => hrList?.content || [], [hrList?.content]);
   const columns = React.useMemo(
@@ -28,14 +49,20 @@ const HrTable: React.FC = () => {
           {
             Header: 'Country',
             accessor: 'locationCountry',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'City',
             accessor: 'locationCity',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'Time Zone',
             accessor: 'timezone',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'View',
@@ -52,7 +79,7 @@ const HrTable: React.FC = () => {
               </button>
             ),
           },
-          {
+       /*   {
             Header: 'Delete',
             accessor: '',
             disableFilters: true,
@@ -62,7 +89,7 @@ const HrTable: React.FC = () => {
                 onClick={() => {
                   sendRequest({
                     method: 'DELETE',
-                    url: `${PREFIX}/employees/${cell.row.original.id}`,
+                    url: `${PREFIX}employees/${cell.row.original.id}`,
                   });
                 }}
               >
@@ -71,13 +98,16 @@ const HrTable: React.FC = () => {
               </button>
             ),
           },
+
+        */
         ],
       },
     ],
     [],
   );
 
-  return <Table name={'HR table'} columns={columns} data={data} />;
+  return <Table name={'HR table'}
+                onDelete={deleteStaff} onAdd={addStaff}  onEdit={editStaff} columns={columns}  data={data} />;
 };
 
 export default HrTable;

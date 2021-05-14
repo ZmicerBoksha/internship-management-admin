@@ -1,10 +1,11 @@
 .miniCard {
   border-radius: 20px;
-  border: 2px solid #1976d2;
+  padding-left: 20px;
 }
 
 .wrapperCard {
   display: flex;
   flex-direction: row;
   border-bottom: 2px solid #ef9588;
+  padding: 5px;
 }

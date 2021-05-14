@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import useAxios from 'axios-hooks';
-import { Controller, useForm } from 'react-hook-form';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import useAxios from "axios-hooks";
+import { Controller, useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import TimeSlots from "../timeSlots/timeSlots";
 import {
   Button,
   createStyles,
@@ -12,17 +13,16 @@ import {
   Switch,
   TextField,
   Theme,
-  Typography,
-} from '@material-ui/core';
-import { useParams } from 'react-router';
-import './staffPageStyle.scss';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import makeStyles from '@material-ui/core/styles/makeStyles';
-import InputMask from 'react-input-mask';
-
+  Typography
+} from "@material-ui/core";
+import { useParams } from "react-router";
+import "./staffPageStyle.scss";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import InputMask from "react-input-mask";
 import {
   COUNTRY_LIST,
   PREFIX,
@@ -30,22 +30,22 @@ import {
   REQUIRED__ERROR__MESSAGE,
   MAX__LENGTH__ERROR__MESSAGE,
   MAX__LENGTH,
-  ADD_PATH,
+  ROLE_NAME,
   POST,
-  PUT,
-} from '../../../constants';
+  PUT
+} from "../../../constants";
 import CandidateTrello from "../candidateTrello/candidateTrello";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
+      minWidth: 120
     },
     selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-  }),
+      marginTop: theme.spacing(2)
+    }
+  })
 );
 
 interface IUrl {
@@ -60,7 +60,7 @@ const StaffPage: React.FC = () => {
   const createUrl = useParams<IUrl>();
 
   useEffect(() => {
-    createUrl.add === 'add' && setAddMode(true);
+    createUrl.add === "add" && setAddMode(true);
   }, []);
 
   const classes = useStyles();
@@ -70,44 +70,48 @@ const StaffPage: React.FC = () => {
     handleSubmit,
     watch,
     formState: { errors },
-    setValue,
+    setValue
   } = useForm();
 
-  const watchCountry = watch('locationCountry');
+  const watchCountry = watch("locationCountry");
 
   useEffect(() => {
     const timeZone = COUNTRY_LIST.get(watchCountry);
     if (Array.isArray(timeZone)) {
-      setValue('timezone', timeZone[0]);
+      setValue("timezone", timeZone[0]);
     }
   }, [watchCountry]);
 
+  let staffId = addMode ? "1" : window.location.href.split("/").slice(-1)[0];
+
   const [{ data: putData, loading: putLoading, error: putError }, sendRequest] = useAxios(
     {
-      url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
-      method: 'PUT',
+      url: `${PREFIX}employees/${window.location.href.split("/").slice(-1)[0]}`,
+      method: "PUT"
     },
-    { manual: true },
+    { manual: true }
   );
 
-  const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`);
+  const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/${staffId}`);
 
 
-  let staffData = addMode ? '' : data;
+  let staffData = addMode ? "" : data;
 
   const onSubmit = (data: any) => {
+    console.log(data);
+    console.log(addMode);
     addMode
-      ? history.push('/staff/hr') &&
-        sendRequest({
-          data: data,
-          method: POST,
-          url: `${PREFIX}employees`,
-        })
+      ?
+      sendRequest({
+        data: data,
+        method: POST,
+        url: `${PREFIX}employees`
+      })
       : sendRequest({
-          data: data,
-          method: PUT,
-          url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
-        });
+        data: data,
+        method: PUT,
+        url: `${PREFIX}employees/${window.location.href.split("/").slice(-1)[0]}`
+      });
   };
 
   if (loading) return <p>Loading...</p>;
@@ -117,7 +121,7 @@ const StaffPage: React.FC = () => {
     <Grid container spacing={3}>
       <Grid className="row" container xs={12} alignItems="center">
         <Typography className="title" variant="h4" noWrap>
-          {window.location.href.split('/').slice(-2)[0]} page
+          {window.location.href.split("/").slice(-2)[0]} page
         </Typography>
         <FormControlLabel
           control={<Switch checked={edit} onChange={() => setEdit(!edit)} name="checkedA" color="primary" />}
@@ -143,7 +147,7 @@ const StaffPage: React.FC = () => {
                     defaultValue={staffData?.firstName}
                     rules={{
                       required: true,
-                      maxLength: MAX__LENGTH,
+                      maxLength: MAX__LENGTH
                     }}
                     render={({ field }) => {
                       return (
@@ -151,8 +155,8 @@ const StaffPage: React.FC = () => {
                           required={edit}
                           error={errors.firstName}
                           helperText={
-                            (errors.firstName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.firstName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.firstName?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.firstName?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           {...field}
                           id="firstName"
@@ -168,14 +172,14 @@ const StaffPage: React.FC = () => {
                     defaultValue={staffData?.lastName}
                     rules={{
                       required: true,
-                      maxLength: MAX__LENGTH,
+                      maxLength: MAX__LENGTH
                     }}
                     render={({ field }) => {
                       return (
                         <TextField
                           helperText={
-                            (errors.lastName?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.lastName?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.lastName?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.lastName?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           required={edit}
                           error={errors.lastName}
@@ -206,7 +210,7 @@ const StaffPage: React.FC = () => {
                       }}
                     />
                   </FormControl>
-                  {watchCountry === 'US' || watchCountry === 'Russia' ? (
+                  {watchCountry === "US" || watchCountry === "Russia" ? (
                     <FormControl className={classes.formControl} disabled={!edit}>
                       <InputLabel id="timezone">Time zone</InputLabel>
                       <Controller
@@ -214,7 +218,7 @@ const StaffPage: React.FC = () => {
                         control={control}
                         defaultValue={staffData?.timezone}
                         rules={{
-                          required: true,
+                          required: true
                         }}
                         render={({ field }) => {
                           return (
@@ -252,7 +256,7 @@ const StaffPage: React.FC = () => {
                     defaultValue={staffData?.locationCity}
                     rules={{
                       required: true,
-                      maxLength: MAX__LENGTH,
+                      maxLength: MAX__LENGTH
                     }}
                     render={({ field }) => {
                       return (
@@ -260,8 +264,8 @@ const StaffPage: React.FC = () => {
                           required={edit}
                           error={errors.locationCity}
                           helperText={
-                            (errors.locationCity?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                            (errors.locationCity?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                            (errors.locationCity?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                            (errors.locationCity?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                           }
                           {...field}
                           id="locationCity"
@@ -289,7 +293,7 @@ const StaffPage: React.FC = () => {
                   rules={{
                     required: true,
                     maxLength: MAX__LENGTH,
-                    pattern: PHONE_PATTERN,
+                    pattern: PHONE_PATTERN
                   }}
                   render={({ field }) => {
                     return (
@@ -312,7 +316,7 @@ const StaffPage: React.FC = () => {
                   defaultValue={staffData?.skype}
                   rules={{
                     required: true,
-                    maxLength: MAX__LENGTH,
+                    maxLength: MAX__LENGTH
                   }}
                   render={({ field }) => {
                     return (
@@ -320,8 +324,8 @@ const StaffPage: React.FC = () => {
                         required={edit}
                         error={errors.skype}
                         helperText={
-                          (errors.skype?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                          (errors.skype?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                          (errors.skype?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.skype?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                         }
                         {...field}
                         id="skype"
@@ -332,13 +336,60 @@ const StaffPage: React.FC = () => {
                   }}
                 />
                 <Controller
-                  name="roleId"
+                  name="type"
                   control={control}
-                  defaultValue={1}
+                  defaultValue={staffData?.type||'HR'}
+                  rules={{
+                    required: true,
+                    maxLength: MAX__LENGTH
+                  }}
                   render={({ field }) => {
-                    return <TextField {...field} id="roleId" label="roleId:" InputProps={{ readOnly: !edit }} />;
+                    return (
+                      <TextField
+                        required={edit}
+                        error={errors.type}
+                        helperText={
+                          (errors.type?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.type?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                        }
+                        {...field}
+                        id="type"
+                        label="type:"
+                        InputProps={{ readOnly: !edit }}
+                      />
+                    );
                   }}
                 />
+                {edit || addMode ?
+                  <FormControl className={classes.formControl} disabled={!edit}>
+                    <InputLabel id="roleId">Role</InputLabel>
+                    <Controller
+                      name="roleId"
+                      control={control}
+                      defaultValue={staffData?.role?.id}
+                      rules={{
+                        required: true
+                      }}
+                      render={({ field }) => {
+                        return (
+                          <Select error={errors.timezone} {...field} labelId="role" id="roleId">
+                            <MenuItem value={1}>Admin</MenuItem>
+                            <MenuItem value={2}>Super Admin</MenuItem>
+                            <MenuItem value={3}>Employee</MenuItem>
+                          </Select>
+                        );
+                      }}
+                    />
+                  </FormControl>
+                  : <Controller
+                    name="role"
+                    control={control}
+                    defaultValue={staffData?.role?.name}
+                    render={({ field }) => {
+                      return <TextField {...field} id="role" label="role:" InputProps={{ readOnly: !edit }} />;
+                    }}
+                  />}
+
               </Grid>
               <Controller
                 name="email"
@@ -350,8 +401,8 @@ const StaffPage: React.FC = () => {
                       required={edit}
                       error={errors.email}
                       helperText={
-                        (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                        (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                        (errors.email?.type === "required" && REQUIRED__ERROR__MESSAGE) ||
+                        (errors.email?.type === "maxLength" && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
                       }
                       {...field}
                       id="email"
@@ -362,10 +413,11 @@ const StaffPage: React.FC = () => {
                 }}
               />
             </Paper>
-          </Grid>
-          <input type="submit" />
+          </Grid>{edit || addMode ? <input type="submit" /> : ""}
         </Grid>
       </form>
+      {!addMode && <TimeSlots />}
+
       {!addMode && <CandidateTrello timeZon={staffData?.timezone} staffId={staffData.id} />}
     </Grid>
   );

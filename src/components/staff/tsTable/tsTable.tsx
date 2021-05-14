@@ -1,10 +1,30 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from "react";
 import useAxios from 'axios-hooks';
-import { PREFIX } from '../../../constants';
+import { PREFIX, TS } from "../../../constants";
 import Table from '../../common/table/table';
+import { SelectColumnFilter } from "../../common/table/filters/selectColumnFilter";
+import { useHistory } from "react-router";
 
 const TsTable: React.FC = () => {
-  const [{ data: TSList }, sendRequest] = useAxios(`${PREFIX}/employees`);
+  const [{ data: TSList }, sendRequest] = useAxios(`${PREFIX}employees?search=type==${TS}`);
+  const history = useHistory();
+  const addStaff = useCallback(() => {
+    history.push(`/staff/add`);
+  }, []);
+
+  const editStaff = (instance: any) => {
+    const StaffID = instance.rows[0].original.id;
+    history.push(`/staff/${StaffID}`);
+  };
+
+  const deleteStaff=(instance: any)=>{
+    const StaffID = instance.rows[0].original.id;
+    sendRequest({
+      method: 'DELETE',
+      url: `${PREFIX}employees/${StaffID}`,
+    });
+  }
+
 
   const data = useMemo(() => TSList?.content || [], [TSList?.content]);
   const columns = React.useMemo(
@@ -28,19 +48,26 @@ const TsTable: React.FC = () => {
           {
             Header: 'Country',
             accessor: 'locationCountry',
-            disableFilters: true,
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'City',
             accessor: 'locationCity',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'Time Zone',
             accessor: 'timezone',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'Primary skill',
-            accessor: 'primarySkill',
+            accessor: 'primaryTechnology',
+            Filter: SelectColumnFilter,
+            filter: 'includes',
           },
           {
             Header: 'View',
@@ -50,30 +77,10 @@ const TsTable: React.FC = () => {
               <button
                 value={cell.row.id}
                 onClick={() => {
-                  window.location.href = `/staff/hr/${cell.row.original.id}`;
+                  window.location.href = `/staff/ts/${cell.row.original.id}`;
                 }}
               >
                 {'View'}
-              </button>
-            ),
-          },
-          {
-            Header: 'Delete',
-            accessor: '',
-            disableFilters: true,
-            Cell: ({ cell }: any) => (
-              <button
-                value={cell.row.id}
-                onClick={() => {
-                  console.log(cell.row.original.id);
-                  sendRequest({
-                    method: 'DELETE',
-                    url: `${PREFIX}/employees/${cell.row.original.id}`,
-                  });
-                }}
-              >
-                {'Delete'}
-                {cell.row.values.age}{' '}
               </button>
             ),
           },
@@ -83,7 +90,7 @@ const TsTable: React.FC = () => {
     [],
   );
 
-  return <Table name={'TsTable table'} columns={columns} data={data} />;
+  return <Table name={'TsTable table'}  onDelete={deleteStaff} onAdd={addStaff}  onEdit={editStaff} columns={columns} data={data} />;
 };
 
 export default TsTable;

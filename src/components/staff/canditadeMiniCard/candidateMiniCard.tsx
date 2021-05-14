@@ -46,13 +46,22 @@ const CandidateMiniCard: React.FC<CandidateMiniCardProps> = ({ timeZon, candidat
       <Grid xs={12} container>
         <div className="wrapperCard">
           <Typography variant="h6" className="columnName" noWrap>
-            Сall date:
+            Interview date:
+          </Typography>
+          <Typography variant="h6" noWrap>
+            {new Intl.DateTimeFormat("en-GB", {
+              timeZone: timeZon
+            }).format(new Date(candidate.interviewDate))}
+          </Typography>
+        </div>
+        <div className="wrapperCard">
+          <Typography variant="h6" className="columnName" noWrap>
+            Interview time:
           </Typography>
           <Typography variant="h6" noWrap>
             {new Intl.DateTimeFormat("en-GB", {
               hour: "numeric",
               minute: "numeric",
-              second: "numeric",
               timeZone: timeZon
             }).format(new Date(candidate.interviewDate))}
           </Typography>

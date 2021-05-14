@@ -17,6 +17,7 @@
     "@types/react-dom": "^17.0.3",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
+    "moment": "^2.29.1",
     "normalize-scss": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -60,16 +61,18 @@
   },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
+    "@types/react-big-calendar": "^0.31.0",
+    "@types/react-input-mask": "^3.0.0",
     "@types/react-table": "^7.0.29",
     "axios-hooks": "^2.6.1",
     "husky": "^6.0.0",
     "lru-cache": "^6.0.0",
     "prettier": "2.2.1",
     "pretty-quick": "^3.1.0",
+    "react-big-calendar": "^0.33.2",
     "react-input-mask": "^2.0.4",
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
-    "webpack": "4.44.2",
-    "@types/react-input-mask": "^3.0.0"
+    "webpack": "4.44.2"
   }
 }

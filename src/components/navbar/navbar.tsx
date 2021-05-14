@@ -171,7 +171,7 @@ export default function Navbar() {
         </MenuItem>
         <Collapse in={staffOpen} timeout="auto" unmountOnExit>
           <MenuList disablePadding>
-            {['HR', 'TS', 'add'].map((category, index) => {
+            {['HR', 'TS'].map((category, index) => {
               return (
                 <MenuItem
                   key={index}
