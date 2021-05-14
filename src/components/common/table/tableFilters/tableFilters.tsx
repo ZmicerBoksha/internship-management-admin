@@ -44,7 +44,9 @@ type TableFiltersProps = {
 };
 
 const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
-  const { allColumns, setAllFilters } = instance;
+  const { allColumns, setAllFilters, column } = instance;
+
+  console.log(column);
 
   const classes = useStyles();
 
@@ -105,7 +107,7 @@ const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
                 .filter(item => item.canFilter)
                 .map(column => {
                   return (
-                    <div key={column.id} className={classes.cell}>
+                    <div key={column.id} className={classes.cell} onClick={() => console.log(column.id)}>
                       {column.render('Filter')}
                     </div>
                   );

@@ -1,12 +1,13 @@
 import { createStyles, makeStyles, Switch, Typography } from '@material-ui/core';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-import { eventsApi, IEventForm } from '../../../api/api';
+import { eventsApi } from '../../../api/api';
 import Preloader from '../../common/preloader/preloader';
 import { PreloaderContext } from '../../common/preloader/preloaderContext';
 import { SnackbarContext, TSnackbar } from '../../common/snackbarInfo/snackbarContext';
 import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 import EventForm from '../eventForm/eventForm';
+import { IEventForm } from '../../../api/api';
 
 const useStyles = makeStyles(() => {
   return createStyles({

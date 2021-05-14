@@ -155,7 +155,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
 
   const onEventFormSubmit = (data: IEventForm) => {
     data.description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-    
+
     let technologyList: string[] = [];
 
     data.technologies &&
@@ -264,8 +264,8 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                       {...field}
                       readOnly={readOnly}
                       editorState={editorState}
-                      wrapperClassName='demo-wrapper'
-                      editorClassName='demo-editor'
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
                       onEditorStateChange={onEditorStateChange}
                     />
                   );

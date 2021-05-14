@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import PauseIcon from '@material-ui/icons/Pause';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
+import { statusHistoryServer, statusServer } from '../../../../api/api';
+import { Context } from '../candidate_card';
+import { TCandidate, TStatus } from '../../../../types/types';
+import { IN_PROGRESS, NOT_SUITABLE, SUITABLE } from '../../../common/const/const';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,6 +28,8 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
       display: 'flex',
       justifyContent: 'center',
+      fontSize: '18px',
+      fontWeight: 400,
     },
     stepper: {
       boxShadow: '1px 1px 1px #dedfe0',
@@ -61,69 +64,106 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function getSteps() {
-  return [
-    'An interview with HR is scheduled',
-    'An interview with HR is finished',
-    'The level of English is checked',
-    'An interview with TsTable is scheduled',
-    'An interview with TsTable is finished',
-  ];
-}
+type CandidateProgressProps = {
+  candidateInfo: TCandidate;
+  editCandidateData: (data: { status: string }) => void;
+  updateCandidateInfo: TCandidate;
+  setCandidatesStatusColor: (color: string) => void;
+};
 
-function getStepContent(stepIndex: number) {
-  switch (stepIndex) {
-    case 0:
-      return 'The administrator needs to schedule an interview with HR and the candidate';
-    case 1:
-      return 'Leave your feedback about the candidate';
-    case 2:
-      return 'Enter the level of English of the candidate';
-    case 3:
-      return 'The administrator needs to schedule an interview with technical specialist and the candidate';
-    case 4:
-      return 'Leave your feedback about the candidate';
-    default:
-      return 'Unknown stepIndex';
-  }
-}
-
-const CandidateProgress: React.FC = () => {
+const CandidateProgress: React.FC<CandidateProgressProps> = ({
+  candidateInfo,
+  editCandidateData,
+  updateCandidateInfo,
+  setCandidatesStatusColor,
+}) => {
+  const [status, setStatus] = useState<TStatus[]>([]);
   const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
   const steps = getSteps();
+  const { activeStep } = useContext(Context);
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const handleNext = () => {
-    setActiveStep(prevActiveStep => prevActiveStep + 1);
+  function getSteps() {
+    return status.map((item: TStatus) => item.name);
+  }
+
+  function getStepContent(stepIndex: number) {
+    return status.map((item: TStatus, index: number) => {
+      return stepIndex === index ? item.description : '';
+    });
+  }
+
+  const setCandidateStatus = (statusName: string) => {
+    editCandidateData({ status: statusName });
+    setCandidatesStatusColor(statusName);
   };
+
+  useEffect(() => {
+    statusServer
+      .getAllStatus()
+      .then(({ data: { content } }) => {
+        setStatus(content);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+    setCandidatesStatusColor(candidateInfo.status);
+  }, []);
+
+  useEffect(() => {
+    statusHistoryServer
+      .getStatusHistoryByCandidate(candidateInfo.id)
+      .then(({ data: { content } }) => {
+        setCurrentStep(content[content.length - 1].status.id);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  }, [candidateInfo.id, activeStep]);
 
   return (
     <div className={classes.root}>
-      <Stepper className={classes.stepper} activeStep={activeStep} alternativeLabel>
-        {steps.map(label => (
+      <Stepper className={classes.stepper} activeStep={currentStep} alternativeLabel>
+        {steps.map((label: string) => (
           <Step key={label}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
       <div>
-        {activeStep === steps.length ? (
-          <div className={classes.info}>
-            <Typography>All steps completed. Please accept or reject this candidate.</Typography>
-            <div className={classes.buttonWrapper}>
-              <Button className={classes.reject}>Reject</Button>
-              <Button className={classes.pending}>Pending</Button>
-              <Button className={classes.approve}>Approve</Button>
-            </div>
+        <h2 className={classes.instructions}>{getStepContent(currentStep)}</h2>
+        {currentStep === steps.length ? (
+          <div className={classes.info} style={updateCandidateInfo && { display: 'none' }}>
+            {(!candidateInfo.status || candidateInfo.status === IN_PROGRESS) && (
+              <>
+                <Typography>All steps completed. Please accept or reject this candidate.</Typography>
+                <div className={classes.buttonWrapper}>
+                  <Button className={classes.reject} onClick={() => setCandidateStatus(NOT_SUITABLE)}>
+                    Reject
+                  </Button>
+                  <Button className={classes.pending} onClick={() => setCandidateStatus(IN_PROGRESS)}>
+                    Pending
+                  </Button>
+                  <Button className={classes.approve} onClick={() => setCandidateStatus(SUITABLE)}>
+                    Approve
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         ) : (
           <div>
-            <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
             <div className={classes.buttonWrapper}>
-              <Button className={classes.reject}>Reject</Button>
-              <Button variant="contained" color="primary" onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
+              {!candidateInfo.status && (
+                <Button
+                  className={classes.reject}
+                  onClick={() => setCandidateStatus(NOT_SUITABLE)}
+                  style={updateCandidateInfo && { display: 'none' }}
+                >
+                  Reject
+                </Button>
+              )}
             </div>
           </div>
         )}

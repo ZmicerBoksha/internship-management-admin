@@ -34,8 +34,9 @@
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "html-to-draftjs": "^1.5.0",
-   
+    "moment": "^2.29.1",
     "react": "^17.0.2",
+    "react-big-calendar": "^0.33.2",
     "react-dom": "^17.0.2",
     "react-draft-wysiwyg": "^1.14.7",
 
@@ -78,6 +79,8 @@
   },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
+    "@types/react-big-calendar": "^0.31.0",
+    "@types/react-input-mask": "^3.0.0",
     "@types/react-table": "^7.0.29",
     "axios-hooks": "^2.6.1",
     "husky": "^6.0.0",
@@ -87,7 +90,6 @@
     "react-input-mask": "^2.0.4",
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
-    "webpack": "4.44.2",
-    "@types/react-input-mask": "^3.0.0"
+    "webpack": "4.44.2"
   }
 }
