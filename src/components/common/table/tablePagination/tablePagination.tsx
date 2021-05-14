@@ -1,6 +1,5 @@
 import { createStyles, makeStyles, TablePagination as MyTablePagination } from '@material-ui/core';
-import { FunctionComponent, MouseEvent, useCallback, useEffect, useState } from 'react';
-import { TableInstance } from 'react-table';
+import { FunctionComponent } from 'react';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -13,7 +12,7 @@ const useStyles = makeStyles(() => {
   });
 });
 
-export const rowsPerPageOptions: number[] = [1, 15, 25, 50];
+export const rowsPerPageOptions: number[] = [10, 15, 25, 50];
 
 type TTablePagination = {
   countRows?: number;
