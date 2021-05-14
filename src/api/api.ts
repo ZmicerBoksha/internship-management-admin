@@ -107,8 +107,10 @@ export interface IEventForm {
 }
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8085/api',
+  baseURL: process.env.REACT_APP_BASE_API_URL,
 });
+console.log('###: process', process);
+console.log('###: env', process.env);
 
 export const eventsApi = {
   getEvents(page: number, itemsPerPage: number, searchParam?: string) {
