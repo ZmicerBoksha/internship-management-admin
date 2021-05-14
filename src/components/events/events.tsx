@@ -10,6 +10,7 @@ import SnackbarInfo from '../common/snackbarInfo/snackbarInfo';
 import { IEvent } from './events-config';
 import { SnackbarContext, TSnackbar } from '../common/snackbarInfo/snackbarContext';
 import { PreloaderContext } from '../common/preloader/preloaderContext';
+import { rowsPerPageOptions } from '../common/table/tablePagination/tablePagination';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -38,25 +39,42 @@ const Events: FunctionComponent = () => {
   const columns = useMemo(() => Columns, []);
 
   const [data, setData] = useState([]);
+  const [countRows, setCountRows] = useState<number>(0);
 
-  async function getData(searchParam?: string) {
+  const [page, setPage] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(rowsPerPageOptions[0]);
+
+  async function getData(page: number, itemsPerPage: number, searchParam?: string) {
     await eventsApi
-      .getEvents(searchParam)
+      .getEvents(page, itemsPerPage, searchParam)
       .then(response => {
         setData(response.content);
+
+        return response;
       })
-      .then(() => {
+      .then(response => {
+        setCountRows(response.totalElements);
         setLoadingData(false);
+        return response;
+      })
+      .catch(err => {
+        err.request.readyState === 4 &&
+          err.request.status === 0 &&
+          setSnackbar({
+            isOpen: true,
+            alertSeverity: 'error',
+            alertMessage: 'Server is not available. Please try again later',
+          });
       });
   }
 
   useEffect(() => {
-    loadingData && getData();
+    loadingData && getData(page, itemsPerPage);
   }, [loadingData]);
 
   useEffect(() => {
-    getData(searchParams);
-  }, [searchParams]);
+    getData(page, itemsPerPage, searchParams);
+  }, [page, itemsPerPage, searchParams]);
 
   const history = useHistory();
 
@@ -98,6 +116,11 @@ const Events: FunctionComponent = () => {
               onEdit={editEvent}
               onDelete={deleteEvents}
               setSearchParams={setSearchParams}
+              countRows={countRows}
+              pageNumberForBack={page}
+              setPage={setPage}
+              rowsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
             />
           )}
           {snackbar?.isOpen && (

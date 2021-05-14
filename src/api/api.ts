@@ -111,11 +111,12 @@ const instance = axios.create({
 });
 
 export const eventsApi = {
-  getEvents(searchParam?: string) {
+  getEvents(page: number, itemsPerPage: number, searchParam?: string) {
     let urlForRequest = '/event/all';
-    if (searchParam) {
-      urlForRequest += `?search=${searchParam}`;
-    }
+    arguments.length && (urlForRequest += '?');
+
+    urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
+    searchParam && (urlForRequest += `&search=${searchParam}`);
 
     return instance.get(urlForRequest).then(response => response.data);
   },

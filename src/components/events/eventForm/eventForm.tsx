@@ -28,6 +28,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import { useModalErrorContext } from '../../common/modalError/modalErrorContext';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -114,6 +115,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
 
   const { loadingData, setLoadingData } = usePreloaderContext();
   const { snackbar, setSnackbar } = useSnackbarContext();
+  const { modalError, setModalError } = useModalErrorContext();
 
   const [editorState, setEditorState] = useState(
     !!eventData?.description
@@ -184,6 +186,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
         .then(newEventId => {
           setLoadingData(true);
           history.push(`/events/info/${newEventId}?mode=edit`);
+        }).catch(err => {
+          setModalError({
+            isOpen: true,
+            errorTitle: `Error ${err.response.status}`,
+            errorText: `${err.response.data.info}`
+          });
         });
 
     eventType === 'info' &&
@@ -200,6 +208,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
 
         history.push('/events');
         // return response.data.id;
+      }).catch(err => {
+        setModalError({
+          isOpen: true,
+          errorTitle: `Error ${err.response.status}`,
+          errorText: `${err.response.data.info}`
+        });
       });
     // .then(newEventId => {
     //   setIsEditMode(false);
@@ -309,13 +323,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         }`}
                         disabled={readOnly}
                       >
-                        {/* <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
-                        <MenuItem value={'ELEMENTARY'}>Elementary (A2)</MenuItem>
-                        <MenuItem value={'PRE_INTERMEDIATE'}>Pre-Intermediate (A2/B1)</MenuItem>
-                        <MenuItem value={'INTERMEDIATE'}>Intermediate (B1)</MenuItem>
-                        <MenuItem value={'UPPER_INTERMEDIATE'}>Upper-Intermediate (B2)</MenuItem>
-                        <MenuItem value={'ADVANCED'}>Advanced (C1)</MenuItem>
-                        <MenuItem value={'PROFICIENCY'}>Proficiency (C2)</MenuItem> */}
                         {englishLevels.map((item, index) => (
                           <MenuItem key={index} value={item.backName}>
                             {item.showAs}
