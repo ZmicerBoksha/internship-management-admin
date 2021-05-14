@@ -12,16 +12,22 @@ import {
 } from '@material-ui/core';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { eventsApi, IEventForm } from '../../../api/api';
-import { Countries } from '../../common/countries/countries';
-import { Technologies } from '../../common/technologies/technologies';
+import { englishLevels, eventFormats, eventsApi, eventTabs, IEventForm } from '../../../api/api';
+import { countries } from '../../common/countries/countries';
+import { technologies } from '../../common/technologies/technologies';
 import SaveIcon from '@material-ui/icons/Save';
 import UpdateIcon from '@material-ui/icons/Update';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Controller, useForm } from 'react-hook-form';
 import { eventsRules } from '../rules/rules';
 import { useHistory } from 'react-router';
-import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
+import { usePreloaderContext } from '../../common/preloader/preloaderContext';
+import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -100,23 +106,25 @@ type TEventForm = {
   eventType: 'new' | 'info';
   isEditMode: boolean;
   eventData: IEventForm | null;
-  setLoadingData: (loadingData: boolean) => void;
   setIsEditMode: (isEditMode: boolean) => void;
 };
 
-const EventForm: FunctionComponent<TEventForm> = ({
-  eventId,
-  eventType,
-  isEditMode,
-  eventData,
-  setLoadingData,
-  setIsEditMode,
-}) => {
+const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMode, eventData, setIsEditMode }) => {
   const classes = useStyles();
 
-  const [openSnackbar, setopenSnackbar] = useState<boolean>(false);
-  const [alertSeverity, setAlertSeverity] = useState<'success' | 'error' | 'warning' | 'info' | undefined>(undefined);
-  const [alertMessage, setAlertMessage] = useState<string | undefined>(undefined);
+  const { loadingData, setLoadingData } = usePreloaderContext();
+  const { snackbar, setSnackbar } = useSnackbarContext();
+
+  const [editorState, setEditorState] = useState(
+    !!eventData?.description
+      ? EditorState.createWithContent(
+          ContentState.createFromBlockArray(htmlToDraft(eventData.description).contentBlocks),
+        )
+      : EditorState.createEmpty(),
+  );
+  const onEditorStateChange = (editorState: EditorState) => {
+    setEditorState(editorState);
+  };
 
   const readOnly = eventType === 'new' ? false : !isEditMode;
   const history = useHistory();
@@ -127,7 +135,6 @@ const EventForm: FunctionComponent<TEventForm> = ({
     handleSubmit,
     setValue,
     unregister,
-    clearErrors,
     formState: { errors },
   } = useForm<IEventForm>();
 
@@ -147,6 +154,8 @@ const EventForm: FunctionComponent<TEventForm> = ({
   }, [watchShowFormat]);
 
   const onEventFormSubmit = (data: IEventForm) => {
+    data.description = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+
     let technologyList: string[] = [];
 
     data.technologies &&
@@ -163,9 +172,11 @@ const EventForm: FunctionComponent<TEventForm> = ({
         .then(response => {
           const status = response.status;
           if (status >= 200 && status <= 299) {
-            setopenSnackbar(true);
-            setAlertSeverity('success');
-            setAlertMessage('Event create success');
+            setSnackbar({
+              isOpen: true,
+              alertSeverity: 'success',
+              alertMessage: 'Event create success',
+            });
           }
 
           return response.data.id;
@@ -177,27 +188,27 @@ const EventForm: FunctionComponent<TEventForm> = ({
 
     eventType === 'info' &&
       eventId &&
-      eventsApi
-        .updateEvent(eventId, data)
-        .then(response => {
-          const status = response.status;
-          if (status >= 200 && status <= 299) {
-            setopenSnackbar(true);
-            setAlertSeverity('success');
-            setAlertMessage('Event update success');
-          }
+      eventsApi.updateEvent(eventId, data).then(response => {
+        const status = response.status;
+        if (status >= 200 && status <= 299) {
+          setSnackbar({
+            isOpen: true,
+            alertSeverity: 'success',
+            alertMessage: 'Event update success',
+          });
+        }
 
-          return response.data.id;
-        })
-        .then(newEventId => {
-          setIsEditMode(false);
-          history.push(`/events/info/${newEventId}`);
-        });
+        history.push('/events');
+        // return response.data.id;
+      });
+    // .then(newEventId => {
+    //   setIsEditMode(false);
+    //   history.push(`/events/info/${newEventId}`);
+    // });
   };
 
   return (
     <>
-      {openSnackbar && <SnackbarInfo isOpen={openSnackbar} alertSeverity={alertSeverity} alertMessage={alertMessage} />}
       <form className={classes.event_form} onSubmit={handleSubmit(onEventFormSubmit)}>
         <div className="left_side_form">
           <div className={classes.form_block_wrap}>
@@ -249,16 +260,13 @@ const EventForm: FunctionComponent<TEventForm> = ({
                 }}
                 render={({ field }) => {
                   return (
-                    <TextareaAutosize
+                    <Editor
                       {...field}
-                      id="description"
-                      aria-label="Event description"
-                      rowsMin={8}
-                      placeholder="Enter event description text"
-                      className={`${classes.full_width} ${!!errors.description && classes.error_field} ${
-                        readOnly && classes.disabled_field
-                      }`}
-                      disabled={readOnly}
+                      readOnly={readOnly}
+                      editorState={editorState}
+                      wrapperClassName="demo-wrapper"
+                      editorClassName="demo-editor"
+                      onEditorStateChange={onEditorStateChange}
                     />
                   );
                 }}
@@ -301,13 +309,18 @@ const EventForm: FunctionComponent<TEventForm> = ({
                         }`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
+                        {/* <MenuItem value={'BEGINNER'}>Beginner (A1)</MenuItem>
                         <MenuItem value={'ELEMENTARY'}>Elementary (A2)</MenuItem>
                         <MenuItem value={'PRE_INTERMEDIATE'}>Pre-Intermediate (A2/B1)</MenuItem>
                         <MenuItem value={'INTERMEDIATE'}>Intermediate (B1)</MenuItem>
                         <MenuItem value={'UPPER_INTERMEDIATE'}>Upper-Intermediate (B2)</MenuItem>
                         <MenuItem value={'ADVANCED'}>Advanced (C1)</MenuItem>
-                        <MenuItem value={'PROFICIENCY'}>Proficiency (C2)</MenuItem>
+                        <MenuItem value={'PROFICIENCY'}>Proficiency (C2)</MenuItem> */}
+                        {englishLevels.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -331,7 +344,7 @@ const EventForm: FunctionComponent<TEventForm> = ({
                   return (
                     <Autocomplete
                       multiple
-                      options={Technologies}
+                      options={technologies}
                       getOptionLabel={option => option}
                       defaultValue={eventData?.technologies.split(',').map(technology => technology.trim())}
                       onChange={(event, data) => {
@@ -502,9 +515,11 @@ const EventForm: FunctionComponent<TEventForm> = ({
                         className={`${!!errors.eventTab && classes.error_field} ${readOnly && classes.disabled_field}`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'PLANNED'}>Planned</MenuItem>
-                        <MenuItem value={'IN_PROGRESS'}>In-progress</MenuItem>
-                        <MenuItem value={'ARCHIVE'}>Archive</MenuItem>
+                        {eventTabs.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -536,8 +551,11 @@ const EventForm: FunctionComponent<TEventForm> = ({
                         className={`${!!errors.format && classes.error_field} ${readOnly && classes.disabled_field}`}
                         disabled={readOnly}
                       >
-                        <MenuItem value={'ONLINE'}>Online</MenuItem>
-                        <MenuItem value={'OFFLINE'}>Offline</MenuItem>
+                        {eventFormats.map((item, index) => (
+                          <MenuItem key={index} value={item.backName}>
+                            {item.showAs}
+                          </MenuItem>
+                        ))}
                       </Select>
                     );
                   }}
@@ -567,7 +585,7 @@ const EventForm: FunctionComponent<TEventForm> = ({
                     return (
                       <Autocomplete
                         {...field}
-                        options={Countries}
+                        options={countries}
                         getOptionLabel={option => option}
                         onChange={(event, data) => field.onChange(data)}
                         className={`${!!errors.country && classes.error_field} ${readOnly && classes.disabled_field}`}

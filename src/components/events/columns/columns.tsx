@@ -7,7 +7,13 @@ import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import { Button, createStyles, IconButton, makeStyles, Popover } from '@material-ui/core';
 import { useState, FunctionComponent, MouseEvent } from 'react';
 import { useHistory } from 'react-router';
-import { eventsApi } from '../../../api/api';
+import { englishLevels, eventFormats, eventsApi, eventTabs } from '../../../api/api';
+import BetweenDatesFilter from '../../common/table/filters/betweenDatesFilter';
+import { usePreloaderContext } from '../../common/preloader/preloaderContext';
+import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
+import { technologies } from '../../common/technologies/technologies';
+import { countries } from '../../common/countries/countries';
+import { SelectColumnFilterEvents } from '../../common/table/filters/selectColumnFilterEvents';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -42,6 +48,9 @@ type TFirstColumnSettings = {
 const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId }) => {
   const classes = useStyles();
 
+  const { loadingData, setLoadingData } = usePreloaderContext();
+  const { snackbar, setSnackbar } = useSnackbarContext();
+
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const openRowPopover = (event: MouseEvent<HTMLButtonElement>) => {
@@ -69,7 +78,16 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
   };
 
   const deleteEvent = () => {
-    eventsApi.deleteEvent(Number(rowId));
+    eventsApi
+      .deleteEvent(Number(rowId))
+      .then(() => {
+        setSnackbar({
+          isOpen: true,
+          alertSeverity: 'success',
+          alertMessage: 'Event was delete.',
+        });
+      })
+      .then(() => setLoadingData(true));
   };
 
   return (
@@ -134,10 +152,16 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
 
 export const Columns = [
   {
-    width: 45,
+    minWidth: 60,
+    width: 60,
+    maxWidth: 60,
     Header: '',
     accessor: 'actions',
+    disableResizing: true,
+    disableGroupBy: true,
     disableFilters: true,
+    disableGlobalFilter: true,
+    alwaysVisible: true,
     Cell: (props: any) => {
       const rowId = props.row.original.id;
       return <FirstColumnSettings rowId={rowId} />;
@@ -146,141 +170,113 @@ export const Columns = [
   {
     Header: 'Id',
     accessor: 'id',
+    startHide: true,
+  },
+  {
+    Header: 'Tab',
+    accessor: 'eventTab',
+    Filter: SelectColumnFilter,
+    filter: 'includes',
+    isVisible: true,
+    startHide: true,
+    selectValues: eventTabs.map(value => value.backName),
+  },
+  {
+    Header: 'Format',
+    accessor: 'format',
+    Filter: SelectColumnFilter,
+    filter: 'includes',
+    startHide: true,
+    selectValues: eventFormats.map(value => value.backName),
+  },
+  {
+    Header: 'Title',
+    accessor: 'title',
+  },
+  {
+    Header: 'Description',
+    accessor: 'description',
+    startHide: true,
+  },
+  {
+    Header: 'Event start',
+    accessor: 'startDate',
+    Filter: BetweenDatesFilter,
+    filter: 'betweenDates',
+  },
+  {
+    Header: 'Event finish',
+    accessor: 'deadline',
+    Filter: BetweenDatesFilter,
+    filter: 'betweenDates',
+  },
+  {
+    Header: 'Date end of acceptin',
+    accessor: 'dateOfEndAccept',
+    Filter: BetweenDatesFilter,
+    filter: 'betweenDates',
+    startHide: true,
+  },
+  {
+    Header: 'Event duration',
+    accessor: 'duration',
+    startHide: true,
+  },
+  {
+    Header: 'Src',
+    accessor: 'image',
     disableFilters: true,
-    // alwaysShow: true,
+    Cell: (props: any) => {
+      return (
+        <>
+          <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
+        </>
+      );
+    },
   },
   {
-    Header: 'Event custom info',
-    columns: [
-      {
-        Header: 'Tab',
-        accessor: 'eventTab',
-        Filter: SelectColumnFilter,
-        filter: 'includes',
-      },
-      {
-        Header: 'Format',
-        accessor: 'format',
-        Filter: SelectColumnFilter,
-        filter: 'includes',
-      },
-    ],
+    Header: 'Alt text',
+    accessor: 'image.altText',
+    disableFilters: true,
+    startHide: true,
   },
   {
-    Header: 'Name and description',
-    columns: [
-      {
-        Header: 'Title',
-        accessor: 'eventTitle',
-        Cell: (props: any) => {
-          return (
-            <>
-              <p>В беке нету</p>
-            </>
-          );
-        },
-      },
-      {
-        Header: 'Body',
-        accessor: 'eventBody',
-        Cell: (props: any) => {
-          return (
-            <>
-              <p>В беке нету</p>
-            </>
-          );
-        },
-      },
-    ],
+    Header: 'English level',
+    accessor: 'englishLevel',
+    Filter: SelectColumnFilter,
+    filter: 'includes',
+    selectValues: englishLevels.map(value => value.backName),
   },
   {
-    Header: 'Dates info',
-    columns: [
-      {
-        Header: 'Event start',
-        accessor: 'startDate',
-      },
-      {
-        Header: 'Event finish',
-        accessor: 'deadline',
-      },
-      {
-        Header: 'Date end of acceptin',
-        accessor: 'dateOfEndAccept',
-      },
-      {
-        Header: 'Event duration',
-        accessor: 'duration',
-      },
-    ],
+    Header: 'Technologies',
+    accessor: 'technologies',
+    selectValues: technologies,
   },
   {
-    Header: 'Image info',
-    columns: [
-      {
-        Header: 'Src',
-        accessor: 'image',
-        disableFilters: true,
-        Cell: (props: any) => {
-          return (
-            <>
-              <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
-            </>
-          );
-        },
-      },
-      {
-        Header: 'Alt text',
-        accessor: 'image.altText',
-        disableFilters: true,
-      },
-    ],
+    Header: 'Country',
+    accessor: 'country',
+    Filter: SelectColumnFilter,
+    filter: 'includes',
+    startHide: true,
+    selectValues: countries,
   },
   {
-    Header: 'Requirements',
-    columns: [
-      {
-        Header: 'English level',
-        accessor: 'englishLevel',
-        Filter: SelectColumnFilter,
-        filter: 'includes',
-      },
-      {
-        Header: 'Technologies',
-        accessor: 'technologies',
-      },
-    ],
+    Header: 'City',
+    accessor: 'city',
+    startHide: true,
   },
   {
-    Header: 'Location',
-    columns: [
-      {
-        Header: 'Country',
-        accessor: 'country',
-        Filter: SelectColumnFilter,
-        filter: 'includes',
-      },
-      {
-        Header: 'City',
-        accessor: 'city',
-      },
-    ],
+    Header: 'Who created event (userId)',
+    accessor: 'creatorEvent',
+    startHide: true,
+    Cell: (props: any) => {
+      const { cell } = props;
+      return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
+    },
   },
   {
-    Header: 'Info create',
-    columns: [
-      {
-        Header: 'Who created event (userId)',
-        accessor: 'creatorEvent',
-        Cell: (props: any) => {
-          const { cell } = props;
-          return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
-        },
-      },
-      {
-        Header: 'Event created at',
-        accessor: 'creatorEvent.createdAt',
-      },
-    ],
+    Header: 'Event created at',
+    accessor: 'creatorEvent.createdAt',
+    startHide: true,
   },
 ];

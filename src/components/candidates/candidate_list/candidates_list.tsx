@@ -1,30 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './styles.css';
-import useAxios from 'axios-hooks';
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
-import { candidateService } from "../../../api/api";
-
-
-export type TCandidate = {
-  institution: string;
-  faculty: string;
-  speciality: string;
-  email: string;
-  englishLevel: string;
-  firstName: string;
-  id: number;
-  experience: string;
-  expertise: string;
-  education: string;
-  location: string;
-  lastName: string;
-  country: string;
-  phone: string;
-  rsmId: number;
-  skype: string;
-};
+import { candidateService } from '../../../api/api';
+import { TCandidate } from '../../../types/types';
 
 const CandidatesList: React.FC = () => {
   const history = useHistory();
@@ -38,20 +18,17 @@ const CandidatesList: React.FC = () => {
 
     candidateService
       .getAllCandidates(params)
-      .then(( {data} ) => {
+      .then(({ data }) => {
         setCandidatesList(data);
       })
-      .catch((err:any) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
-  const [{ data: candidateResume /*loading: candidatesListLoading, error: candidatesListError*/ }] = useAxios(
-    `/resume?search=`,
-  );
-
   const handleClick = (instance: any) => {
-    const candidateID = instance.rows[0].original.id;
+    console.log(instance);
+    const candidateID = instance.selectedFlatRows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };
 

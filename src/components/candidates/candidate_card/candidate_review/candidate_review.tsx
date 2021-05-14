@@ -3,7 +3,7 @@ import CandidateSkills from '../candidate_skills/candidate_skills';
 import { Paper, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import useAxios from 'axios-hooks';
-import { TCandidate } from '../../candidate_list/candidates_list';
+import { TCandidate, TFeedback } from '../../../../types/types';
 
 type TCandidateReviewProps = {
   getCandidateInfo: TCandidate;
@@ -56,8 +56,8 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
     { manual: true },
   );
 
-  const addReview = (data: any) => {
-    executePost({data})
+  const addReview = (data: TFeedback) => {
+    executePost({ data });
   };
 
   const [{ data: getInterviewFeedback /*loading: getLoading, error: getError*/ }, getFetch] = useAxios(
@@ -92,6 +92,7 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
             skillsDescription={softSkillsDescription}
             handleSkillsDescription={handleSoftSkillsReview}
             handleSubmitReview={handleSubmitReview}
+            statusId={2}
           />
         )}
       </Paper>
@@ -107,6 +108,7 @@ const CandidateReview: React.FC<TCandidateReviewProps> = ({ getCandidateInfo }) 
             skillsDescription={hardSkillsDescription}
             handleSkillsDescription={handleHardSkillsReview}
             handleSubmitReview={handleSubmitReview}
+            statusId={4}
           />
         )}
       </Paper>

@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import { TSnackbar } from './snackbarContext';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -17,13 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type TSnackbarInfo = {
-  isOpen?: boolean;
-  alertSeverity?: 'success' | 'error' | 'warning' | 'info';
-  alertMessage?: string;
-};
-
-const SnackbarInfo: FunctionComponent<TSnackbarInfo> = ({ isOpen, alertSeverity, alertMessage }) => {
+const SnackbarInfo: FunctionComponent<TSnackbar> = ({ isOpen, alertSeverity, alertMessage }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(isOpen);
 

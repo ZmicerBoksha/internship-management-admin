@@ -1,8 +1,7 @@
 import { createStyles, fade, InputBase, makeStyles, Theme } from '@material-ui/core';
-import { ChangeEvent, FunctionComponent, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { TableInstance, useAsyncDebounce } from 'react-table';
 import SearchIcon from '@material-ui/icons/Search';
-import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -35,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     inputInput: {
       padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
       paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
       transition: theme.transitions.create('width'),
       width: '100%',
@@ -56,28 +54,13 @@ type GlobalFilterProps = {
 
 const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
   const classes = useStyles();
-
   const { globalFilter, setGlobalFilter } = instance;
 
-  const history = useHistory();
+  const [value, setValue] = useState(globalFilter);
 
-  const [value, setValue] = useState('');
-  // Comment delete after create filters
-  // const onChangeInput = useAsyncDebounce(value => {
-  //   setGlobalFilter(value || undefined);
-  // }, 1000);
-
-  
-
-  const onChangeInput = (event: ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setValue(newValue);
-
-    const searchParam = `global==${newValue}`;
-    history.push({
-      search: `${searchParam}`,
-    });
-  };
+  const onChangeInput = useAsyncDebounce(value => {
+    setGlobalFilter(value || undefined);
+  }, 1000);
 
   return (
     <div className={classes.search}>
@@ -90,7 +73,10 @@ const GlobalFilter: FunctionComponent<GlobalFilterProps> = ({ instance }) => {
           root: classes.inputRoot,
           input: classes.inputInput,
         }}
-        onChange={onChangeInput}
+        onChange={event => {
+          setValue(event.target.value);
+          onChangeInput(event.target.value);
+        }}
         value={value}
         inputProps={{ 'aria-label': 'search' }}
       />
