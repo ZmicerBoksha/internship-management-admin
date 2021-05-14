@@ -191,9 +191,7 @@ const Table: FunctionComponent<TableProps> = ({
   const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
 
   useEffect(() => {
-    instance.state.hiddenColumns = allColumns
-      .filter(column => column.hasOwnProperty('startHide'))
-      .map(column => column.id);
+    instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(({ id }) => id);
   }, []);
 
   const history = useHistory();
@@ -230,10 +228,10 @@ const Table: FunctionComponent<TableProps> = ({
 
     instance.allColumns.forEach(column => {
       if (!column.disableGlobalFilter)
-        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*" or ` : '';
+        globalFilterParametrs += state.globalFilter ? `${column.id}=="${state.globalFilter}*",` : '';
     });
 
-    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 4));
+    setSearchParams && setSearchParams(globalFilterParametrs.substring(0, globalFilterParametrs.length - 1));
   }, [state.globalFilter]);
 
   return (

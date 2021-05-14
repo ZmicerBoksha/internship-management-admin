@@ -54,10 +54,8 @@ const Events: FunctionComponent = () => {
       })
       .then(response => {
         setCountRows(response.totalElements);
-        return response;
-      })
-      .then(() => {
         setLoadingData(false);
+        return response;
       })
       .catch(err => {
         err.request.readyState === 4 &&

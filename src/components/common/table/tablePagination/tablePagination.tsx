@@ -32,12 +32,12 @@ const TablePagination: FunctionComponent<TTablePagination> = ({
   const classes = useStyles();
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage && setPage(newPage);
+    setPage?.(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setItemsPerPage && setItemsPerPage(parseInt(event.target.value, 10));
-    setPage && setPage(0);
+    setItemsPerPage?.(parseInt(event.target.value, 10));
+    setPage?.(0);
   };
 
   return (
