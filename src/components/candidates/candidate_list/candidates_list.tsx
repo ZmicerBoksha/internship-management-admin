@@ -1,13 +1,20 @@
 import React, { useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import './styles.css';
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
-import { candidateService } from '../../../api/api';
+import { candidateService, candidateEventsApi } from '../../../api/api';
 import { TCandidate } from '../../../types/types';
+
+type TCandidateEvents = {
+  eventId?: string;
+};
 
 const CandidatesList: React.FC = () => {
   const history = useHistory();
+  const { eventId } = useParams<TCandidateEvents>();
+  console.log(eventId);
+
   const [candidatesList, setCandidatesList] = useState<TCandidate[]>([]);
 
   const fetchCandidatesList = (size: number, page: number) => {
@@ -16,14 +23,18 @@ const CandidatesList: React.FC = () => {
       page: page,
     };
 
-    candidateService
-      .getAllCandidates(params)
-      .then(({ data }) => {
-        setCandidatesList(data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if (!!eventId) {
+      candidateEventsApi.getAllCandidateEvent(page, size, eventId);
+    } else {
+      candidateService
+        .getAllCandidates(params)
+        .then(({ data }) => {
+          setCandidatesList(data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
 
   const handleClick = (instance: any) => {

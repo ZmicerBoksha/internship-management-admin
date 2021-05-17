@@ -109,8 +109,6 @@ export interface IEventForm {
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
 });
-console.log('###: process', process);
-console.log('###: env', process.env);
 
 export const eventsApi = {
   getEvents(page: number, itemsPerPage: number, searchParam?: string) {
@@ -149,6 +147,18 @@ export const eventsApi = {
   },
   deleteEvent(eventId: number) {
     return instance.delete(`/event/${eventId}`).then(response => response);
+  },
+};
+
+export const candidateEventsApi = {
+  getAllCandidateEvent(page: number, itemsPerPage: number, searchParam?: string) {
+    // return instance.get(`/candidate-event/${eventId}`).then(response => response);
+    let urlForRequest = '/candidate-event/all';
+    arguments.length && (urlForRequest += '?');
+
+    urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
+    searchParam && (urlForRequest += `&search=${searchParam}`);
+    return instance.get(urlForRequest).then(response => response);
   },
 };
 
