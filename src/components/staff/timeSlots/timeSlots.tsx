@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import PopUpCalender from "../popUpCalender/popUpCalender";
 import Button from "@material-ui/core/Button";
 import CandidateMiniCard from "../canditadeMiniCard/candidateMiniCard";
 import { useHistory } from "react-router-dom";
