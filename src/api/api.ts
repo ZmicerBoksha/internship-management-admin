@@ -100,6 +100,7 @@ export interface IEventForm {
   deadline: Date;
   dateOfEndAccept: Date;
   duration: string;
+  imageId: number
   image: {
     altText?: string;
     imageData: any;
@@ -109,6 +110,15 @@ export interface IEventForm {
 const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
 });
+
+export const imageApi = {
+  getImageById(imageId: string | number) {
+    return instance.get(`/image/${imageId}`)
+    .then(response => {
+      console.log(response);
+    })
+  }
+}
 
 export const eventsApi = {
   getEvents(page: number, itemsPerPage: number, searchParam?: string) {

@@ -193,11 +193,11 @@ export const Columns = [
     Header: 'Title',
     accessor: 'title',
   },
-  {
-    Header: 'Description',
-    accessor: 'description',
-    startHide: true,
-  },
+  // {
+  //   Header: 'Description',
+  //   accessor: 'description',
+  //   startHide: true,
+  // },
   {
     Header: 'Event start',
     accessor: 'startDate',
@@ -222,18 +222,18 @@ export const Columns = [
     accessor: 'duration',
     startHide: true,
   },
-  {
-    Header: 'Src',
-    accessor: 'image',
-    disableFilters: true,
-    Cell: (props: any) => {
-      return (
-        <>
-          <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
-        </>
-      );
-    },
-  },
+  // {
+  //   Header: 'Src',
+  //   accessor: 'image',
+  //   disableFilters: true,
+  //   // Cell: (props: any) => {
+  //   //   return (
+  //   //     <>
+  //   //       <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
+  //   //     </>
+  //   //   );
+  //   // },
+  // },
   {
     Header: 'Alt text',
     accessor: 'image.altText',
