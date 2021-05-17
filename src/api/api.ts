@@ -152,12 +152,12 @@ export const eventsApi = {
 
 export const candidateEventsApi = {
   getAllCandidateEvent(page: number, itemsPerPage: number, searchParam?: string) {
-    // return instance.get(`/candidate-event/${eventId}`).then(response => response);
     let urlForRequest = '/candidate-event/all';
     arguments.length && (urlForRequest += '?');
 
-    urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
+    urlForRequest += `page=${page}&itemsPerPage=${itemsPerPage}`;
     searchParam && (urlForRequest += `&search=${searchParam}`);
+
     return instance.get(urlForRequest).then(response => response);
   },
 };
@@ -174,7 +174,7 @@ export const getStatusCandidateById = (candidateIds: number[]) => {
   return instance.get(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`).then(({ data }) => data);
 };
 
-const getAllCandidates = (params: PageParams) => instance.get<TCandidate[]>('/candidate', { params });
+const getAllCandidates = (params: PageParams) => instance.get('/candidate', { params });
 
 const getCandidate = (id: number) => instance.get<TCandidate>(`/candidate/${id}`);
 
