@@ -38,6 +38,7 @@ const App: React.FC = () => {
           path="/"
           component={() => (!!window.localStorage.getItem('token') ? <Navbar /> : <Redirect to="/authorization" />)}
         ></Route>
+        <Navbar />
       </Switch>
     </div>
   );
