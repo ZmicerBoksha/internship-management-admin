@@ -4,9 +4,11 @@ import HelpOutlineOutlinedIcon from '@material-ui/icons/HelpOutlineOutlined';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Grid } from '@material-ui/core';
+import { Grid, Paper, Typography } from '@material-ui/core';
 import LineChart from './Chart/LineChart';
 import useAxios from 'axios-hooks';
+import PieChart from './Chart/PieChart';
+import GeoChart from './Chart/GeoChart';
 interface ICard {
   icon: any;
   title: string;
@@ -20,9 +22,7 @@ const Dashboard: React.FC = () => {
   });
   if (loading) return <p>Loading...</p>;
 
-  console.log(CandidateData);
   const Candidates = CandidateData.content.map((eventInfo: any) => eventInfo);
-  console.log(Candidates);
   const InProcessCount = Candidates.filter((eventInfo: any) => eventInfo.mainSkill === 'Java').length;
   const Rejected = Candidates.filter((eventInfo: any) => eventInfo.mainSkill === 'JavaScript').length;
   const Accepted = Candidates.filter((eventInfo: any) => eventInfo.mainSkill === 'DevOps').length;
@@ -58,8 +58,11 @@ const Dashboard: React.FC = () => {
             </Grid>
           );
         })}
-        <Grid item xs={8}>
-          <LineChart />
+        <Grid item xs={12} md={8}>
+          <GeoChart />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <PieChart />
         </Grid>
       </Grid>
     </div>
