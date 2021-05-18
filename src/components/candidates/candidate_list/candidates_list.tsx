@@ -50,7 +50,6 @@ const CandidatesList: React.FC = () => {
         setCountRows(response.data.totalElements);
       });
     }else{
-      debugger
       candidateService
         .getAllCandidates(params)
         .then(({ data }) => {          
@@ -68,7 +67,6 @@ const CandidatesList: React.FC = () => {
   }, [page, itemsPerPage, searchParams, eventId]);
 
   const handleClick = (instance: any) => {
-    console.log(instance);
     const candidateID = instance.selectedFlatRows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };

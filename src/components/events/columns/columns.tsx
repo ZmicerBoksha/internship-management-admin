@@ -222,24 +222,24 @@ export const Columns = [
     accessor: 'duration',
     startHide: true,
   },
-  // {
-  //   Header: 'Src',
-  //   accessor: 'image',
-  //   disableFilters: true,
-  //   // Cell: (props: any) => {
-  //   //   return (
-  //   //     <>
-  //   //       <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
-  //   //     </>
-  //   //   );
-  //   // },
-  // },
   {
-    Header: 'Alt text',
-    accessor: 'image.altText',
+    Header: 'Src',
+    accessor: 'image',
     disableFilters: true,
-    startHide: true,
+    Cell: (props: any) => {
+      return (
+        <>
+          <img src={`${props.cell.value.src}`} alt={`${props.cell.value.altText}`} />
+        </>
+      );
+    },
   },
+  // {
+  //   Header: 'Alt text',
+  //   accessor: 'image.altText',
+  //   disableFilters: true,
+  //   startHide: true,
+  // },
   {
     Header: 'English level',
     accessor: 'englishLevel',

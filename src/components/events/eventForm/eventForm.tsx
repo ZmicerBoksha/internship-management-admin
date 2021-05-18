@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { ChangeEvent, FunctionComponent, useEffect, useState } from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { englishLevels, eventFormats, eventsApi, eventTabs, IEventForm } from '../../../api/api';
+import { englishLevels, eventFormats, eventsApi, eventTabs, IEventForm, imageApi } from '../../../api/api';
 import { countries } from '../../common/countries/countries';
 import { technologies } from '../../common/technologies/technologies';
 import SaveIcon from '@material-ui/icons/Save';
@@ -143,10 +143,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   const watchShowFormat = watch('format');
   const watchTechnologies = watch('technologies');
   const watchSelectCountry = watch('country');
-  const watchSelectImage = watch('image');
+  const watchSelectImageData = watch('image.data');
   const watchSelectDateStart = watch('startDate');
   const watchSelectDateOfEndAccept = watch('dateOfEndAccept');
   const watchSelectDeadline = watch('deadline');
+
+  console.log(eventData)
 
   useEffect(() => {
     if (watchShowFormat === 'ONLINE' || eventData?.format === 'ONLINE') {
@@ -180,12 +182,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
               alertMessage: 'Event create success',
             });
           }
-
           return response.data.id;
         })
         .then(newEventId => {
           setLoadingData(true);
-          history.push(`/events/info/${newEventId}?mode=edit`);
+          setLoadingData(false);
+          // history.push(`/events/info/${newEventId}?mode=edit`);
         }).catch(err => {
           setModalError({
             isOpen: true,
@@ -206,7 +208,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
           });
         }
 
-        history.push('/events');
+        // history.push('/events');
         // return response.data.id;
       }).catch(err => {
         setModalError({
@@ -645,8 +647,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
               <Typography component="h2">Image info</Typography>
             </div>
             <div className={classes.input_wrap}>
-              {watchSelectImage && (
-                <img src={URL.createObjectURL(watchSelectImage.imageData)} alt="" className={classes.choose_image} />
+              {watchSelectImageData && (
+                // <img src={URL.createObjectURL(watchSelectImageData)} alt="" className={classes.choose_image} />
+                <img src={eventData?.image.src} alt="" className={classes.choose_image} />
               )}
               <Button
                 variant="contained"
@@ -655,28 +658,40 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 className={`${readOnly && classes.disabled_field}`}
                 disabled={readOnly}
               >
-                Upload image
-                <input
-                  type="file"
-                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                    const imageFile = event.target.files?.length && event.target.files[0];
-                    imageFile && imageFile.name.match(/\.(jpg|jpeg|png|gif|ico)$/)
-                      ? setValue('image.imageData', imageFile)
-                      : alert('Ошибка, нужна картинка');
+                Upload image                
+                <Controller
+                  name="image.data"
+                  control={control}
+                  defaultValue={eventData?.image.data}
+                  rules={{
+                    required: true,
                   }}
-                  hidden
+                  render={() => {
+                    return (
+                      <input
+                        type="file"
+                        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                          const imageFile = event.target.files?.length && event.target.files[0];
+                          !!imageFile &&
+                          //   imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? setValue('image.data', imageFile) : alert('Ошибка, нужна картинка');
+                          imageApi.createImage(eventData!.id, imageFile)
+                        }}
+                        hidden
+                      />
+                    );
+                  }}
                 />
               </Button>
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
-                {(watchSelectImage && watchSelectImage.imageData.name) || 'Please select image.'}
+                {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'}
               </Typography>
             </div>
-            {watchSelectImage && (
+            {/* {watchSelectImageData && (
               <div className={classes.input_wrap}>
                 <Controller
-                  name="image.altText"
+                  name="image.data!.altText"
                   control={control}
-                  defaultValue={eventData?.image?.altText}
+                  defaultValue={eventData?.image.data.altText || ''}
                   render={({ field }) => {
                     return (
                       <TextField
@@ -692,7 +707,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                   }}
                 />
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <div className={classes.form_button_wrap}>
