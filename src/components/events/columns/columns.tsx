@@ -74,7 +74,7 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
   };
 
   const showCandidates = () => {
-    console.log('showCandidates');
+    history.push(`/candidate?search=event.id==${rowId}`);
   };
 
   const deleteEvent = () => {
@@ -229,7 +229,7 @@ export const Columns = [
     Cell: (props: any) => {
       return (
         <>
-          <img src={`${props.cell.value.path}.${props.cell.value.ext}`} alt={`${props.cell.value.altText}`} />
+          <img src={`${props?.cell?.value?.path}.${props?.cell?.value?.ext}`} alt={`${props?.cell?.value?.altText}`} />
         </>
       );
     },

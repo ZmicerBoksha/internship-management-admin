@@ -1,6 +1,5 @@
 import { createStyles, makeStyles, TablePagination as MyTablePagination } from '@material-ui/core';
-import { FunctionComponent, MouseEvent, useCallback, useEffect } from 'react';
-import { TableInstance } from 'react-table';
+import { FunctionComponent } from 'react';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -13,43 +12,43 @@ const useStyles = makeStyles(() => {
   });
 });
 
-type TablePaginationProps = {
-  instance: TableInstance;
-  fetchRequest?: (pageSize: number, pageIndex: number) => void;
+export const rowsPerPageOptions: number[] = [10, 15, 25, 50];
+
+type TTablePagination = {
+  countRows?: number;
+  page?: number;
+  setPage?: (page: number) => void;
+  rowsPerPage?: number;
+  setItemsPerPage?: (itemsPerPage: number) => void;
 };
 
-const TablePagination: FunctionComponent<TablePaginationProps> = ({ instance, fetchRequest }) => {
+const TablePagination: FunctionComponent<TTablePagination> = ({
+  countRows,
+  page,
+  setPage,
+  rowsPerPage,
+  setItemsPerPage,
+}) => {
   const classes = useStyles();
 
-  const {
-    state: { pageIndex, pageSize },
-    setPageSize,
-  } = instance;
+  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
+    setPage?.(newPage);
+  };
 
-  useEffect(() => {
-    fetchRequest?.(pageSize, pageIndex);
-  }, [pageIndex, pageSize]);
-
-  const handleChangeRowsPerPage = useCallback(
-    event => {
-      setPageSize(Number(event.target.value));
-    },
-    [setPageSize],
-  );
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setItemsPerPage?.(parseInt(event.target.value, 10));
+    setPage?.(0);
+  };
 
   return (
     <MyTablePagination
       className={classes.custom_pagination}
-      rowsPerPageOptions={[10, 25, 50, 100]}
       component="div"
-      count={instance.rows.length}
-      rowsPerPage={pageSize}
-      page={pageIndex}
-      SelectProps={{
-        inputProps: { 'aria-label': 'rows per page' },
-        native: true,
-      }}
-      onChangePage={() => ''}
+      rowsPerPageOptions={rowsPerPageOptions}
+      count={countRows || 0}
+      rowsPerPage={rowsPerPage || rowsPerPageOptions[0]}
+      page={page || 0}
+      onChangePage={handleChangePage}
       onChangeRowsPerPage={handleChangeRowsPerPage}
     />
   );

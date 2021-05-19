@@ -1,8 +1,8 @@
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent, SyntheticEvent, useEffect, useState } from 'react';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import { TSnackbar } from './snackbarContext';
+import { TSnackbar, useSnackbarContext } from './snackbarContext';
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -19,19 +19,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const SnackbarInfo: FunctionComponent<TSnackbar> = ({ isOpen, alertSeverity, alertMessage }) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(isOpen);
+  const { snackbar, setSnackbar } = useSnackbarContext();
 
-  const snackbarClose = (event?: React.SyntheticEvent, reason?: string) => {
+  useEffect(() => {
+    setSnackbar({
+      isOpen,
+      alertSeverity,
+      alertMessage,
+    });
+  }, []);
+
+  const snackbarClose = (event?: SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
 
-    setOpen(false);
+    setSnackbar({
+      isOpen: false,
+    });
   };
 
   return (
     <div className={classes.root}>
-      <Snackbar open={open} autoHideDuration={6000} onClose={snackbarClose}>
+      <Snackbar open={Boolean(snackbar?.isOpen)} autoHideDuration={6000} onClose={snackbarClose}>
         <Alert onClose={snackbarClose} severity={alertSeverity}>
           {alertMessage}
         </Alert>

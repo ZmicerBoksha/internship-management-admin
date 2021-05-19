@@ -1,46 +1,3 @@
-/*
-import React from 'react';
-import { Link } from 'react-router-dom';
-
-const Navbar: React.FC = () => {
-  return (
-    <aside className="aside">
-      <nav className="menu">
-        <ul className="menu__list">
-          <li className="menu__item">
-            <Link className="menu__item-link" to="/">
-              Dashboard
-            </Link>
-          </li>
-          <li className="menu__item">
-            <Link className="menu__item-link" to="/authorization">
-              Authorization
-            </Link>
-          </li>
-          <li className="menu__item">
-            <Link className="menu__item-link" to="/events">
-              Events
-            </Link>
-          </li>
-          <li className="menu__item">
-            <Link className="menu__item-link" to="/staff">
-              Staff
-            </Link>
-          </li>
-          <li className="menu__item">
-            <Link className="menu__item-link" to="/candidate">
-              Candidates
-            </Link>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  );
-};
-
-export default Navbar;
-
-*/
 
 /*
 import React from 'react';
@@ -92,7 +49,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+// import MenuIcon from '@material-ui/icons/Menu';
+import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
@@ -101,7 +59,8 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { ExpandLess } from '@material-ui/icons';
 import EventIcon from '@material-ui/icons/Event';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import StaffIcon from '@material-ui/icons/Group';
+// import StaffIcon from '@material-ui/icons/Group';
+import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 import CandidateIcon from '@material-ui/icons/PeopleOutline';
 import Routers from '../routers/routers';
 
@@ -211,7 +170,7 @@ export default function Navbar() {
             staffHandleClick();
           }}
         >
-          <StaffIcon style={{ marginRight: '5px' }} />
+          <PeopleOutlineOutlinedIcon style={{ marginRight: '5px' }} />
           Staff
         </MenuItem>
         <Collapse in={staffOpen} timeout="auto" unmountOnExit>
@@ -248,7 +207,7 @@ export default function Navbar() {
             onClick={handleDrawerToggle}
             className={classes.menuButton}
           >
-            <MenuIcon />
+            <MenuOutlinedIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
             Admin panel

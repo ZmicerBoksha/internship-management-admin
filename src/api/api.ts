@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import { instance } from '../service/axios';
 import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
@@ -106,16 +107,20 @@ export interface IEventForm {
   };
 }
 
-const instance = axios.create({
-  baseURL: 'http://localhost:8085/api',
-});
+// const instance = axios.create({
+//   baseURL: process.env.REACT_APP_BASE_API_URL,
+// });
+
+console.log('###: process', process);
+console.log('###: env', process.env);
 
 export const eventsApi = {
-  getEvents(searchParam?: string) {
+  getEvents(page: number, itemsPerPage: number, searchParam?: string) {
     let urlForRequest = '/event/all';
-    if (searchParam) {
-      urlForRequest += `?search=${searchParam}`;
-    }
+    arguments.length && (urlForRequest += '?');
+
+    urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
+    searchParam && (urlForRequest += `&search=${searchParam}`);
 
     return instance.get(urlForRequest).then(response => response.data);
   },
