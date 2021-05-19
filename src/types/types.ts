@@ -107,3 +107,8 @@ export type TStatusHistoryPost = {
   employeeId: number;
   statusId: number;
 };
+
+export type TEmploeeTimeSlots = {
+  id: number;
+  dataTime: string;
+};

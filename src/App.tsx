@@ -16,7 +16,7 @@ const axios = Axios.create({
 axios.interceptors.request.use(
   function (config) {
     const token = window.localStorage.getItem('token');
-    config.headers.Authorization = 'Barear ' + token;
+    config.headers.Authorization = 'Bearer ' + token;
 
     return config;
   },

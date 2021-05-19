@@ -1,7 +1,8 @@
 import axios from "axios";
+import { PREFIX } from "../../../constants";
 
 const instance = axios.create({
-  baseURL: 'http://localhost:8085/api',
+  baseURL: PREFIX,
 });
 
 export const getCandidateIdByEmpolee=(id:number)=> {
