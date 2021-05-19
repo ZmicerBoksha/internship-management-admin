@@ -14,15 +14,17 @@ const axios = Axios.create({
 });
 
 axios.interceptors.request.use(
-  function (config) {
-    const token = window.localStorage.getItem('token');
-    config.headers.Authorization = 'Barear ' + token;
+  async config => {
+    const token = localStorage.getItem('token');
 
+    if (token) {
+      config.headers = {
+        authorization: `Bearer ${token}`,
+      };
+    }
     return config;
   },
-  error => {
-    console.log('ERROR:', error);
-  },
+  error => Promise.reject(error),
 );
 
 const cache = new LRU({ max: 10 });
