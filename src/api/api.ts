@@ -128,11 +128,7 @@ export const imageApi = {
         'content-type': 'multipart/form-data'
       }
     }
-    console.log(imageData)
-    return instance.post(`/image/upload?id=${eventId}`, formData, config).then(response => {
-      console.log(response)
-      return response
-    });
+    return instance.post(`/image/upload?id=${eventId}`, formData, config).then(response => response);
   },
   updateImage(imageId: string | number, imageData: File) {
     let formData = new FormData();
@@ -145,6 +141,14 @@ export const imageApi = {
       }
     }
 
+    const newImageInfo = {
+      altText: '',
+      ext: imageData.type,
+      imageName: imageData.name,
+      size: imageData.size
+    }
+
+    console.log(imageData);
     return instance.put(`/image/${imageId}`, formData, config).then(response => {
       console.log(response)
       return response
@@ -214,7 +218,6 @@ export const eventsApi = {
       const responseData: IEventForm = {...response.data};
       
       return imageApi.getImageById(responseData.imageId).then(imageData => {
-        console.log(imageData);
         return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
           responseData.image = {
             data: {...imageData},
@@ -241,10 +244,9 @@ export const eventsApi = {
         employee: 1,
         eventType: 1,
       })
-      .then(response => {
-        imageApi.createImage(/*response.data.id*/ 25, formData.image.data);
+      .then(newEventData => {
+        return imageApi.createImage(newEventData.data.id, formData.image.data).then(() => newEventData)
 
-        return response;
       });
   },
   updateEvent(eventId: string, formData: IEventForm) {
@@ -255,11 +257,11 @@ export const eventsApi = {
         employee: 1,
         eventType: 1,
       })
-      // .then(response => {
-      //   imageApi.updateImage(response.data.imageId, formData.image.data);
+      .then(updateEventData => {
+        console.log(updateEventData)
+        return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData)
 
-      //   return response
-      // });
+      });
   },
   deleteEvent(eventId: number) {
     return instance.delete(`/event/${eventId}`).then(response => response);

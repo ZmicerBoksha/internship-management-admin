@@ -186,9 +186,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
         })
         .then(newEventId => {
           setLoadingData(true);
-          setLoadingData(false);
-          // history.push(`/events/info/${newEventId}?mode=edit`);
+          history.push(`/events/info/${newEventId}?mode=edit`);
         }).catch(err => {
+          console.log(err)
           setModalError({
             isOpen: true,
             errorTitle: `Error ${err.response.status}`,
@@ -648,6 +648,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             </div>
             <div className={classes.input_wrap}>
               {watchSelectImageData && (
+                
                 // <img src={URL.createObjectURL(watchSelectImageData)} alt="" className={classes.choose_image} />
                 <img src={eventData?.image.src} alt="" className={classes.choose_image} />
               )}
@@ -672,9 +673,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         type="file"
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                           const imageFile = event.target.files?.length && event.target.files[0];
-                          !!imageFile &&
-                          //   imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? setValue('image.data', imageFile) : alert('Ошибка, нужна картинка');
-                          imageApi.createImage(eventData!.id, imageFile)
+                          !!imageFile && 
+                            imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? setValue('image.data', imageFile) : alert('Ошибка, нужна картинка');
+                          // imageApi.createImage(eventData!.id, imageFile)
                         }}
                         hidden
                       />
@@ -683,7 +684,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 />
               </Button>
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
-                {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'}
+                {(watchSelectImageData && '') || 'Please select image.'}
               </Typography>
             </div>
             {/* {watchSelectImageData && (
