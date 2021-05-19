@@ -1,4 +1,5 @@
-import axios from 'axios';
+// import axios from 'axios';
+import { instance } from '../service/axios';
 import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
@@ -106,9 +107,10 @@ export interface IEventForm {
   };
 }
 
-const instance = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API_URL,
-});
+// const instance = axios.create({
+//   baseURL: process.env.REACT_APP_BASE_API_URL,
+// });
+
 console.log('###: process', process);
 console.log('###: env', process.env);
 
