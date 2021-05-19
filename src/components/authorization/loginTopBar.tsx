@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      padding: '3%',
     },
     title: {
       color: '#0082ca',
