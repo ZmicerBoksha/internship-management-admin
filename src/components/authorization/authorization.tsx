@@ -63,7 +63,7 @@ const Authorization = () => {
   const classes = useStyles();
   const [{ data: response, loading, error }, executePost] = useAxios<ILoginResponse>(
     {
-      headers: { Authorization: undefined },
+      headers: { Authorization: '' },
       url: `/auth/login`,
       method: 'POST',
     },
