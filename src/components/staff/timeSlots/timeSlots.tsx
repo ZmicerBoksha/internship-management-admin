@@ -1,15 +1,16 @@
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid } from '@material-ui/core';
 
-import React, { useEffect, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import Button from "@material-ui/core/Button";
-import CandidateMiniCard from "../canditadeMiniCard/candidateMiniCard";
-import { useHistory } from "react-router-dom";
-import useAxios from "axios-hooks";
-import { POST, PREFIX } from "../../../constants";
-import { getSlots } from "./api";
+import React, { useEffect, useState } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import Button from '@material-ui/core/Button';
+import CandidateMiniCard from '../canditadeMiniCard/candidateMiniCard';
+import { useHistory } from 'react-router-dom';
+import useAxios from 'axios-hooks';
+import { POST, PREFIX, TIME_SLOT_DURATION, TIME_SLOTS_BACKEND_FORMAT } from "../../../constants";
+import { getSlots } from './api';
+import Preloader from '../../common/preloader/preloader';
 
 const localizer = momentLocalizer(moment);
 
@@ -135,45 +136,57 @@ const TimeSlots = () => {
    ];
   */
 
+  /* JSON.map((item: any) => {
+   item['end'] = moment(item.start).add(30, 'm').toDate();
+ });
+ */
+
+  //mocks data for working with calender
+
+  const candidate = {
+    cnId: 2,
+    firstName: 'Anton',
+    lastName: 'Vasilev',
+    primaryTechnology: 'Java',
+    interviewDate: 'Thu May 13 2021 12:40:38 GMT+0300 (Москва, стандартное время)',
+  };
 
   const [{ data, loading, error }, sendRequest] = useAxios(
     {
       url: `${PREFIX}employees/availability`,
-      method: POST
+      method: POST,
     },
-    { manual: true }
+    { manual: true },
   );
 
   const [events, setEvents] = useState([]);
 
-  /* JSON.map((item: any) => {
-     item['end'] = moment(item.start).add(30, 'm').toDate();
-   });
-   */
+
 
   const [open, setOpen] = useState<boolean>(false);
 
-  const openPopUp = (event: any) => {
+  const openPopUp = (event: any): void => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setOpen(false);
   };
+
   const history = useHistory();
 
-  const handleRedirectToCandidate = () => {
+  const handleRedirectToCandidate = (): void => {
     history.push(`/candidate/${2}`);
   };
 
-  const empId = window.location.href.split("/").slice(-1)[0];
+  const empId = window.location.href.split('/').slice(-1)[0];
 
   useEffect(() => {
     async function getData() {
       await getSlots(empId).then(response => {
         response.map((item: any) => {
-          item["start"] = new Date(item.dateTime);
-          item["end"] = moment(item.start).add(30, "m").toDate();
+          item.start = new Date(item.dateTime);
+          item.end = moment(item.start).add(30, 'm').toDate();
           delete item.dateTime;
         });
         setEvents(response);
@@ -183,22 +196,22 @@ const TimeSlots = () => {
     getData();
   }, []);
 
-
   const handleSelect = (e: any): void => {
-    const newSlots: any = e.slots.map((item: any) => moment(item).format("Y-MM-DD HH:mm"));
+
+    const newSlots: Date = e.slots.map((item: Date) => moment(item).format(TIME_SLOTS_BACKEND_FORMAT));
 
     e.slots.forEach((slot: Date, index: number) => {
       let event = {
         id: index,
         start: slot,
-        end: moment(slot).add(30, "m").toDate()
+        end: moment(slot).add(TIME_SLOT_DURATION, 'm').toDate(),
       };
 
       sendRequest({
         data: {
           employeeId: empId,
-          availableTimeSlots: newSlots
-        }
+          availableTimeSlots: newSlots,
+        },
       });
 
       // @ts-ignore
@@ -206,52 +219,46 @@ const TimeSlots = () => {
     });
   };
 
-  const candidate = {
-    cnId: 2,
-    firstName: "Anton",
-    lastName: "Vasilev",
-    primaryTechnology: "Java",
-    interviewDate: "Thu May 13 2021 12:40:38 GMT+0300 (Москва, стандартное время)"
-  };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Preloader />;
   if (error) return <p>Error!</p>;
+
   return (
-    <Grid xs={12} className="App" style={{ marginTop: "60px" }}>
+    <Grid xs={12} className="App" style={{ marginTop: '60px' }}>
       <Calendar
         selectable={true}
         localizer={localizer}
-        views={["week"]}
-        defaultView={"week"}
+        views={['week']}
+        defaultView={'week'}
         events={events}
         startAccessor="start"
-        scrollToTime={new Date(2018, 1, 1, 6)}
+        scrollToTime={new Date()}
         defaultDate={new Date()}
         onSelectEvent={event => openPopUp(event)}
         onSelectSlot={e => handleSelect(e)}
-        style={{ height: "940" }}
+        style={{ height: '940' }}
         endAccessor="end"
         eventPropGetter={(event, start, end, isSelected) => {
-          let newStyle = {
-            backgroundColor: "lightgrey",
-            color: "black",
-            border: "none"
+          const newStyle = {
+            backgroundColor: 'lightgrey',
+            color: 'black',
+            border: 'none',
           };
 
           if (event) {
-            newStyle.backgroundColor = "lightgreen";
+            newStyle.backgroundColor = 'lightgreen';
           }
 
           return {
-            className: "",
-            style: newStyle
+            className: '',
+            style: newStyle,
           };
         }}
       />
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle>Information about time slot</DialogTitle>
         <DialogContent>
-          <CandidateMiniCard timeZon={"Europe/Kirov"} candidate={candidate} />
+          <CandidateMiniCard timeZon={'Europe/Kirov'} candidate={candidate} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleRedirectToCandidate} color="primary">
@@ -259,6 +266,9 @@ const TimeSlots = () => {
           </Button>
           <Button onClick={handleClose} color="primary">
             Close
+          </Button>
+          <Button onClick={handleClose} color="primary">
+            Remove time slotF
           </Button>
         </DialogActions>
       </Dialog>

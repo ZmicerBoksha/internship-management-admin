@@ -108,7 +108,7 @@ export type TStatusHistoryPost = {
   statusId: number;
 };
 
-export type TEmploeeTimeSlots = {
+export interface TEmploeeTimeSlots  {
   id: number;
   dataTime: string;
-};
+}

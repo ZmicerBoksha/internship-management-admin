@@ -76,15 +76,11 @@ export const COUNTRY_LIST = new Map<string, any>([
 export const ADD_PATH = '/staff/add';
 export const PUT = 'PUT';
 export const POST = 'POST';
+export const GET = 'GET';
 
-export const ROLE_NAME = {
-  1: 'Admin',
-  2: 'Super Admin',
-  3: 'Employee',
-};
 
-export const HR="HR";
-export const TS="TS";
+export const HR = 'HR';
+export const TS = 'TS';
 
 export const PREFIX = `http://localhost:8085/api/`;
 
@@ -94,3 +90,7 @@ export const PHONE_PATTERN = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
 export const REQUIRED__ERROR__MESSAGE = `This field is required`;
 export const MAX__LENGTH__ERROR__MESSAGE = (number: number) => `This field cannot exceed ${number} characters`;
 export const MAX__LENGTH = 20;
+
+export const TIME_SLOTS_BACKEND_FORMAT = 'Y-MM-DD HH:mm';
+
+export const TIME_SLOT_DURATION = 30;

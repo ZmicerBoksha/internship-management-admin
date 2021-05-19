@@ -3,18 +3,7 @@ import useAxios from 'axios-hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import TimeSlots from '../timeSlots/timeSlots';
-import {
-  Button,
-  createStyles,
-  FormControlLabel,
-  FormHelperText,
-  Grid,
-  Paper,
-  Switch,
-  TextField,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { createStyles, FormControlLabel, Grid, Paper, Switch, TextField, Theme, Typography } from '@material-ui/core';
 import { useParams } from 'react-router';
 import './staffPageStyle.scss';
 import FormControl from '@material-ui/core/FormControl';
@@ -30,11 +19,13 @@ import {
   REQUIRED__ERROR__MESSAGE,
   MAX__LENGTH__ERROR__MESSAGE,
   MAX__LENGTH,
-  ROLE_NAME,
   POST,
   PUT,
+  GET,
+  HR,
+  TS,
 } from '../../../constants';
-import CandidateTrello from '../candidateTrello/candidateTrello';
+import Preloader from '../../common/preloader/preloader';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,8 +45,8 @@ interface IUrl {
 
 const StaffPage: React.FC = () => {
   let history: any = useHistory();
-  let [edit, setEdit] = useState(false);
-  let [addMode, setAddMode] = useState(false);
+  let [edit, setEdit] = useState<boolean>(false);
+  let [addMode, setAddMode] = useState<boolean>(false);
 
   const createUrl = useParams<IUrl>();
 
@@ -82,17 +73,23 @@ const StaffPage: React.FC = () => {
     }
   }, [watchCountry]);
 
-  let staffId = addMode ? '1' : window.location.href.split('/').slice(-1)[0];
+  const staffId: string = window.location.href.split('/').slice(-1)[0];
 
-  const [{ data: putData, loading: putLoading, error: putError }, sendRequest] = useAxios(
+  const [{ data, loading, error, response }, sendRequest] = useAxios(
     {
-      url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
-      method: 'PUT',
+      url: `${PREFIX}employees/${staffId}`,
+      method: PUT,
     },
     { manual: true },
   );
-
-  const [{ data, loading, error }, refetch] = useAxios(`${PREFIX}employees/${staffId}`);
+  useEffect(() => {
+    if (!addMode) {
+      sendRequest({
+        url: `${PREFIX}employees/${staffId}`,
+        method: GET,
+      });
+    }
+  }, []);
 
   let staffData = addMode ? '' : data;
 
@@ -101,16 +98,20 @@ const StaffPage: React.FC = () => {
       ? sendRequest({
           data: data,
           method: POST,
-          url: `${PREFIX}employees`,
-        })
+          url: `${PREFIX}employees/add`,
+        }) && history.push(`HR`)
       : sendRequest({
           data: data,
-          method: PUT,
-          url: `${PREFIX}employees/${window.location.href.split('/').slice(-1)[0]}`,
         });
+
+    if (response?.status === 200) {
+      setEdit(false);
+    }
   };
 
-  if (loading) return <p>Loading...</p>;
+  console.log(addMode);
+
+  if (loading) return <Preloader />;
   if (error) return <p>Error!</p>;
 
   return (
@@ -126,7 +127,6 @@ const StaffPage: React.FC = () => {
         <Typography variant="h6" className="switchLabel" noWrap>
           Edit mode
         </Typography>
-        {edit && <Button variant="contained">Save</Button>}
       </Grid>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container justify="center" xs={12}>
@@ -134,7 +134,7 @@ const StaffPage: React.FC = () => {
             <Typography className="subtitle" variant="h5" noWrap>
               Details
             </Typography>
-            <Paper>
+            <Paper className="card">
               <Grid container spacing={2} alignItems="center">
                 <Grid item spacing={2} alignItems="center">
                   <Controller
@@ -271,6 +271,31 @@ const StaffPage: React.FC = () => {
                       );
                     }}
                   />
+                  {edit || addMode ? (
+                    <Controller
+                      name="password"
+                      control={control}
+                      rules={{
+                        maxLength: MAX__LENGTH,
+                      }}
+                      render={({ field }) => {
+                        return (
+                          <TextField
+                            error={errors.password}
+                            helperText={
+                              errors.password?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH)
+                            }
+                            {...field}
+                            id="password"
+                            label="Change password:"
+                            InputProps={{ readOnly: !edit }}
+                          />
+                        );
+                      }}
+                    />
+                  ) : (
+                    ''
+                  )}
                 </Grid>
               </Grid>
             </Paper>
@@ -331,31 +356,38 @@ const StaffPage: React.FC = () => {
                     );
                   }}
                 />
-                <Controller
-                  name="type"
-                  control={control}
-                  defaultValue={staffData?.type || 'HR'}
-                  rules={{
-                    required: true,
-                    maxLength: MAX__LENGTH,
-                  }}
-                  render={({ field }) => {
-                    return (
-                      <TextField
-                        required={edit}
-                        error={errors.type}
-                        helperText={
-                          (errors.type?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                          (errors.type?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
-                        }
-                        {...field}
-                        id="type"
-                        label="type:"
-                        InputProps={{ readOnly: !edit }}
-                      />
-                    );
-                  }}
-                />
+
+                {edit || addMode ? (
+                  <FormControl className={classes.formControl} disabled={!edit}>
+                    <InputLabel id="type">Staff type</InputLabel>
+                    <Controller
+                      name="type"
+                      control={control}
+                      defaultValue={staffData?.type || HR}
+                      rules={{
+                        required: true,
+                      }}
+                      render={({ field }) => {
+                        return (
+                          <Select error={errors.type} {...field} labelId="type" id="type">
+                            <MenuItem value={HR}>HR</MenuItem>
+                            <MenuItem value={TS}>TS</MenuItem>
+                          </Select>
+                        );
+                      }}
+                    />
+                  </FormControl>
+                ) : (
+                  <Controller
+                    name="type"
+                    control={control}
+                    defaultValue={staffData?.type}
+                    render={({ field }) => {
+                      return <TextField {...field} id="type" label="Staff type:" InputProps={{ readOnly: !edit }} />;
+                    }}
+                  />
+                )}
+
                 {edit || addMode ? (
                   <FormControl className={classes.formControl} disabled={!edit}>
                     <InputLabel id="roleId">Role</InputLabel>
@@ -368,7 +400,7 @@ const StaffPage: React.FC = () => {
                       }}
                       render={({ field }) => {
                         return (
-                          <Select error={errors.timezone} {...field} labelId="role" id="roleId">
+                          <Select error={errors.role} {...field} labelId="role" id="roleId">
                             <MenuItem value={1}>Admin</MenuItem>
                             <MenuItem value={2}>Super Admin</MenuItem>
                             <MenuItem value={3}>Employee</MenuItem>
@@ -414,7 +446,7 @@ const StaffPage: React.FC = () => {
           {edit || addMode ? <input type="submit" /> : ''}
         </Grid>
       </form>
-      {!addMode && <TimeSlots />}
+      {addMode ? '' : <TimeSlots />}
     </Grid>
   );
 };
