@@ -94,15 +94,22 @@ const StaffPage: React.FC = () => {
   let staffData = addMode ? '' : data;
 
   const onSubmit = (data: any) => {
-    addMode
-      ? sendRequest({
-          data: data,
-          method: POST,
-          url: `${PREFIX}employees/add`,
-        }) && history.push(`HR`)
-      : sendRequest({
-          data: data,
-        });
+    if (addMode) {
+      console.log(data);
+
+      sendRequest({
+        data,
+        method: POST,
+        url: `${PREFIX}employees/add`,
+      });
+      if (response?.status === 200) {
+        history.push(`HR`);
+      }
+    } else {
+      sendRequest({
+        data: data,
+      });
+    }
 
     if (response?.status === 200) {
       setEdit(false);
@@ -271,6 +278,7 @@ const StaffPage: React.FC = () => {
                       );
                     }}
                   />
+
                   {edit || addMode ? (
                     <Controller
                       name="password"
