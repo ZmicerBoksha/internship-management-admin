@@ -1,5 +1,5 @@
-// import axios from 'axios';
-import { instance } from '../service/axios';
+import { config } from 'node:process';
+import axios from 'axios';
 import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 
 type PageParams = {
@@ -87,6 +87,11 @@ export const eventTabs: TBackendModelWithGoodText[] = [
   },
 ];
 
+export type TImageEvent = {
+  data: File,
+  src?: string,
+}
+
 export interface IEventForm {
   id: number;
   eventTab: TEventTab;
@@ -101,18 +106,64 @@ export interface IEventForm {
   deadline: Date;
   dateOfEndAccept: Date;
   duration: string;
-  image: {
-    altText?: string;
-    imageData: any;
-  };
+  imageId: number;
+  image: TImageEvent
 }
 
-// const instance = axios.create({
-//   baseURL: process.env.REACT_APP_BASE_API_URL,
-// });
+const instance = axios.create({
+  baseURL: process.env.REACT_APP_BASE_API_URL,
+});
 
-console.log('###: process', process);
-console.log('###: env', process.env);
+export const imageApi = {
+  getImageById(imageId: string | number) {
+    return instance.get(`/image/${imageId}`).then(response => response.data);
+  },
+  createImage(eventId: string | number, imageData: File) {
+    let formData = new FormData();
+    formData.append('image', imageData);
+    
+    const config = {
+      headers: {
+        withCredentials: true,
+        'content-type': 'multipart/form-data'
+      }
+    }
+    return instance.post(`/image/upload?id=${eventId}`, formData, config).then(response => response);
+  },
+  updateImage(imageId: string | number, imageData: File) {
+    let formData = new FormData();
+    formData.append('image', imageData);    
+    
+    const config = {
+      headers: {
+        withCredentials: true,
+        'content-type': 'multipart/form-data'
+      }
+    }
+
+    const newImageInfo = {
+      altText: '',
+      ext: imageData.type,
+      imageName: imageData.name,
+      size: imageData.size
+    }
+
+    console.log(imageData);
+    return instance.put(`/image/${imageId}`, formData, config).then(response => {
+      console.log(response)
+      return response
+    });
+  },
+};
+
+export const filesApi = {
+  getImageByName(imageName: string, imagePath: string) {
+    imageName += imageName.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? '' : `.${imagePath}`;
+
+    return instance.get(`/file/image/${imageName}`)
+    .then(response => response)
+  }
+}
 
 export const eventsApi = {
   getEvents(page: number, itemsPerPage: number, searchParam?: string) {
@@ -122,35 +173,110 @@ export const eventsApi = {
     urlForRequest += `&page=${page}&itemsPerPage=${itemsPerPage}`;
     searchParam && (urlForRequest += `&search=${searchParam}`);
 
-    return instance.get(urlForRequest).then(response => response.data);
+    return instance.get(urlForRequest).then(response => {
+      const totalElements = response.data.totalElements;
+
+      const arrayGetImagesInfo: TImageEvent[] = response.data.content.map((item: IEventForm) =>
+        imageApi.getImageById(item.imageId).then(imageData => {
+
+          return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+            return {
+              data: {...imageData},
+              src: `${fileData.config.baseURL}${fileData.config.url}`
+            }
+          })
+          .catch(error => {
+            return {
+              data: {},
+              src: ''
+            }
+          })
+        })
+      );
+
+      return Promise.all(arrayGetImagesInfo)
+        .then(responses => {
+          const responseData: IEventForm[] = [...response.data.content];
+          return responses.map((item, index) => {
+            const { ...props } = responseData[index];
+            return {
+              ...props,
+              image: {...item}
+            };
+          });
+        })
+        .then(response => {
+          return {
+            eventsList: response,
+            totalElements
+          }
+        })
+    })
   },
   getEventInfo(eventId: string) {
-    return instance.get(`/event/${eventId}`).then(response => response.data);
+    return instance.get(`/event/${eventId}`).then(response => {
+      const responseData: IEventForm = {...response.data};
+      
+      return imageApi.getImageById(responseData.imageId).then(imageData => {
+        return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+          responseData.image = {
+            data: {...imageData},
+            src: `${fileData.config.baseURL}${fileData.config.url}`
+          }
+          return responseData
+        })
+        .catch(error => {
+          responseData.image = {
+            data: {...imageData},
+            src: ``
+          }
+          return responseData
+        })
+      })
+    });
   },
   createEvent(formData: IEventForm) {
     return instance
       .post(`/event`, {
         ...formData,
-        image: 1,
+        imageId: 1,
         creatorEvent: 1,
         employee: 1,
         eventType: 1,
       })
-      .then(response => response);
+      .then(newEventData => {
+        return imageApi.createImage(newEventData.data.id, formData.image.data).then(() => newEventData)
+
+      });
   },
   updateEvent(eventId: string, formData: IEventForm) {
     return instance
       .put(`/event/${eventId}`, {
         ...formData,
-        image: 1,
         creatorEvent: 1,
         employee: 1,
         eventType: 1,
       })
-      .then(response => response);
+      .then(updateEventData => {
+        console.log(updateEventData)
+        return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData)
+
+      });
   },
   deleteEvent(eventId: number) {
     return instance.delete(`/event/${eventId}`).then(response => response);
+  },
+};
+
+export const candidateEventsApi = {
+  getAllCandidateEvent(page: number, itemsPerPage: number, searchParam?: string) {
+    let urlForRequest = '/candidate-event/all';
+    arguments.length && (urlForRequest += '?');
+
+    urlForRequest += `page=${page}&itemsPerPage=${itemsPerPage}`;
+    searchParam && (urlForRequest += `&search=${searchParam}`);
+
+    return instance.get(urlForRequest).then(response => response);
   },
 };
 
@@ -166,7 +292,7 @@ export const getStatusCandidateById = (candidateIds: number[]) => {
   return instance.get(`status/history/all?search=candidate.id=in=(${candidateIds.join()})`).then(({ data }) => data);
 };
 
-const getAllCandidates = (params: PageParams) => instance.get<TCandidate[]>('/candidate', { params });
+const getAllCandidates = (params: PageParams) => instance.get('/candidate', { params });
 
 const getCandidate = (id: number) => instance.get<TCandidate>(`/candidate/${id}`);
 

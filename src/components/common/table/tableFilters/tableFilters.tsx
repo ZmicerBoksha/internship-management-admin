@@ -46,8 +46,6 @@ type TableFiltersProps = {
 const TableFilters: FunctionComponent<TableFiltersProps> = ({ instance }) => {
   const { allColumns, setAllFilters, column } = instance;
 
-  console.log(column);
-
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);

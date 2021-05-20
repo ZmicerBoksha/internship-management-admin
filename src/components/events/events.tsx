@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback, useEffect, useMemo, useState } from 're
 import { createStyles, CssBaseline, makeStyles } from '@material-ui/core';
 import { TableInstance } from 'react-table';
 import { useHistory } from 'react-router';
-import { eventsApi } from '../../api/api';
+import { eventsApi, IEventForm, imageApi } from '../../api/api';
 import { Columns } from './columns/columns';
 import Preloader from '../common/preloader/preloader';
 import Table from '../common/table/table';
@@ -38,7 +38,7 @@ const Events: FunctionComponent = () => {
 
   const columns = useMemo(() => Columns, []);
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<IEventForm[]>([]);
   const [countRows, setCountRows] = useState<number>(0);
 
   const [page, setPage] = useState<number>(0);
@@ -48,16 +48,13 @@ const Events: FunctionComponent = () => {
     await eventsApi
       .getEvents(page, itemsPerPage, searchParam)
       .then(response => {
-        setData(response.content);
-
-        return response;
-      })
-      .then(response => {
         setCountRows(response.totalElements);
+        setData(response.eventsList);
         setLoadingData(false);
         return response;
       })
       .catch(err => {
+        console.log(err)
         err.request.readyState === 4 &&
           err.request.status === 0 &&
           setSnackbar({
