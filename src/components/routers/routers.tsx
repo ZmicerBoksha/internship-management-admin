@@ -11,21 +11,20 @@ import HrTable from '../staff/hrTable/hrTable';
 import StaffPage from '../staff/staffPage/staffPage';
 import EventInfo from '../events/eventInfo/eventInfo';
 
-
 const Routers: React.FC = () => {
   return (
     <div className="wrapper">
       <Switch>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path='/events' component={Events} />
-        <Route exact path='/events/:eventType?/:eventId?' component={EventInfo} />
+        <Route exact path="/events" component={Events} />
+        <Route exact path="/events/:eventType?/:eventId?" component={EventInfo} />
         <Route exact path="/staff/hr" component={HrTable} />
         <Route exact path="/staff/ts" component={TsTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />
         <Route exact path="/staff/ts/:id" component={StaffPage} />
         <Route exact path="/staff/:add?" component={StaffPage} />
 
-        <Route exact path="/candidate" component={CandidatesPage} />
+        <Route exact path={['/candidate', '/candidate-events/:eventId?']} component={CandidatesPage} />
         <Route path="/candidate/:id" component={CandidateCard} />
         <Route path="*" component={Error} />
       </Switch>

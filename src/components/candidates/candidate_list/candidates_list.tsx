@@ -1,33 +1,72 @@
-import React, { useMemo, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import './styles.css';
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
-import { candidateService } from '../../../api/api';
+import { candidateEventsApi, candidateService } from '../../../api/api';
 import { TCandidate } from '../../../types/types';
+import { rowsPerPageOptions } from '../../common/table/tablePagination/tablePagination';
+
+type TUrl = {
+  eventId?: string;
+};
 
 const CandidatesList: React.FC = () => {
   const history = useHistory();
+  const [searchParams, setSearchParams] = useState<string>('');
+  const { eventId } = useParams<TUrl>();
+
   const [candidatesList, setCandidatesList] = useState<TCandidate[]>([]);
 
-  const fetchCandidatesList = (size: number, page: number) => {
+  const [countRows, setCountRows] = useState<number>(0);
+
+  const [page, setPage] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(rowsPerPageOptions[0]);
+
+  const fetchCandidatesList = (size: number, page: number, searchParam?: string) => {
     let params = {
       itemsPerPage: size,
       page: page,
     };
 
-    candidateService
-      .getAllCandidates(params)
-      .then(({ data }) => {
-        setCandidatesList(data);
-      })
-      .catch(err => {
-        console.log(err);
+    if(eventId){
+      if(!!searchParam){
+        const searchParamList = searchParam?.split(';');
+        searchParam = '';
+        searchParamList?.map(parametr => {
+          searchParam += `candidate.${parametr};`
+        })
+      }
+      searchParam += `event.id=="${eventId}"`;      
+
+      candidateEventsApi.getAllCandidateEvent(page, size, searchParam).then(response => {
+        const candidateForEventList: TCandidate[] = [];
+
+        for(let i = 0; i < response.data.content.length; i++){
+          candidateForEventList.push(response.data.content[i].candidate)
+        }
+
+        setCandidatesList(candidateForEventList);
+        setCountRows(response.data.totalElements);
       });
+    }else{
+      candidateService
+        .getAllCandidates(params)
+        .then(({ data }) => {          
+          setCandidatesList(data.content);
+          setCountRows(data.totalElements);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   };
+  
+  useEffect(() => {
+    fetchCandidatesList(itemsPerPage, page, searchParams);
+  }, [page, itemsPerPage, searchParams, eventId]);
 
   const handleClick = (instance: any) => {
-    console.log(instance);
     const candidateID = instance.selectedFlatRows[0].original.id;
     history.push(`/candidate/${candidateID}`);
   };
@@ -145,7 +184,12 @@ const CandidatesList: React.FC = () => {
       columns={columns}
       data={data}
       onEdit={handleClick}
-      fetchRequest={fetchCandidatesList}
+      setSearchParams={setSearchParams}
+      countRows={countRows}
+      pageNumberForBack={page}
+      setPage={setPage}
+      rowsPerPage={itemsPerPage}
+      setItemsPerPage={setItemsPerPage}
     />
   );
 };

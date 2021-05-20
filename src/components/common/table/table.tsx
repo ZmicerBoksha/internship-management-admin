@@ -131,7 +131,6 @@ type TableProps = {
   onAdd?: (instance: TableInstance) => void;
   onEdit?: (instance: TableInstance) => void;
   onDelete?: (instance: TableInstance) => void;
-  fetchRequest?: (pageSize: number, pageIndex: number) => void;
   setSearchParams?: (searchParams: string) => void;
   countRows?: number;
   pageNumberForBack?: number;

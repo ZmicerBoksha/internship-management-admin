@@ -46,6 +46,7 @@ const EventInfo: FunctionComponent = () => {
 
   async function getEventData(id: string) {
     await eventsApi.getEventInfo(id).then(response => {
+      console.log(response)
       setEventData(response);
       setLoadingData(false);
     });

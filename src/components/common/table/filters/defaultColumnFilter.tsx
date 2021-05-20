@@ -12,7 +12,6 @@ const DefaultColumnFilter: FunctionComponent<DefaultColumnFilterProps> = ({ colu
 
   console.log(filterValue);
   const [value, setValue] = useState(filterValue || '');
-  console.log(value);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);

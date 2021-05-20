@@ -74,7 +74,7 @@ const FirstColumnSettings: FunctionComponent<TFirstColumnSettings> = ({ rowId })
   };
 
   const showCandidates = () => {
-    history.push(`/candidate?search=event.id==${rowId}`);
+    history.push(`/candidate-events/${rowId}`);
   };
 
   const deleteEvent = () => {
@@ -193,11 +193,11 @@ export const Columns = [
     Header: 'Title',
     accessor: 'title',
   },
-  {
-    Header: 'Description',
-    accessor: 'description',
-    startHide: true,
-  },
+  // {
+  //   Header: 'Description',
+  //   accessor: 'description',
+  //   startHide: true,
+  // },
   {
     Header: 'Event start',
     accessor: 'startDate',
@@ -229,17 +229,17 @@ export const Columns = [
     Cell: (props: any) => {
       return (
         <>
-          <img src={`${props?.cell?.value?.path}.${props?.cell?.value?.ext}`} alt={`${props?.cell?.value?.altText}`} />
+          <img src={`${props.cell.value.src}`} alt={`${props.cell.value.altText}`} />
         </>
       );
     },
   },
-  {
-    Header: 'Alt text',
-    accessor: 'image.altText',
-    disableFilters: true,
-    startHide: true,
-  },
+  // {
+  //   Header: 'Alt text',
+  //   accessor: 'image.altText',
+  //   disableFilters: true,
+  //   startHide: true,
+  // },
   {
     Header: 'English level',
     accessor: 'englishLevel',
