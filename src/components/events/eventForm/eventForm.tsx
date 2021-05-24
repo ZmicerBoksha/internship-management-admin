@@ -167,7 +167,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     data.technologies = technologyList.join(', ');
 
     data.duration = `${(+new Date(data.deadline) - +new Date(data.startDate)) / (60 * 60 * 24 * 1000)} days`;
-
+     
     eventType === 'new' &&
       eventsApi
         .createEvent(data)

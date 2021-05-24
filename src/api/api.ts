@@ -222,6 +222,7 @@ export const eventsApi = {
 
       return Promise.all(arrayGetImagesInfo)
         .then(responses => {
+          console.log(responses)
           const responseData: IEventForm[] = [...response.data.content];
           return responses.map((item, index) => {
             const { ...props } = responseData[index];
@@ -232,6 +233,7 @@ export const eventsApi = {
           });
         })
         .then(response => {
+          console.log(response)
           return {
             eventsList: response,
             totalElements,
@@ -365,3 +367,5 @@ export const employeeServer = {
   getHrEmployees,
   getTsEmployees,
 };
+
+
