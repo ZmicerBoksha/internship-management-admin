@@ -716,7 +716,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                   }}
                 />
               </div>
-            )} */}
+            )}
           </div>
         </div>
         <div className={classes.form_button_wrap}>
