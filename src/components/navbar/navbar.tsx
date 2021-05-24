@@ -52,15 +52,16 @@ import MenuOutlinedIcon from '@material-ui/icons/MenuOutlined';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
-import { Collapse, MenuItem, MenuList } from '@material-ui/core';
-import { Link, Route, Switch } from 'react-router-dom';
-import { ExpandLess } from '@material-ui/icons';
+import { Collapse, Menu, MenuItem, MenuList } from '@material-ui/core';
+import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { AccountCircle, ExpandLess } from '@material-ui/icons';
 import EventIcon from '@material-ui/icons/Event';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 // import StaffIcon from '@material-ui/icons/Group';
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 import CandidateIcon from '@material-ui/icons/PeopleOutline';
 import Routers from '../routers/routers';
+import { IEmployeeRoles } from '../../api/api';
 
 const drawerWidth = 240;
 
@@ -68,6 +69,10 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: 'flex',
+      flexGrow: 1,
+    },
+    title: {
+      flexGrow: 1,
     },
     drawer: {
       [theme.breakpoints.up('sm')]: {
@@ -108,6 +113,12 @@ export default function Navbar() {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [staffOpen, setStaffOpen] = React.useState(true);
 
+  const [employeeInfoEl, setEmployeeInfoEl] = React.useState<null | HTMLElement>(null);
+
+  const employeeInfo: IEmployeeRoles = JSON.parse(window.localStorage.getItem('employeeInfo') || '{}');
+
+  const employeeMenu = Boolean(employeeInfoEl);
+
   const handleListItemClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setSelectedIndex(index);
   };
@@ -123,6 +134,21 @@ export default function Navbar() {
   const staffHandleClick = () => {
     setStaffOpen(!staffOpen);
   };
+
+  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setEmployeeInfoEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setEmployeeInfoEl(null);
+  };
+
+  const history = useHistory();
+  const handleLogout = () => {
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('employeeInfo');
+    history.push('/authorization');
+  }
 
   const drawer = (
     <div>
@@ -207,9 +233,40 @@ export default function Navbar() {
           >
             <MenuOutlinedIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap className={classes.title}>
             Admin panel
           </Typography>
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />  
+              <Typography variant="h6" noWrap>
+                {employeeInfo.name} {employeeInfo.lastName}
+              </Typography>
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={employeeInfoEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={employeeMenu}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">

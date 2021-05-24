@@ -21,6 +21,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import LoginTopBar from './loginTopBar';
 import useAxios from 'axios-hooks';
 import { useHistory, Redirect } from 'react-router-dom';
+import { getEmployeeInfoByEmail } from '../../api/api';
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -77,7 +78,6 @@ const Authorization = () => {
 
   useEffect(() => {
     if (!!response) {
-      console.log(response.token);
       window.localStorage.setItem('token', response.token);
 
       setTimeout(() => {
@@ -104,6 +104,10 @@ const Authorization = () => {
       data: {
         ...formData,
       },
+    }).then(response => {
+      getEmployeeInfoByEmail(formData.email).then(response => {
+        window.localStorage.setItem('employeeInfo', JSON.stringify(response))
+      })
     });
   };
   return (

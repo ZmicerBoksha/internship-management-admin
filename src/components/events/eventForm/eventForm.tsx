@@ -148,8 +148,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   const watchSelectDateOfEndAccept = watch('dateOfEndAccept');
   const watchSelectDeadline = watch('deadline');
 
-  console.log(eventData)
-
   useEffect(() => {
     if (watchShowFormat === 'ONLINE' || eventData?.format === 'ONLINE') {
       unregister('country');
@@ -169,7 +167,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     data.technologies = technologyList.join(', ');
 
     data.duration = `${(+new Date(data.deadline) - +new Date(data.startDate)) / (60 * 60 * 24 * 1000)} days`;
-
+     
     eventType === 'new' &&
       eventsApi
         .createEvent(data)
@@ -188,7 +186,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
           setLoadingData(true);
           history.push(`/events/info/${newEventId}?mode=edit`);
         }).catch(err => {
-          console.log(err)
           setModalError({
             isOpen: true,
             errorTitle: `Error ${err.response.status}`,
@@ -686,11 +683,19 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
                 {(watchSelectImageData && '') || 'Please select image.'}
               </Typography>
+              {
+                // @ts-ignore
+                errors.image?.data?.type === 'required' && (
+                  <Typography variant="overline" color="error">
+                    {eventsRules.requiredtext()}
+                  </Typography>
+                )
+              }
             </div>
-            {/* {watchSelectImageData && (
+            {watchSelectImageData && (
               <div className={classes.input_wrap}>
                 <Controller
-                  name="image.data!.altText"
+                  name="image.data.altText"
                   control={control}
                   defaultValue={eventData?.image.data.altText || ''}
                   render={({ field }) => {
@@ -708,7 +713,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                   }}
                 />
               </div>
-            )} */}
+            )}
           </div>
         </div>
         <div className={classes.form_button_wrap}>
