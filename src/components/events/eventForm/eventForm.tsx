@@ -681,7 +681,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 />
               </Button>
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
-                {(watchSelectImageData && '') || 'Please select image.'}
+                {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'}
               </Typography>
               {
                 // @ts-ignore

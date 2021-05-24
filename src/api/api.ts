@@ -171,7 +171,7 @@ export const imageApi = {
     const newImageInfo = {
       altText: '',
       ext: imageData.type,
-      imageName: imageData.name,
+      name: imageData.name,
       size: imageData.size
     }
 
@@ -182,10 +182,10 @@ export const imageApi = {
 };
 
 export const filesApi = {
-  getImageByName(imageName: string, imagePath: string) {
-    imageName += imageName.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? '' : `.${imagePath}`;
+  getImageByName(name: string, imagePath: string) {
+    name += name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? '' : `.${imagePath}`;
 
-    return instance.get(`/file/image/${imageName}`)
+    return instance.get(`/file/image/${name}`)
     .then(response => response)
   }
 }
@@ -204,13 +204,15 @@ export const eventsApi = {
       const arrayGetImagesInfo: TImageEvent[] = response.data.content.map((item: IEventForm) =>
         imageApi.getImageById(item.imageId).then(imageData => {
 
-          return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+          return filesApi.getImageByName(imageData.name, imageData.ext).then(fileData => {
+            console.log(fileData)
             return {
               data: {...imageData},
               src: `${fileData.config.baseURL}${fileData.config.url}`
             }
           })
           .catch(error => {
+            console.log(error)
             return {
               data: {},
               src: ''
@@ -221,6 +223,7 @@ export const eventsApi = {
 
       return Promise.all(arrayGetImagesInfo)
         .then(responses => {
+          console.log(responses)
           const responseData: IEventForm[] = [...response.data.content];
           return responses.map((item, index) => {
             const { ...props } = responseData[index];
@@ -231,6 +234,7 @@ export const eventsApi = {
           });
         })
         .then(response => {
+          console.log(response)
           return {
             eventsList: response,
             totalElements
@@ -243,7 +247,7 @@ export const eventsApi = {
       const responseData: IEventForm = {...response.data};
       
       return imageApi.getImageById(responseData.imageId).then(imageData => {
-        return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+        return filesApi.getImageByName(imageData.name, imageData.ext).then(fileData => {
           responseData.image = {
             data: {...imageData},
             src: `${fileData.config.baseURL}${fileData.config.url}`
