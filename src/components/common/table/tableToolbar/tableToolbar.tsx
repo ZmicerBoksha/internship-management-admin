@@ -7,6 +7,7 @@ import { TableInstance } from 'react-table';
 import ColumnHidePage from '../columnHidePage/columnHidePage';
 import TableFilters from '../tableFilters/tableFilters';
 import GlobalFilter from '../filters/globalFilter';
+import { isSuperAdmin } from '../../../../helper/roles/getRoles';
 
 const useStyles = makeStyles((theme: Theme) => {
   return createStyles({
@@ -72,7 +73,7 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
             </div>
           </Tooltip>
         )}
-        {onDelete && (
+        {onDelete && isSuperAdmin() && (
           <Tooltip title="Delete event(s)">
             <div>
               <IconButton

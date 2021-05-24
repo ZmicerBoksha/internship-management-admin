@@ -1,6 +1,7 @@
 import { config } from 'node:process';
 import axios from 'axios';
 import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
+import { ROLE } from '../helper/roles/getRoles';
 
 type PageParams = {
   page: number;
@@ -88,7 +89,7 @@ export const eventTabs: TBackendModelWithGoodText[] = [
 ];
 
 export type TImageEvent = {
-  data: File,
+  data: File & {altText?: string},
   src?: string,
 }
 
@@ -114,14 +115,40 @@ const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
 });
 
+
+export interface IEmployeeRoles {
+  name?: string,
+  lastName?: string,
+  role?: ROLE
+}
+
+export const getEmployeeInfoByEmail = (email: string) => instance.get(`/employees?search=email==${email}`).then(response => {
+  const allEmployeeInfo = response.data.content[0];
+  const employeeInfo: IEmployeeRoles = {
+    name: allEmployeeInfo.firstName,
+    lastName: allEmployeeInfo.lastName,
+    role: allEmployeeInfo.role.name
+  } 
+
+  return employeeInfo
+})
+
+
 export const imageApi = {
   getImageById(imageId: string | number) {
     return instance.get(`/image/${imageId}`).then(response => response.data);
   },
-  createImage(eventId: string | number, imageData: File) {
+  createImage(eventId: string | number, imageData: File & {altText?: string}) {
     let formData = new FormData();
     formData.append('image', imageData);
-    
+
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    console.log(imageData);
+    console.log(formData)
+    console.log(formData.get('image'));
     const config = {
       headers: {
         withCredentials: true,
@@ -144,23 +171,21 @@ export const imageApi = {
     const newImageInfo = {
       altText: '',
       ext: imageData.type,
-      imageName: imageData.name,
+      name: imageData.name,
       size: imageData.size
     }
 
-    console.log(imageData);
     return instance.put(`/image/${imageId}`, formData, config).then(response => {
-      console.log(response)
       return response
     });
   },
 };
 
 export const filesApi = {
-  getImageByName(imageName: string, imagePath: string) {
-    imageName += imageName.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? '' : `.${imagePath}`;
+  getImageByName(name: string, imagePath: string) {
+    name += name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? '' : `.${imagePath}`;
 
-    return instance.get(`/file/image/${imageName}`)
+    return instance.get(`/file/image/${name}`)
     .then(response => response)
   }
 }
@@ -179,13 +204,15 @@ export const eventsApi = {
       const arrayGetImagesInfo: TImageEvent[] = response.data.content.map((item: IEventForm) =>
         imageApi.getImageById(item.imageId).then(imageData => {
 
-          return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+          return filesApi.getImageByName(imageData.name, imageData.ext).then(fileData => {
+            console.log(fileData)
             return {
               data: {...imageData},
               src: `${fileData.config.baseURL}${fileData.config.url}`
             }
           })
           .catch(error => {
+            console.log(error)
             return {
               data: {},
               src: ''
@@ -196,6 +223,7 @@ export const eventsApi = {
 
       return Promise.all(arrayGetImagesInfo)
         .then(responses => {
+          console.log(responses)
           const responseData: IEventForm[] = [...response.data.content];
           return responses.map((item, index) => {
             const { ...props } = responseData[index];
@@ -206,6 +234,7 @@ export const eventsApi = {
           });
         })
         .then(response => {
+          console.log(response)
           return {
             eventsList: response,
             totalElements
@@ -218,7 +247,7 @@ export const eventsApi = {
       const responseData: IEventForm = {...response.data};
       
       return imageApi.getImageById(responseData.imageId).then(imageData => {
-        return filesApi.getImageByName(imageData.imageName, imageData.ext).then(fileData => {
+        return filesApi.getImageByName(imageData.name, imageData.ext).then(fileData => {
           responseData.image = {
             data: {...imageData},
             src: `${fileData.config.baseURL}${fileData.config.url}`
@@ -258,7 +287,6 @@ export const eventsApi = {
         eventType: 1,
       })
       .then(updateEventData => {
-        console.log(updateEventData)
         return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData)
 
       });
@@ -340,3 +368,5 @@ export const employeeServer = {
   getHrEmployees,
   getTsEmployees,
 };
+
+

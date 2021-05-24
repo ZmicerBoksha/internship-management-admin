@@ -169,7 +169,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     data.technologies = technologyList.join(', ');
 
     data.duration = `${(+new Date(data.deadline) - +new Date(data.startDate)) / (60 * 60 * 24 * 1000)} days`;
-
+     
     eventType === 'new' &&
       eventsApi
         .createEvent(data)
@@ -684,13 +684,21 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 />
               </Button>
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
-                {(watchSelectImageData && '') || 'Please select image.'}
+                {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'}
               </Typography>
+              {
+                // @ts-ignore
+                errors.image?.data?.type === 'required' && (
+                  <Typography variant="overline" color="error">
+                    {eventsRules.requiredtext()}
+                  </Typography>
+                )
+              }
             </div>
-            {/* {watchSelectImageData && (
+            {watchSelectImageData && (
               <div className={classes.input_wrap}>
                 <Controller
-                  name="image.data!.altText"
+                  name="image.data.altText"
                   control={control}
                   defaultValue={eventData?.image.data.altText || ''}
                   render={({ field }) => {
