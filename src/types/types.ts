@@ -107,3 +107,8 @@ export type TStatusHistoryPost = {
   employeeId: number;
   statusId: number;
 };
+
+export interface TEmploeeTimeSlots  {
+  id: number;
+  dataTime: string;
+}

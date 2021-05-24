@@ -6,7 +6,6 @@ import Authorization from '../authorization/authorization';
 import CandidatesPage from '../candidates/candidates_page';
 import CandidateCard from '../candidates/candidate_card/candidate_card';
 import Error from '../path_error/error';
-
 import TsTable from '../staff/tsTable/tsTable';
 import HrTable from '../staff/hrTable/hrTable';
 import StaffPage from '../staff/staffPage/staffPage';
@@ -22,6 +21,7 @@ const Routers: React.FC = () => {
         <Route exact path="/staff/hr" component={HrTable} />
         <Route exact path="/staff/ts" component={TsTable} />
         <Route exact path="/staff/hr/:id" component={StaffPage} />
+        <Route exact path="/staff/ts/:id" component={StaffPage} />
         <Route exact path="/staff/:add?" component={StaffPage} />
 
         <Route exact path={['/candidate', '/candidate-events/:eventId?']} component={CandidatesPage} />

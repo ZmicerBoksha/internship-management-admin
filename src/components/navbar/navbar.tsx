@@ -1,3 +1,4 @@
+
 /*
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -41,6 +42,7 @@ const Navbar: React.FC = () => {
 export default Navbar;
 
 */
+
 
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
@@ -199,7 +201,7 @@ export default function Navbar() {
         </MenuItem>
         <Collapse in={staffOpen} timeout="auto" unmountOnExit>
           <MenuList disablePadding>
-            {['HR', 'TS', 'add'].map((category, index) => {
+            {['HR', 'TS'].map((category, index) => {
               return (
                 <MenuItem
                   key={index}

@@ -148,6 +148,8 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   const watchSelectDateOfEndAccept = watch('dateOfEndAccept');
   const watchSelectDeadline = watch('deadline');
 
+  console.log(eventData)
+
   useEffect(() => {
     if (watchShowFormat === 'ONLINE' || eventData?.format === 'ONLINE') {
       unregister('country');
@@ -186,6 +188,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
           setLoadingData(true);
           history.push(`/events/info/${newEventId}?mode=edit`);
         }).catch(err => {
+          console.log(err)
           setModalError({
             isOpen: true,
             errorTitle: `Error ${err.response.status}`,
@@ -713,7 +716,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                   }}
                 />
               </div>
-            )}
+            )} */}
           </div>
         </div>
         <div className={classes.form_button_wrap}>

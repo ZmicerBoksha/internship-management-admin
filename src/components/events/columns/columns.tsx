@@ -234,12 +234,12 @@ export const Columns = [
       );
     },
   },
-  {
-    Header: 'Alt text',
-    accessor: 'image.altText',
-    disableFilters: true,
-    startHide: true,
-  },
+  // {
+  //   Header: 'Alt text',
+  //   accessor: 'image.altText',
+  //   disableFilters: true,
+  //   startHide: true,
+  // },
   {
     Header: 'English level',
     accessor: 'englishLevel',
