@@ -14,6 +14,7 @@ import { useSnackbarContext } from '../../common/snackbarInfo/snackbarContext';
 import { technologies } from '../../common/technologies/technologies';
 import { countries } from '../../common/countries/countries';
 import { SelectColumnFilterEvents } from '../../common/table/filters/selectColumnFilterEvents';
+import { NavLink } from 'react-router-dom';
 
 const useStyles = makeStyles(() => {
   return createStyles({
@@ -268,15 +269,27 @@ export const Columns = [
   {
     Header: 'Who created event (userId)',
     accessor: 'creatorEvent',
-    startHide: true,
+    // startHide: true,
     Cell: (props: any) => {
       const { cell } = props;
-      return <>{`${cell.value.empFirstName} ${cell.value.empLastName} (${cell.value.role.name})`}</>;
+      return (
+        <>
+          <NavLink
+            to={`/staff/${cell.value.type}/${cell.value.id}`}
+            style={{
+              fontWeight: 'bold',
+              cursor: 'pointer',
+            }}
+          >
+            {`${cell.value.firstName} ${cell.value.lastName} (${cell.value.role.name})`}
+          </NavLink>
+        </>
+      );
     },
   },
   {
     Header: 'Event created at',
     accessor: 'creatorEvent.createdAt',
-    startHide: true,
+    // startHide: true,
   },
 ];

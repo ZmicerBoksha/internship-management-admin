@@ -1,4 +1,4 @@
-import { createStyles, makeStyles, Switch, Typography } from '@material-ui/core';
+import { createStyles, Link, makeStyles, Switch, Typography } from '@material-ui/core';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import { eventsApi, IEventForm } from '../../../api/api';
@@ -46,7 +46,6 @@ const EventInfo: FunctionComponent = () => {
 
   async function getEventData(id: string) {
     await eventsApi.getEventInfo(id).then(response => {
-      console.log(response)
       setEventData(response);
       setLoadingData(false);
     });

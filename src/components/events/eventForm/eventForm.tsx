@@ -148,8 +148,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
   const watchSelectDateOfEndAccept = watch('dateOfEndAccept');
   const watchSelectDeadline = watch('deadline');
 
-  console.log(eventData)
-
   useEffect(() => {
     if (watchShowFormat === 'ONLINE' || eventData?.format === 'ONLINE') {
       unregister('country');
@@ -169,7 +167,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     data.technologies = technologyList.join(', ');
 
     data.duration = `${(+new Date(data.deadline) - +new Date(data.startDate)) / (60 * 60 * 24 * 1000)} days`;
-     
+
     eventType === 'new' &&
       eventsApi
         .createEvent(data)
@@ -187,36 +185,39 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
         .then(newEventId => {
           setLoadingData(true);
           history.push(`/events/info/${newEventId}?mode=edit`);
-        }).catch(err => {
-          console.log(err)
+        })
+        .catch(err => {
           setModalError({
             isOpen: true,
             errorTitle: `Error ${err.response.status}`,
-            errorText: `${err.response.data.info}`
+            errorText: `${err.response.data.info}`,
           });
         });
 
     eventType === 'info' &&
       eventId &&
-      eventsApi.updateEvent(eventId, data).then(response => {
-        const status = response.status;
-        if (status >= 200 && status <= 299) {
-          setSnackbar({
-            isOpen: true,
-            alertSeverity: 'success',
-            alertMessage: 'Event update success',
-          });
-        }
+      eventsApi
+        .updateEvent(eventId, data)
+        .then(response => {
+          const status = response.status;
+          if (status >= 200 && status <= 299) {
+            setSnackbar({
+              isOpen: true,
+              alertSeverity: 'success',
+              alertMessage: 'Event update success',
+            });
+          }
 
-        // history.push('/events');
-        // return response.data.id;
-      }).catch(err => {
-        setModalError({
-          isOpen: true,
-          errorTitle: `Error ${err.response.status}`,
-          errorText: `${err.response.data.info}`
+          // history.push('/events');
+          // return response.data.id;
+        })
+        .catch(err => {
+          setModalError({
+            isOpen: true,
+            errorTitle: `Error ${err.response.status}`,
+            errorText: `${err.response.data.info}`,
+          });
         });
-      });
     // .then(newEventId => {
     //   setIsEditMode(false);
     //   history.push(`/events/info/${newEventId}`);
@@ -648,7 +649,6 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             </div>
             <div className={classes.input_wrap}>
               {watchSelectImageData && (
-                
                 // <img src={URL.createObjectURL(watchSelectImageData)} alt="" className={classes.choose_image} />
                 <img src={eventData?.image.src} alt="" className={classes.choose_image} />
               )}
@@ -659,7 +659,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 className={`${readOnly && classes.disabled_field}`}
                 disabled={readOnly}
               >
-                Upload image                
+                Upload image
                 <Controller
                   name="image.data"
                   control={control}
@@ -673,8 +673,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         type="file"
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                           const imageFile = event.target.files?.length && event.target.files[0];
-                          !!imageFile && 
-                            imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/) ? setValue('image.data', imageFile) : alert('Ошибка, нужна картинка');
+                          !!imageFile && imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/)
+                            ? setValue('image.data', imageFile)
+                            : alert('Ошибка, нужна картинка');
                           // imageApi.createImage(eventData!.id, imageFile)
                         }}
                         hidden
