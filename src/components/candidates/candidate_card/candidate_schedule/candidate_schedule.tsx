@@ -8,12 +8,7 @@ import 'react-big-calendar/lib/sass/styles.scss';
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
 import { Button } from '@material-ui/core';
 
-const axios = Axios.create({
-  baseURL: 'http://localhost:8085/api',
-});
-const cache = new LRU({ max: 10 });
 
-configure({ axios, cache });
 
 const localizer = momentLocalizer(moment);
 
