@@ -89,7 +89,10 @@ export const eventTabs: TBackendModelWithGoodText[] = [
 ];
 
 export type TImageEvent = {
-  data: File & { altText?: string };
+  data: File & {
+    id?: number | string;
+    altText?: string;
+  };
   src?: string;
 };
 
@@ -222,7 +225,7 @@ export const eventsApi = {
 
       return Promise.all(arrayGetImagesInfo)
         .then(responses => {
-          console.log(responses)
+          console.log(responses);
           const responseData: IEventForm[] = [...response.data.content];
           return responses.map((item, index) => {
             const { ...props } = responseData[index];
@@ -233,7 +236,7 @@ export const eventsApi = {
           });
         })
         .then(response => {
-          console.log(response)
+          console.log(response);
           return {
             eventsList: response,
             totalElements,
@@ -282,12 +285,14 @@ export const eventsApi = {
     return instance
       .put(`/event/${eventId}`, {
         ...formData,
-        creatorEvent: 1,
+        creatorEvent: JSON.parse(window.localStorage.getItem('employeeInfo') || '{}').id,
         employee: 1,
         eventType: 1,
       })
       .then(updateEventData => {
-        return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData);
+        console.log(updateEventData.data.id);
+        // return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData);
+        return imageApi.createImage(updateEventData.data.id, formData.image.data).then(() => updateEventData);
       });
   },
   deleteEvent(eventId: number) {
@@ -367,5 +372,3 @@ export const employeeServer = {
   getHrEmployees,
   getTsEmployees,
 };
-
-
