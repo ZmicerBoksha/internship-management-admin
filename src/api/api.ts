@@ -91,9 +91,9 @@ export const eventTabs: TBackendModelWithGoodText[] = [
 export type TImageEvent = {
   data: File & {
     id?: number | string;
-    altText?: string;
   };
   src?: string;
+  altText?: string;
 };
 
 export interface IEventForm {
@@ -142,9 +142,9 @@ export const imageApi = {
   getImageById(imageId: string | number) {
     return instance.get(`/image/${imageId}`).then(response => response.data);
   },
-  createImage(eventId: string | number, imageData: File & { altText?: string }) {
+  createImage(eventId: string | number, imageData: TImageEvent) {
     let formData = new FormData();
-    formData.append('image', imageData);
+    formData.append('image', imageData.data);
 
     for (let [key, value] of formData.entries()) {
       console.log(`${key}: ${value}`);
@@ -159,7 +159,11 @@ export const imageApi = {
         'content-type': 'multipart/form-data',
       },
     };
-    return instance.post(`/image/upload?id=${eventId}`, formData, config).then(response => response);
+
+    let createParam = `id=${eventId}&altText=`;
+    createParam += !!imageData.altText ? `${imageData.altText}` : '';
+
+    return instance.post(`/image/upload?${createParam}`, formData, config).then(response => response);
   },
   updateImage(imageId: string | number, imageData: File) {
     let formData = new FormData();
@@ -211,6 +215,7 @@ export const eventsApi = {
             .then(fileData => {
               return {
                 data: { ...imageData },
+                altText: `${imageData.altText}`,
                 src: `${fileData.config.baseURL}${fileData.config.url}`,
               };
             })
@@ -218,6 +223,7 @@ export const eventsApi = {
               return {
                 data: {},
                 src: '',
+                altText: '',
               };
             });
         }),
@@ -225,7 +231,6 @@ export const eventsApi = {
 
       return Promise.all(arrayGetImagesInfo)
         .then(responses => {
-          console.log(responses);
           const responseData: IEventForm[] = [...response.data.content];
           return responses.map((item, index) => {
             const { ...props } = responseData[index];
@@ -236,7 +241,6 @@ export const eventsApi = {
           });
         })
         .then(response => {
-          console.log(response);
           return {
             eventsList: response,
             totalElements,
@@ -254,6 +258,7 @@ export const eventsApi = {
           .then(fileData => {
             responseData.image = {
               data: { ...imageData },
+              altText: `${imageData.altText}`,
               src: `${fileData.config.baseURL}${fileData.config.url}`,
             };
             return responseData;
@@ -261,6 +266,7 @@ export const eventsApi = {
           .catch(error => {
             responseData.image = {
               data: { ...imageData },
+              altText: ``,
               src: ``,
             };
             return responseData;
@@ -278,7 +284,7 @@ export const eventsApi = {
         employee: 1,
       })
       .then(newEventData => {
-        return imageApi.createImage(newEventData.data.id, formData.image.data).then(() => newEventData);
+        return imageApi.createImage(newEventData.data.id, formData.image).then(() => newEventData);
       });
   },
   updateEvent(eventId: string, formData: IEventForm) {
@@ -290,9 +296,8 @@ export const eventsApi = {
         eventType: 1,
       })
       .then(updateEventData => {
-        console.log(updateEventData.data.id);
         // return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData);
-        return imageApi.createImage(updateEventData.data.id, formData.image.data).then(() => updateEventData);
+        return imageApi.createImage(updateEventData.data.id, formData.image).then(() => updateEventData);
       });
   },
   deleteEvent(eventId: number) {
