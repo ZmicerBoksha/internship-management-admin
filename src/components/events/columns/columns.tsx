@@ -172,6 +172,10 @@ export const Columns = [
     Header: 'Id',
     accessor: 'id',
     startHide: true,
+    disableResizing: true,
+    disableGroupBy: true,
+    disableFilters: true,
+    disableGlobalFilter: true,
   },
   {
     Header: 'Tab',
@@ -227,6 +231,7 @@ export const Columns = [
     Header: 'Src',
     accessor: 'image',
     disableFilters: true,
+    disableGlobalFilter: true,
     Cell: (props: any) => {
       return (
         <>
@@ -267,9 +272,10 @@ export const Columns = [
     startHide: true,
   },
   {
-    Header: 'Who created event (userId)',
+    Header: 'Who created event',
     accessor: 'creatorEvent',
-    // startHide: true,
+    disableFilters: true,
+    disableGlobalFilter: true,
     Cell: (props: any) => {
       const { cell } = props;
       return (
@@ -290,6 +296,8 @@ export const Columns = [
   {
     Header: 'Event created at',
     accessor: 'creatorEvent.createdAt',
-    // startHide: true,
+    startHide: true,
+    disableFilters: true,
+    disableGlobalFilter: true,
   },
 ];

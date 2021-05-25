@@ -210,7 +210,8 @@ const Table: FunctionComponent<TableProps> = ({
             filterParametrs += item.value[2] ? `${item.id}=le="${item.value[2]}";` : '';
             break;
           default:
-            filterParametrs += item.value ? `${item.id}=="${item.value}*";` : '';
+            filterParametrs += item.value[0] ? `${item.id}=="${item.value}*";` : '';
+            debugger;
             break;
         }
       });
