@@ -4,6 +4,7 @@ import { PREFIX, TS } from "../../../constants";
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from "../../common/table/filters/selectColumnFilter";
 import { useHistory } from "react-router";
+import { Button } from "@material-ui/core";
 
 const TsTable: React.FC = () => {
   const [{ data: TSList }, sendRequest] = useAxios(`${PREFIX}employees?search=type==${TS}`);
@@ -74,14 +75,14 @@ const TsTable: React.FC = () => {
             accessor: '',
             disableFilters: true,
             Cell: ({ cell }: any) => (
-              <button
-                value={cell.row.id}
-                onClick={() => {
-                  window.location.href = `/staff/ts/${cell.row.original.id}`;
-                }}
+              <Button style={{ marginTop: '10px' }} variant="contained" color="primary" type="submit"
+                      value={cell.row.id}
+                      onClick={() => {
+                        window.location.href = `/staff/ts/${cell.row.original.id}`;
+                      }}
               >
                 {'View'}
-              </button>
+              </Button>
             ),
           },
         ],
