@@ -188,7 +188,7 @@ const Table: FunctionComponent<TableProps> = ({
     selectionHook,
   );
 
-  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state } = instance;
+  const { allColumns, headerGroups, getTableBodyProps, page, prepareRow, state, rows } = instance;
 
   useEffect(() => {
     instance.state.hiddenColumns = allColumns.filter(column => column.hasOwnProperty('startHide')).map(({ id }) => id);
@@ -273,7 +273,7 @@ const Table: FunctionComponent<TableProps> = ({
             ))}
           </TableHead>
           <TableBody {...getTableBodyProps()} className={classes.table_body}>
-            {page.map((row, i) => {
+            {rows.map((row, i) => {
               prepareRow(row);
               return (
                 <TableRow {...row.getRowProps()} className={classes.table_row}>
