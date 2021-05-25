@@ -8,9 +8,11 @@ import Button from '@material-ui/core/Button';
 import CandidateMiniCard from '../canditadeMiniCard/candidateMiniCard';
 import { useHistory } from 'react-router-dom';
 import useAxios from 'axios-hooks';
-import { POST, PREFIX, TIME_SLOT_DURATION, TIME_SLOTS_BACKEND_FORMAT } from "../../../constants";
+import { DELETE, POST, PREFIX, TIME_SLOT_DURATION, TIME_SLOTS_BACKEND_FORMAT } from "../../../constants";
 import { getSlots } from './api';
 import Preloader from '../../common/preloader/preloader';
+import { TSnackbar } from '../../common/snackbarInfo/snackbarContext';
+import SnackbarInfo from '../../common/snackbarInfo/snackbarInfo';
 
 const localizer = momentLocalizer(moment);
 
@@ -151,22 +153,22 @@ const TimeSlots = () => {
     interviewDate: 'Thu May 13 2021 12:40:38 GMT+0300 (Москва, стандартное время)',
   };
 
-  const [{ data, loading, error }, sendRequest] = useAxios(
+  const [{ data, loading, error, response }, sendRequest] = useAxios(
     {
       url: `${PREFIX}employees/availability`,
       method: POST,
     },
     { manual: true },
   );
-
+  // const [snackbar, setSnackbar] = useState<TSnackbar>({});
   const [events, setEvents] = useState([]);
-
-
+  const [slotId, setSlotId] = useState(undefined);
 
   const [open, setOpen] = useState<boolean>(false);
 
   const openPopUp = (event: any): void => {
     setOpen(true);
+    setSlotId(event.slotId);
   };
 
   const handleClose = (): void => {
@@ -196,8 +198,26 @@ const TimeSlots = () => {
     getData();
   }, []);
 
-  const handleSelect = (e: any): void => {
+  const handleDelete = (): void => {
+    sendRequest({
+      url: `${PREFIX}employees/${slotId}/slot`,
+      method: DELETE,
+    });
 
+    if (response?.status === 200) {
+      alert('Success');
+      events.splice(
+        // @ts-ignore
+        events.findIndex(item => item.slotId === slotId),
+        1,
+      );
+      setEvents(events);
+      setOpen(false);
+      //  setSnackbar({isOpen:true,alertSeverity:'success', alertMessage:'success'  });
+    }
+  };
+
+  const handleSelect = (e: any): void => {
     const newSlots: Date = e.slots.map((item: Date) => moment(item).format(TIME_SLOTS_BACKEND_FORMAT));
 
     e.slots.forEach((slot: Date, index: number) => {
@@ -218,7 +238,6 @@ const TimeSlots = () => {
       setEvents(prevState => [...prevState, event]);
     });
   };
-
 
   if (loading) return <Preloader />;
   if (error) return <p>Error!</p>;
@@ -267,8 +286,8 @@ const TimeSlots = () => {
           <Button onClick={handleClose} color="primary">
             Close
           </Button>
-          <Button onClick={handleClose} color="primary">
-            Remove time slotF
+          <Button onClick={handleDelete} color="secondary">
+            Remove time slot
           </Button>
         </DialogActions>
       </Dialog>

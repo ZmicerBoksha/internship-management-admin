@@ -3,7 +3,17 @@ import useAxios from 'axios-hooks';
 import { Controller, useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
 import TimeSlots from '../timeSlots/timeSlots';
-import { createStyles, FormControlLabel, Grid, Paper, Switch, TextField, Theme, Typography } from '@material-ui/core';
+import {
+  Button,
+  createStyles,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Switch,
+  TextField,
+  Theme,
+  Typography,
+} from '@material-ui/core';
 import { useParams } from 'react-router';
 import './staffPageStyle.scss';
 import FormControl from '@material-ui/core/FormControl';
@@ -26,6 +36,8 @@ import {
   TS,
 } from '../../../constants';
 import Preloader from '../../common/preloader/preloader';
+import UpdateIcon from '@material-ui/icons/Update';
+import SaveIcon from '@material-ui/icons/Save';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,8 +148,8 @@ const StaffPage: React.FC = () => {
         </Typography>
       </Grid>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container justify="center" xs={12}>
-          <Grid item xs={6} spacing={2}>
+        <Grid container  justify="center" xs={12}>
+          <Grid  className="fullCard" item xs={6} spacing={2}>
             <Typography className="subtitle" variant="h5" noWrap>
               Details
             </Typography>
@@ -309,13 +321,14 @@ const StaffPage: React.FC = () => {
             </Paper>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid  item xs={6}>
             <Typography className="subtitle" variant="h5" noWrap>
               Contacts
             </Typography>
-            <Paper>
+            <Paper className="card">
               <Grid>
                 <Controller
+
                   name="phone"
                   control={control}
                   defaultValue={staffData?.phone}
@@ -327,6 +340,7 @@ const StaffPage: React.FC = () => {
                   render={({ field }) => {
                     return (
                       <TextField
+                        className="item"
                         label="Phone:"
                         {...field}
                         id="phone"
@@ -428,30 +442,18 @@ const StaffPage: React.FC = () => {
                   />
                 )}
               </Grid>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue={staffData?.email}
-                render={({ field }) => {
-                  return (
-                    <TextField
-                      required={edit}
-                      error={errors.email}
-                      helperText={
-                        (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                        (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
-                      }
-                      {...field}
-                      id="email"
-                      label="Email:"
-                      InputProps={{ readOnly: !edit }}
-                    />
-                  );
-                }}
-              />
+
             </Paper>
           </Grid>
-          {edit || addMode ? <input type="submit" /> : ''}
+          {edit || addMode ? <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            type="submit"
+
+          >
+            Save
+          </Button> : ''}
         </Grid>
       </form>
       {addMode ? '' : <TimeSlots />}
