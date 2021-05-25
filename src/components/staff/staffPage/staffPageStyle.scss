@@ -4,10 +4,15 @@
   border-radius: 5px;
   border: 1px solid black;
   padding: 5px;
+  margin-bottom: 20px;
 }
 
 .switchLabel {
   color: #757575;
+}
+
+.fullCard{
+  padding-right: 40px;
 }
 
 .card{
@@ -48,4 +53,10 @@
 .columnName {
   padding-right: 20px;
   color: #757575;
+}
+
+.item{
+  padding-right:10px;
+  padding-bottom: 10px;
+  padding-top: 10px;
 }
