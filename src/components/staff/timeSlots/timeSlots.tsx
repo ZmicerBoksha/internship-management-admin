@@ -191,6 +191,7 @@ const TimeSlots = () => {
           item.end = moment(item.start).add(30, 'm').toDate();
           delete item.dateTime;
         });
+        console.log(events);
         setEvents(response);
       });
     }
@@ -198,20 +199,24 @@ const TimeSlots = () => {
     getData();
   }, []);
 
-  const handleDelete = (): void => {
-    sendRequest({
+  const handleDelete = async () => {
+   const response= await sendRequest({
       url: `${PREFIX}employees/${slotId}/slot`,
       method: DELETE,
     });
 
     if (response?.status === 200) {
       alert('Success');
+      /*
       events.splice(
         // @ts-ignore
         events.findIndex(item => item.slotId === slotId),
         1,
       );
-      setEvents(events);
+
+       */
+      // @ts-ignore
+      setEvents(events.filter(item => item.slotId !== slotId));
       setOpen(false);
       //  setSnackbar({isOpen:true,alertSeverity:'success', alertMessage:'success'  });
     }
@@ -226,6 +231,7 @@ const TimeSlots = () => {
         start: slot,
         end: moment(slot).add(TIME_SLOT_DURATION, 'm').toDate(),
       };
+
 
       sendRequest({
         data: {

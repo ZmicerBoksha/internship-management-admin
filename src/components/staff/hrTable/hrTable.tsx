@@ -9,7 +9,7 @@ import { rowsPerPageOptions } from '../../common/table/tablePagination/tablePagi
 import { countries } from '../../common/countries/countries';
 
 const HrTable: React.FC = () => {
-  const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}employees?search=type==${HR}`);
+  const [{ data: hrList ,response}, sendRequest] = useAxios(`${PREFIX}employees?search=type==${HR}`);
 
   const [searchParams, setSearchParams] = useState<string>('');
   const [dataList, setDataList] = useState<any[]>([]);

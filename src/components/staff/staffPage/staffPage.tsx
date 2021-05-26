@@ -36,6 +36,8 @@ import {
   TS,
 } from '../../../constants';
 import Preloader from '../../common/preloader/preloader';
+import { EMAIL_PATTERN } from '../../common/const/const';
+import { isSuperAdmin } from '../../../helper/roles/getRoles';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,6 +78,10 @@ const StaffPage: React.FC = () => {
   } = useForm();
 
   const watchCountry = watch('locationCountry');
+  const watchType = watch('type');
+
+
+  console.log(COUNTRY_LIST.get(watchCountry));
 
   useEffect(() => {
     const timeZone = COUNTRY_LIST.get(watchCountry);
@@ -105,14 +111,19 @@ const StaffPage: React.FC = () => {
 
   let staffData = addMode ? '' : data;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    console.log(data);
     if (addMode) {
-      sendRequest({
+      const response= await sendRequest({
         data,
         method: POST,
         url: `${PREFIX}employees`,
       });
+      if (response?.status === 200) {
+        alert('Success');
         history.push(`/staff/hr`);
+      }
+
 
     } else {
       sendRequest({
@@ -344,6 +355,11 @@ const StaffPage: React.FC = () => {
                         InputProps={{ readOnly: !edit }}
                         error={errors.phone}
                         required={edit}
+                        helperText={
+                          (errors.phone?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.phone?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(13))||
+                          (errors.phone?.type === 'pattern' && 'Check correct of phone number')
+                        }
                       >
                         <InputMask mask="(0)999 999 99 99" />
                       </TextField>
@@ -382,6 +398,7 @@ const StaffPage: React.FC = () => {
                   rules={{
                     required: true,
                     maxLength: MAX__LENGTH,
+                    pattern: EMAIL_PATTERN
                   }}
                   render={({ field }) => {
                     return (
@@ -390,7 +407,8 @@ const StaffPage: React.FC = () => {
                         error={errors.email}
                         helperText={
                           (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                          (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(30))
+                          (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(30))||
+                          (errors.email?.type === 'pattern' && 'Check correct of email address')
                         }
                         {...field}
                         id="email"
@@ -431,6 +449,34 @@ const StaffPage: React.FC = () => {
                     }}
                   />
                 )}
+
+                {watchType==="TS" || staffData?.type==="TS" ? <Controller
+                  name="primaryTechnology"
+                  control={control}
+                  defaultValue={staffData?.primaryTechnology}
+                  rules={{
+                    required: true,
+                    maxLength: MAX__LENGTH,
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        required={edit}
+                        error={errors.primaryTechnology}
+                        helperText={
+                          (errors.primaryTechnology?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.primaryTechnology?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                        }
+                        {...field}
+                        id="primaryTechnology"
+                        label="Primary Technology:"
+                        InputProps={{ readOnly: !edit }}
+                      />
+                    );
+                  }}
+                />:''
+
+                }
 
                 {edit || addMode ? (
                   <FormControl className={classes.formControl} disabled={!edit}>
@@ -477,7 +523,7 @@ const StaffPage: React.FC = () => {
           </Button> : ''}
         </Grid>
       </form>
-      {addMode ? '' : <TimeSlots />}
+      {!addMode && isSuperAdmin() && <TimeSlots />}
     </Grid>
   );
 };
