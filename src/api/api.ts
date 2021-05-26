@@ -150,6 +150,7 @@ export const imageApi = {
     return instance.get(`/image/${imageId}`).then(response => response.data);
   },
   createImage(eventId: string | number, imageData: TImageEvent) {
+    console.log('Create image')
     let formData = new FormData();
     formData.append('image', imageData.data);
 
@@ -172,9 +173,10 @@ export const imageApi = {
 
     return instance.post(`/image/upload?${createParam}`, formData, config).then(response => response);
   },
-  updateImage(imageId: string | number, imageData: File) {
+  updateImage(imageId: string | number, imageData: TImageEvent) {
+    console.log('Update image')
     let formData = new FormData();
-    formData.append('image', imageData);
+    formData.append('image', imageData.data);
 
     const config = {
       headers: {
@@ -184,13 +186,11 @@ export const imageApi = {
     };
 
     const newImageInfo = {
-      altText: '',
-      ext: imageData.type,
-      name: imageData.name,
-      size: imageData.size,
+      altText: imageData.altText,
     };
 
-    return instance.put(`/image/${imageId}`, formData, config).then(response => {
+    return instance.put(`/image/${imageId}`, newImageInfo).then(response => {
+      console.log(response)
       return response;
     });
   },
@@ -295,6 +295,7 @@ export const eventsApi = {
       });
   },
   updateEvent(eventId: string, formData: IEventForm) {
+    console.log(formData)
     return instance
       .put(`/event/${eventId}`, {
         ...formData,
@@ -304,7 +305,10 @@ export const eventsApi = {
       })
       .then(updateEventData => {
         // return imageApi.updateImage(updateEventData.data.imageId, formData.image.data).then(() => updateEventData);
-        return imageApi.createImage(updateEventData.data.id, formData.image).then(() => updateEventData);
+        console.log(!formData.image.data.id)
+        if(!formData.image.data.id) return imageApi.createImage(updateEventData.data.id, formData.image).then(() => updateEventData);
+        
+        return imageApi.updateImage(formData.image.data.id, formData.image).then(() => updateEventData);
       });
   },
   deleteEvent(eventId: number) {
