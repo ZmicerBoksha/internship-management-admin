@@ -5,6 +5,9 @@ import { employeeServer } from '../../../../api/api';
 import { TCandidate, TEmployee } from '../../../../types/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Context } from '../candidate_card';
+import { watch } from 'fs';
+import { COUNTRY_LIST, GET, PREFIX, PUT } from '../../../../constants';
+import useAxios from 'axios-hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,9 +47,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type CandidateInterviewProps = {
   candidateInfo: TCandidate;
+  setSlots: any;
 };
 
-const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }) => {
+const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,setSlots }) => {
   const classes = useStyles();
   const errorMessageRequired = 'This field is required';
   const [hr, setHr] = useState<TEmployee[]>([]);
@@ -64,6 +68,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
     handleSubmit,
     control,
     formState: { errors },
+    watch,
   } = useForm();
 
   useEffect(() => {
@@ -85,6 +90,26 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
         console.log(err);
       });
   }, []);
+
+  const watchTsEmployee = watch('tsEmployee');
+
+
+  const [{ data, loading, error, response }, sendRequest] = useAxios(
+    {
+      method: GET,
+    },
+    { manual: true },
+  );
+
+  useEffect(() => {
+  sendRequest({
+    url: `${PREFIX}employees/${watchTsEmployee}/crossing/${candidateInfo.id}`,
+  })
+
+    setSlots(data?.suitableTimeSlots||[])
+    //console.log(data.suitableTimeSlots)
+  }, [watchTsEmployee]);
+
 
   return (
     <Grid container spacing={3} style={{ marginBottom: '40px' }}>
@@ -198,7 +223,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
               }}
             />
             <Controller
-              name="time"
+              name="tsEmployee"
               control={control}
               defaultValue={''}
               rules={{
@@ -206,7 +231,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo }
               }}
               render={({ field }) => {
                 return (
-                  <TextField {...field} id="time" label="TS List" type="text" className={classes.textField} select>
+                  <TextField {...field} id="tsEmployee" label="TS List" type="text" className={classes.textField} select>
                     {ts.map((option: TEmployee) => (
                       <MenuItem key={option.id} value={option.id}>
                         {`${option.firstName} ${option.lastName}`}
