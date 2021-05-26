@@ -9,7 +9,6 @@ import 'react-big-calendar/lib/addons/dragAndDrop/styles.scss';
 import { Button } from '@material-ui/core';
 
 
-
 const localizer = momentLocalizer(moment);
 
 /*
@@ -34,7 +33,7 @@ ts  [{10.20.21, accepted: 'userId'}]
 
 hr backend work with above 2*/
 
-const CandidateSchedule = () => {
+const CandidateSchedule = (slots: any) => {
   type Event = {
     start: Date;
     end: Date;
@@ -44,7 +43,15 @@ const CandidateSchedule = () => {
   const initialEvents: Event[] = [];
 
   const [listOfEvents, setListOfEvents] = useState(initialEvents);
-
+  if (slots !== []) {
+    slots.map((item: any) => {
+      item.start = new Date(item.dateTime);
+      item.end = moment(item.start).add(30, 'm').toDate();
+      delete item.dateTime;
+    });
+    setListOfEvents(slots);
+  }
+  console.log(slots);
   const handleSelect = (e: any): void => {
     const title = window.prompt('New Event name');
     if (title) {
@@ -68,6 +75,10 @@ const CandidateSchedule = () => {
     //POST request with data in UFC Format
   };
 
+  const handleSelectSlots = (event: any) => {
+
+    console.log(event);
+  };
   return (
     <div
       style={{
@@ -86,8 +97,8 @@ const CandidateSchedule = () => {
         localizer={localizer}
         events={listOfEvents}
         startAccessor="start"
-        onSelectEvent={event => console.log(event)}
-        onSelectSlot={handleSelect}
+        onSelectEvent={handleSelectSlots}
+
         endAccessor="end"
         style={{ height: 600, width: '100%' }}
       />
