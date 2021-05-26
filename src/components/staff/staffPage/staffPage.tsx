@@ -36,8 +36,7 @@ import {
   TS,
 } from '../../../constants';
 import Preloader from '../../common/preloader/preloader';
-import UpdateIcon from '@material-ui/icons/Update';
-import SaveIcon from '@material-ui/icons/Save';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,28 +94,26 @@ const StaffPage: React.FC = () => {
     { manual: true },
   );
   useEffect(() => {
-    if (!addMode) {
+    // createUrl.add === 'add' && setAddMode(true);
+    createUrl.add ?
+      setAddMode(true) :
       sendRequest({
         url: `${PREFIX}employees/${staffId}`,
         method: GET,
       });
-    }
   }, []);
 
   let staffData = addMode ? '' : data;
 
   const onSubmit = (data: any) => {
     if (addMode) {
-      console.log(data);
-
       sendRequest({
         data,
         method: POST,
-        url: `${PREFIX}employees/add`,
+        url: `${PREFIX}employees`,
       });
-      if (response?.status === 200) {
-        history.push(`HR`);
-      }
+        history.push(`/staff/hr`);
+
     } else {
       sendRequest({
         data: data,
@@ -378,6 +375,31 @@ const StaffPage: React.FC = () => {
                     );
                   }}
                 />
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue={staffData?.email}
+                  rules={{
+                    required: true,
+                    maxLength: MAX__LENGTH,
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        required={edit}
+                        error={errors.email}
+                        helperText={
+                          (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(30))
+                        }
+                        {...field}
+                        id="email"
+                        label="Email:"
+                        InputProps={{ readOnly: !edit }}
+                      />
+                    );
+                  }}
+                />
 
                 {edit || addMode ? (
                   <FormControl className={classes.formControl} disabled={!edit}>
@@ -450,7 +472,6 @@ const StaffPage: React.FC = () => {
             color="primary"
             size="large"
             type="submit"
-
           >
             Save
           </Button> : ''}

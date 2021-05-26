@@ -35,6 +35,11 @@ const CandidateCard: React.FC = () => {
   const { url } = useRouteMatch();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [statusColor, setStatusColor] = useState<string>('#fafbfd');
+  const [time, setTime] = useState([]);
+  const [slots, setSlots] = useState([{
+    id: 25,
+    dateTime: new Date(2021, 6, 25, 18, 30, 0),
+  }]);
 
   const setCandidatesStatusColor = (color: string) => {
     let red = 'NOT_SUITABLE';
@@ -121,9 +126,9 @@ const CandidateCard: React.FC = () => {
             candidateInfo={getCandidateInfo}
             editCandidateData={editCandidateData}
           />
-          <CandidateInterview candidateInfo={getCandidateInfo} />
           <CandidateReview getCandidateInfo={getCandidateInfo} />
-          <CandidateSchedule />
+          <CandidateInterview setSlots={setSlots} candidateInfo={getCandidateInfo} />
+          <CandidateSchedule slots={slots} />
         </div>
       </div>
     </Context.Provider>
