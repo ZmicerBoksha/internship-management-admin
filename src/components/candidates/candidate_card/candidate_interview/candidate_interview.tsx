@@ -76,7 +76,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
   } = useForm();
 
   const onSubmitHr = (data: any) => {
-    console.log(moment(data.time).format(TIME_SLOTS_BACKEND_FORMAT))
+    console.log(moment(data.time).format(TIME_SLOTS_BACKEND_FORMAT));
     sendRequest(
       {
         url: `${PREFIX}interviewtime`,
@@ -84,15 +84,15 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
         data: {
           beginDate: data.time,
           cnId: window.location.href.split('/').slice(-1)[0],
-          empId:watchTsEmployee,
-          evId: 8
+          empId: watchTsEmployee,
+          evId: 8,
         },
       },
     );
   };
 
   const onSubmitTs = (data: any) => {
-    console.log(data)
+    console.log(data);
     sendRequest(
       {
         url: `${PREFIX}interviewtime`,
@@ -100,8 +100,8 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
         data: {
           beginDate: moment(data.date).format(TIME_SLOTS_BACKEND_FORMAT),
           cnId: window.location.href.split('/').slice(-1)[0],
-          empId:watchTsEmployee,
-          evId: 1
+          empId: watchTsEmployee,
+          evId: 1,
         },
       },
     );
@@ -132,13 +132,20 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
   const watchTsEmployee = watch('tsEmployee');
 
 
-
-
   useEffect(() => {
-    sendRequest({
-      url: `${PREFIX}employees${watchTsEmployee}/crossing/${candidateInfo.id}`,
-    });
-    setSlots(data?.suitableTimeSlots || []);
+       sendRequest({
+        url: `${PREFIX}employees/${watchHR}/crossing/${candidateInfo.id}`,
+      }).then( (response)=>{let crossing = response.data.suitableTimeSlots;
+    if (response.status === 200) {
+
+      crossing.map((item: any) => {
+        item.start = new Date(item.dateTime);
+        item.end = moment(item.start).add(30, 'm').toDate();
+        delete item.dateTime;
+      });
+      setSlots(crossing || []);}
+    })
+
 
   }, [watchHR]);
 
@@ -157,6 +164,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
         });
       }
     }
+
     getData();
 
 
@@ -182,9 +190,9 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
               defaultValue={time}
               render={({ field }) => {
                 return (
-            <TextField id="time" name="time" InputProps={{ readOnly: true }} value={time} />   );
+                  <TextField id="time" name="time" InputProps={{ readOnly: true }} value={time} />);
               }}
-                />
+            />
             <Controller
               name="hr"
               control={control}
@@ -194,7 +202,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
               defaultValue=""
               render={({ field }) => {
                 return (
-                  <TextField {...field} id="time" label="HR List" type="text" className={classes.textField} select>
+                  <TextField {...field} id="hr" label="HR List" type="text" className={classes.textField} select>
                     {hr.map((option: TEmployee) => (
                       <MenuItem key={option.id} value={option.id}>
                         {`${option.firstName} ${option.lastName}`}
