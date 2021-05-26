@@ -704,9 +704,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             {watchSelectImageData && (
               <div className={classes.input_wrap}>
                 <Controller
-                  name="image.data.altText"
+                  name="image.altText"
                   control={control}
-                  defaultValue={eventData?.image.data.altText || ''}
+                  defaultValue={eventData?.image.altText || ''}
                   render={({ field }) => {
                     return (
                       <TextField
