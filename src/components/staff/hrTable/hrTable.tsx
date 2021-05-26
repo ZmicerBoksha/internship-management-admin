@@ -17,7 +17,6 @@ const HrTable: React.FC = () => {
 
   const [page, setPage] = useState<number>(0);
   const [itemsPerPage, setItemsPerPage] = useState<number>(rowsPerPageOptions[0]);
-  async function getData(page: number, itemsPerPage: number, searchParam?: string) {}
 
   useEffect(() => {
     let urlForRequest = `${PREFIX}employees?itemsPerPage=${itemsPerPage}&page=${page}&search=type==${HR}`;

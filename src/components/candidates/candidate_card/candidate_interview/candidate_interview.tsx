@@ -92,7 +92,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
   };
 
   const onSubmitTs = (data: any) => {
-    console.log(data);
+    console.log(data)
     sendRequest(
       {
         url: `${PREFIX}interviewtime`,
@@ -100,8 +100,8 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
         data: {
           beginDate: moment(data.date).format(TIME_SLOTS_BACKEND_FORMAT),
           cnId: window.location.href.split('/').slice(-1)[0],
-          empId: watchTsEmployee,
-          evId: 1,
+          empId:watchTsEmployee,
+          evId: 1
         },
       },
     );
@@ -192,7 +192,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
                 return (
                   <TextField id="time" name="time" InputProps={{ readOnly: true }} value={time} />);
               }}
-            />
+                />
             <Controller
               name="hr"
               control={control}
