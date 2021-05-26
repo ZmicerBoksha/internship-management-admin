@@ -37,6 +37,7 @@ import {
 } from '../../../constants';
 import Preloader from '../../common/preloader/preloader';
 import { EMAIL_PATTERN } from '../../common/const/const';
+import { isSuperAdmin } from '../../../helper/roles/getRoles';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,6 +78,8 @@ const StaffPage: React.FC = () => {
   } = useForm();
 
   const watchCountry = watch('locationCountry');
+  const watchType = watch('type');
+
 
   console.log(COUNTRY_LIST.get(watchCountry));
 
@@ -447,6 +450,34 @@ const StaffPage: React.FC = () => {
                   />
                 )}
 
+                {watchType==="TS" || staffData?.type==="TS" ? <Controller
+                  name="primaryTechnology"
+                  control={control}
+                  defaultValue={staffData?.primaryTechnology}
+                  rules={{
+                    required: true,
+                    maxLength: MAX__LENGTH,
+                  }}
+                  render={({ field }) => {
+                    return (
+                      <TextField
+                        required={edit}
+                        error={errors.primaryTechnology}
+                        helperText={
+                          (errors.primaryTechnology?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.primaryTechnology?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(MAX__LENGTH))
+                        }
+                        {...field}
+                        id="primaryTechnology"
+                        label="Primary Technology:"
+                        InputProps={{ readOnly: !edit }}
+                      />
+                    );
+                  }}
+                />:''
+
+                }
+
                 {edit || addMode ? (
                   <FormControl className={classes.formControl} disabled={!edit}>
                     <InputLabel id="roleId">Role</InputLabel>
@@ -492,7 +523,7 @@ const StaffPage: React.FC = () => {
           </Button> : ''}
         </Grid>
       </form>
-      {addMode ? '' : <TimeSlots />}
+      {!addMode && isSuperAdmin() && <TimeSlots />}
     </Grid>
   );
 };
