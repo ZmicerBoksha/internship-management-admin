@@ -16,7 +16,6 @@
     "@types/draftjs-to-html": "^0.8.0",
     "@types/html-to-draftjs": "^1.4.0",
     "@types/jest": "^26.0.22",
-    "@types/node": "^12.20.7",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-draft-wysiwyg": "^1.13.2",
@@ -79,6 +78,7 @@
   },
   "devDependencies": {
     "@types/lru-cache": "^5.1.0",
+    "@types/node": "^12.20.13",
     "@types/react-big-calendar": "^0.31.0",
     "@types/react-input-mask": "^3.0.0",
     "@types/react-table": "^7.0.29",
