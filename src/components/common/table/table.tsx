@@ -211,7 +211,6 @@ const Table: FunctionComponent<TableProps> = ({
             break;
           default:
             filterParametrs += item.value[0] ? `${item.id}=="${item.value}*";` : '';
-            debugger;
             break;
         }
       });
