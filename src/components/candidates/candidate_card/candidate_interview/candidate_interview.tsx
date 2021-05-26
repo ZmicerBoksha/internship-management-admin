@@ -136,7 +136,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, 
 
   useEffect(() => {
     sendRequest({
-      url: `${PREFIX}employees/${watchTsEmployee}/crossing/${candidateInfo.id}`,
+      url: `${PREFIX}employees${watchTsEmployee}/crossing/${candidateInfo.id}`,
     });
     setSlots(data?.suitableTimeSlots || []);
 

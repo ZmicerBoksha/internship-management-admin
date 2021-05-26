@@ -232,6 +232,7 @@ const TimeSlots = () => {
         end: moment(slot).add(TIME_SLOT_DURATION, 'm').toDate(),
       };
 
+
       sendRequest({
         data: {
           employeeId: empId,
