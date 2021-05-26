@@ -118,11 +118,17 @@ const instance = axios.create({
   baseURL: process.env.REACT_APP_BASE_API_URL,
 });
 
+export enum EMPLOYEE_TYPE {
+  TS = 'TS',
+  HR = 'HR',
+}
+
 export interface IEmployeeRoles {
   id?: string | number;
   name?: string;
   lastName?: string;
   role?: ROLE;
+  type?: EMPLOYEE_TYPE;
 }
 
 export const getEmployeeInfoByEmail = (email: string) =>
@@ -133,6 +139,7 @@ export const getEmployeeInfoByEmail = (email: string) =>
       name: allEmployeeInfo.firstName,
       lastName: allEmployeeInfo.lastName,
       role: allEmployeeInfo.role.name,
+      type: allEmployeeInfo.type,
     };
 
     return employeeInfo;

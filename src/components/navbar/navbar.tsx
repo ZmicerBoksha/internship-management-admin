@@ -1,4 +1,3 @@
-
 /*
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -43,7 +42,6 @@ export default Navbar;
 
 */
 
-
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
@@ -55,7 +53,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme, Theme, createStyles } from '@material-ui/core/styles';
 import { Collapse, Menu, MenuItem, MenuList } from '@material-ui/core';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import { Link, Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import { AccountCircle, ExpandLess } from '@material-ui/icons';
 import EventIcon from '@material-ui/icons/Event';
 import DashboardIcon from '@material-ui/icons/Dashboard';
@@ -64,6 +62,9 @@ import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined'
 import CandidateIcon from '@material-ui/icons/PeopleOutline';
 import Routers from '../routers/routers';
 import { IEmployeeRoles } from '../../api/api';
+import { isEmployee, isRoleExist } from '../../helper/roles/getRoles';
+import { getEmployeeType } from '../../helper/getEmployeeType';
+import { getEmployeeId } from '../../helper/getEmployeeId';
 
 const drawerWidth = 240;
 
@@ -84,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       [theme.breakpoints.up('sm')]: {
-        width: `calc(100% - ${drawerWidth}px)`,
+        width: isRoleExist() && isEmployee() ? '100%' : `calc(100% - ${drawerWidth}px)`,
       },
     },
     menuButton: {
@@ -150,7 +151,7 @@ export default function Navbar() {
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('employeeInfo');
     history.push('/authorization');
-  }
+  };
 
   const drawer = (
     <div>
@@ -246,7 +247,7 @@ export default function Navbar() {
               onClick={handleMenu}
               color="inherit"
             >
-              <AccountCircle />  
+              <AccountCircle />
               <Typography variant="h6" noWrap>
                 {employeeInfo.name} {employeeInfo.lastName}
               </Typography>
@@ -271,36 +272,41 @@ export default function Navbar() {
           </div>
         </Toolbar>
       </AppBar>
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      {isEmployee() && <Redirect to={`/staff/${getEmployeeType().toLowerCase()}/${getEmployeeId()}`} />}
+      {!isEmployee() && (
+        <>
+          <nav className={classes.drawer} aria-label="mailbox folders">
+            {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+            <Hidden smUp implementation="css">
+              <Drawer
+                variant="temporary"
+                anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                open={mobileOpen}
+                onClose={handleDrawerToggle}
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                ModalProps={{
+                  keepMounted: true, // Better open performance on mobile.
+                }}
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+            <Hidden xsDown implementation="css">
+              <Drawer
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+                variant="permanent"
+                open
+              >
+                {drawer}
+              </Drawer>
+            </Hidden>
+          </nav>
+        </>
+      )}
       <Routers />
     </div>
   );
