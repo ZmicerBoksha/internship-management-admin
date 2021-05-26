@@ -7,7 +7,7 @@ import { useHistory } from 'react-router';
 import { Button } from '@material-ui/core';
 
 const HrTable: React.FC = () => {
-  const [{ data: hrList }, sendRequest] = useAxios(`${PREFIX}employees?search=type==${HR}`);
+  const [{ data: hrList ,response}, sendRequest] = useAxios(`${PREFIX}employees?search=type==${HR}`);
 
   const history = useHistory();
 
@@ -27,6 +27,7 @@ const HrTable: React.FC = () => {
       method: 'DELETE',
       url: `${PREFIX}employees/${StaffID}`,
     });
+    console.log(response)
   }
 
   const data = useMemo(() => hrList?.content || [], [hrList?.content]);

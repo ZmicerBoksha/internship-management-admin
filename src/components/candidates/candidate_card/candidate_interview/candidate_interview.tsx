@@ -6,8 +6,11 @@ import { TCandidate, TEmployee } from '../../../../types/types';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Context } from '../candidate_card';
 import { watch } from 'fs';
-import { COUNTRY_LIST, GET, PREFIX, PUT } from '../../../../constants';
+import { COUNTRY_LIST, GET, POST, PREFIX, PUT, TIME_SLOTS_BACKEND_FORMAT } from '../../../../constants';
 import useAxios from 'axios-hooks';
+import { getSlots } from '../../../staff/timeSlots/api';
+import moment from 'moment';
+import { getCandidateById, getCandidateIdByEmpolee, getStatusCandidateById } from '../../../staff/candidateTrello/api';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -48,21 +51,22 @@ const useStyles = makeStyles((theme: Theme) =>
 type CandidateInterviewProps = {
   candidateInfo: TCandidate;
   setSlots: any;
+  time: any;
 };
 
-const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,setSlots }) => {
+const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo, setSlots, time }) => {
   const classes = useStyles();
   const errorMessageRequired = 'This field is required';
   const [hr, setHr] = useState<TEmployee[]>([]);
   const [ts, setTs] = useState<TEmployee[]>([]);
   const { handleNextStep } = useContext(Context);
 
-  const onSubmitHr = (data: TCandidate) => {
-    console.log(data);
-  };
-  const onSubmitTs = (data: TCandidate) => {
-    console.log(data);
-  };
+  const [{ data, loading, error, response }, sendRequest] = useAxios(
+    {
+      method: GET,
+    },
+    { manual: true },
+  );
 
   const {
     handleSubmit,
@@ -70,6 +74,38 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
     formState: { errors },
     watch,
   } = useForm();
+
+  const onSubmitHr = (data: any) => {
+    console.log(moment(data.time).format(TIME_SLOTS_BACKEND_FORMAT))
+    sendRequest(
+      {
+        url: `${PREFIX}interviewtime`,
+        method: POST,
+        data: {
+          beginDate: data.time,
+          cnId: window.location.href.split('/').slice(-1)[0],
+          empId:watchTsEmployee,
+          evId: 8
+        },
+      },
+    );
+  };
+
+  const onSubmitTs = (data: any) => {
+    console.log(data)
+    sendRequest(
+      {
+        url: `${PREFIX}interviewtime`,
+        method: POST,
+        data: {
+          beginDate: moment(data.date).format(TIME_SLOTS_BACKEND_FORMAT),
+          cnId: window.location.href.split('/').slice(-1)[0],
+          empId:watchTsEmployee,
+          evId: 1
+        },
+      },
+    );
+  };
 
   useEffect(() => {
     employeeServer
@@ -91,22 +127,40 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
       });
   }, []);
 
+
+  const watchHR = watch('hr');
   const watchTsEmployee = watch('tsEmployee');
 
 
-  const [{ data, loading, error, response }, sendRequest] = useAxios(
-    {
-      method: GET,
-    },
-    { manual: true },
-  );
+
 
   useEffect(() => {
-  sendRequest({
-    url: `${PREFIX}employees/${watchTsEmployee}/crossing/${candidateInfo.id}`,
-  })
+    sendRequest({
+      url: `${PREFIX}employees/${watchTsEmployee}/crossing/${candidateInfo.id}`,
+    });
+    setSlots(data?.suitableTimeSlots || []);
 
-    setSlots(data?.suitableTimeSlots||[])
+  }, [watchHR]);
+
+
+  useEffect(() => {
+    async function getData() {
+      if (watchTsEmployee) {
+        await getSlots(watchTsEmployee).then(response => {
+          response.map((item: any) => {
+            item.start = new Date(item.dateTime);
+            item.end = moment(item.start).add(30, 'm').toDate();
+            delete item.dateTime;
+          });
+          setSlots(response);
+
+        });
+      }
+    }
+    getData();
+
+
+    // setSlots(data?.suitableTimeSlots||[])
     //console.log(data.suitableTimeSlots)
   }, [watchTsEmployee]);
 
@@ -120,40 +174,19 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
           </Typography>
           <form className={classes.container} onSubmit={handleSubmit(onSubmitHr)}>
             <Controller
-              name="date"
+              name="time"
               control={control}
-              defaultValue={''}
               rules={{
                 required: true,
               }}
+              defaultValue={time}
               render={({ field }) => {
                 return (
-                  <TextField
-                    {...field}
-                    id="datetime-local"
-                    label="Interview date"
-                    type="datetime-local"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                );
+            <TextField id="time" name="time" InputProps={{ readOnly: true }} value={time} />   );
               }}
-            />
+                />
             <Controller
-              name="time"
-              control={control}
-              defaultValue={''}
-              rules={{
-                required: true,
-              }}
-              render={({ field }) => {
-                return <TextField {...field} id="time" label="Time slots" type="text" className={classes.textField} />;
-              }}
-            />
-            <Controller
-              name="time"
+              name="hr"
               control={control}
               rules={{
                 required: true,
@@ -176,7 +209,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
               color="primary"
               type="submit"
               className={classes.button}
-              onClick={() => handleNextStep?.(1)}
+
             >
               Approve
             </Button>
@@ -189,39 +222,7 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
             TS interview
           </Typography>
           <form className={classes.container} onSubmit={handleSubmit(onSubmitTs)}>
-            <Controller
-              name="date"
-              control={control}
-              defaultValue={''}
-              rules={{
-                required: true,
-              }}
-              render={({ field }) => {
-                return (
-                  <TextField
-                    {...field}
-                    id="datetime-local"
-                    label="Interview date"
-                    type="datetime-local"
-                    className={classes.textField}
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                );
-              }}
-            />
-            <Controller
-              name="time"
-              control={control}
-              defaultValue={''}
-              rules={{
-                required: true,
-              }}
-              render={({ field }) => {
-                return <TextField {...field} id="time" label="Time slots" type="text" className={classes.textField} />;
-              }}
-            />
+            <TextField id="data" name="date" InputProps={{ readOnly: true }} value={time} />
             <Controller
               name="tsEmployee"
               control={control}
@@ -231,7 +232,8 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
               }}
               render={({ field }) => {
                 return (
-                  <TextField {...field} id="tsEmployee" label="TS List" type="text" className={classes.textField} select>
+                  <TextField {...field} id="tsEmployee" label="TS List" type="text" className={classes.textField}
+                             select>
                     {ts.map((option: TEmployee) => (
                       <MenuItem key={option.id} value={option.id}>
                         {`${option.firstName} ${option.lastName}`}
@@ -246,7 +248,6 @@ const CandidateInterview: React.FC<CandidateInterviewProps> = ({ candidateInfo,s
               color="primary"
               type="submit"
               className={classes.button}
-              onClick={() => handleNextStep?.(3)}
             >
               Approve
             </Button>

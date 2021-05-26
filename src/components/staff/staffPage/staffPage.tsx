@@ -36,6 +36,7 @@ import {
   TS,
 } from '../../../constants';
 import Preloader from '../../common/preloader/preloader';
+import { EMAIL_PATTERN } from '../../common/const/const';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -77,6 +78,8 @@ const StaffPage: React.FC = () => {
 
   const watchCountry = watch('locationCountry');
 
+  console.log(COUNTRY_LIST.get(watchCountry));
+
   useEffect(() => {
     const timeZone = COUNTRY_LIST.get(watchCountry);
     if (Array.isArray(timeZone)) {
@@ -105,14 +108,19 @@ const StaffPage: React.FC = () => {
 
   let staffData = addMode ? '' : data;
 
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    console.log(data);
     if (addMode) {
-      sendRequest({
+      const response= await sendRequest({
         data,
         method: POST,
         url: `${PREFIX}employees`,
       });
+      if (response?.status === 200) {
+        alert('Success');
         history.push(`/staff/hr`);
+      }
+
 
     } else {
       sendRequest({
@@ -344,6 +352,11 @@ const StaffPage: React.FC = () => {
                         InputProps={{ readOnly: !edit }}
                         error={errors.phone}
                         required={edit}
+                        helperText={
+                          (errors.phone?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
+                          (errors.phone?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(13))||
+                          (errors.phone?.type === 'pattern' && 'Check correct of phone number')
+                        }
                       >
                         <InputMask mask="(0)999 999 99 99" />
                       </TextField>
@@ -382,6 +395,7 @@ const StaffPage: React.FC = () => {
                   rules={{
                     required: true,
                     maxLength: MAX__LENGTH,
+                    pattern: EMAIL_PATTERN
                   }}
                   render={({ field }) => {
                     return (
@@ -390,7 +404,8 @@ const StaffPage: React.FC = () => {
                         error={errors.email}
                         helperText={
                           (errors.email?.type === 'required' && REQUIRED__ERROR__MESSAGE) ||
-                          (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(30))
+                          (errors.email?.type === 'maxLength' && MAX__LENGTH__ERROR__MESSAGE(30))||
+                          (errors.email?.type === 'pattern' && 'Check correct of email address')
                         }
                         {...field}
                         id="email"

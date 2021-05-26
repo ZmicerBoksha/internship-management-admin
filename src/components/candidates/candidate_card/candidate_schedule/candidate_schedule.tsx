@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from 'react';
+import React, { useState, FunctionComponent, useEffect, useMemo } from 'react';
 import Axios from 'axios';
 import LRU from 'lru-cache';
 import { configure } from 'axios-hooks';
@@ -33,16 +33,24 @@ ts  [{10.20.21, accepted: 'userId'}]
 
 hr backend work with above 2*/
 
-const CandidateSchedule = (slots: any) => {
+// @ts-ignore
+const CandidateSchedule = ({slots, setTime}) => {
   type Event = {
     start: Date;
     end: Date;
     title: string;
-    meta: string;
   };
-  const initialEvents: Event[] = [];
+  const initialEvents: any = [];
 
-  const [listOfEvents, setListOfEvents] = useState(initialEvents);
+  const [listOfEvents, setListOfEvents] = useState([]);
+
+console.log(slots)
+
+useEffect(()=>{
+  slots.length && setListOfEvents(slots);
+},[slots])
+
+  /*
   if (slots !== []) {
     slots.map((item: any) => {
       item.start = new Date(item.dateTime);
@@ -51,7 +59,10 @@ const CandidateSchedule = (slots: any) => {
     });
     setListOfEvents(slots);
   }
-  console.log(slots);
+
+   */
+  //console.log(slots);
+  /*
   const handleSelect = (e: any): void => {
     const title = window.prompt('New Event name');
     if (title) {
@@ -68,6 +79,8 @@ const CandidateSchedule = (slots: any) => {
     }
   };
 
+   */
+
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
@@ -77,7 +90,8 @@ const CandidateSchedule = (slots: any) => {
 
   const handleSelectSlots = (event: any) => {
 
-    console.log(event);
+    //console.log(event);
+    setTime(event.start)
   };
   return (
     <div
@@ -98,13 +112,11 @@ const CandidateSchedule = (slots: any) => {
         events={listOfEvents}
         startAccessor="start"
         onSelectEvent={handleSelectSlots}
-
+        scrollToTime={new Date()}
+        defaultDate={new Date()}
         endAccessor="end"
         style={{ height: 600, width: '100%' }}
       />
-      <Button style={{ marginTop: '10px' }} variant="contained" color="primary" type="submit" onClick={handleSubmit}>
-        Submit
-      </Button>
     </div>
   );
 };
