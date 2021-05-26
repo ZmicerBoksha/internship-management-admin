@@ -167,7 +167,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
     data.technologies = technologyList.join(', ');
 
     data.duration = `${(+new Date(data.deadline) - +new Date(data.startDate)) / (60 * 60 * 24 * 1000)} days`;
-     
+
     eventType === 'new' &&
       eventsApi
         .createEvent(data)
@@ -208,8 +208,8 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             });
           }
 
-          // history.push('/events');
-          // return response.data.id;
+          history.push('/events');
+          return response.data.id;
         })
         .catch(err => {
           setModalError({
@@ -248,7 +248,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                       id="title"
                       label="Title"
                       fullWidth
-                      className={`${!!errors.title && classes.error_field} ${readOnly && classes.disabled_field}`}
+                      // className={`${!!errors.title && classes.error_field} ${readOnly && classes.disabled_field}`}
                       variant="outlined"
                       disabled={readOnly}
                     />
@@ -361,9 +361,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                         setValue('technologies', data.join(', '));
                       }}
                       getOptionSelected={(option, value) => option === value}
-                      className={`${!!errors.technologies && classes.error_field} ${
-                        readOnly && classes.disabled_field
-                      }`}
+                      // className={`${!!errors.technologies && classes.error_field} ${
+                      //   readOnly && classes.disabled_field
+                      // }`}
                       disabled={readOnly}
                       renderInput={params => <TextField {...params} label="Technologies" variant="outlined" />}
                     />
@@ -650,7 +650,11 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             <div className={classes.input_wrap}>
               {watchSelectImageData && (
                 // <img src={URL.createObjectURL(watchSelectImageData)} alt="" className={classes.choose_image} />
-                <img src={eventData?.image.src} alt="" className={classes.choose_image} />
+                <img
+                  src={(watchSelectImageData.id && eventData?.image.src) || URL.createObjectURL(watchSelectImageData)}
+                  alt=""
+                  className={classes.choose_image}
+                />
               )}
               <Button
                 variant="contained"
@@ -675,7 +679,7 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                           const imageFile = event.target.files?.length && event.target.files[0];
                           !!imageFile && imageFile.name.match(/\.(jpg|jpeg|png|gif|ico|svg)$/)
                             ? setValue('image.data', imageFile)
-                            : alert('Ошибка, нужна картинка');
+                            : alert('Ошибка, допустимые форматы: jpg, jpeg, png, gif, ico, svg');
                           // imageApi.createImage(eventData!.id, imageFile)
                         }}
                         hidden
@@ -685,11 +689,12 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
                 />
               </Button>
               <Typography variant="caption" className={classes.help_text_for_choose_image}>
-                {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'}
+                {/* {(watchSelectImageData && watchSelectImageData.name) || 'Please select image.'} */}
+                {!watchSelectImageData && 'Please select image.'}
               </Typography>
               {
                 // @ts-ignore
-                errors.image?.data?.type === 'required' && (
+                !watchSelectImageData && errors.image?.data?.type === 'required' && (
                   <Typography variant="overline" color="error">
                     {eventsRules.requiredtext()}
                   </Typography>
@@ -699,9 +704,9 @@ const EventForm: FunctionComponent<TEventForm> = ({ eventId, eventType, isEditMo
             {watchSelectImageData && (
               <div className={classes.input_wrap}>
                 <Controller
-                  name="image.data.altText"
+                  name="image.altText"
                   control={control}
-                  defaultValue={eventData?.image.data.altText || ''}
+                  defaultValue={eventData?.image.altText || ''}
                   render={({ field }) => {
                     return (
                       <TextField
