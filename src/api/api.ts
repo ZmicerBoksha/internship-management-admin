@@ -1,4 +1,3 @@
-import { config } from 'node:process';
 import axios from 'axios';
 import { TCandidate, TInterviewTime, TResume, TStatusHistoryPost } from '../types/types';
 import { ROLE } from '../helper/roles/getRoles';
