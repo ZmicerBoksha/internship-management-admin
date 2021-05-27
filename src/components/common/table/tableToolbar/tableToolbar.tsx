@@ -88,7 +88,7 @@ const TableToolbar: FunctionComponent<TableToolbarProps> = ({ instance, onAdd, o
         )}
       </div>
       <div className={classes.right_icons}>
-        <GlobalFilter instance={instance} />
+        {/* <GlobalFilter instance={instance} /> */}
         <ColumnHidePage instance={instance} />
         <TableFilters instance={instance} />
       </div>

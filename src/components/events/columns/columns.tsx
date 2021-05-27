@@ -280,15 +280,17 @@ export const Columns = [
       const { cell } = props;
       return (
         <>
-          <NavLink
-            to={`/staff/${cell.value.type}/${cell.value.id}`}
-            style={{
-              fontWeight: 'bold',
-              cursor: 'pointer',
-            }}
-          >
-            {`${cell.value.firstName} ${cell.value.lastName} (${cell.value.role.name})`}
-          </NavLink>
+          {(!cell.value.type && (
+            <NavLink
+              to={`/staff/${cell.value.type}/${cell.value.id}`}
+              style={{
+                fontWeight: 'bold',
+                cursor: 'pointer',
+              }}
+            >
+              {`${cell.value.firstName} ${cell.value.lastName} (${cell.value.role.name})`}
+            </NavLink>
+          )) || <>{`${cell.value.firstName} ${cell.value.lastName} (${cell.value.role.name})`}</>}
         </>
       );
     },
