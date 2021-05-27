@@ -3,9 +3,11 @@ import { useHistory, useParams } from 'react-router-dom';
 import './styles.css';
 import Table from '../../common/table/table';
 import { SelectColumnFilter } from '../../common/table/filters/selectColumnFilter';
-import { candidateEventsApi, candidateService } from '../../../api/api';
+import { candidateEventsApi, candidateService, englishLevels } from '../../../api/api';
 import { TCandidate } from '../../../types/types';
 import { rowsPerPageOptions } from '../../common/table/tablePagination/tablePagination';
+import { technologies } from '../../common/technologies/technologies';
+import { countries } from '../../common/countries/countries';
 
 type TUrl = {
   eventId?: string;
@@ -27,32 +29,33 @@ const CandidatesList: React.FC = () => {
     let params = {
       itemsPerPage: size,
       page: page,
+      search: searchParams,
     };
 
-    if(eventId){
-      if(!!searchParam){
+    if (eventId) {
+      if (!!searchParam) {
         const searchParamList = searchParam?.split(';');
         searchParam = '';
         searchParamList?.map(parametr => {
-          searchParam += `candidate.${parametr};`
-        })
+          searchParam += `candidate.${parametr};`;
+        });
       }
-      searchParam += `event.id=="${eventId}"`;      
+      searchParam += `event.id=="${eventId}"`;
 
       candidateEventsApi.getAllCandidateEvent(page, size, searchParam).then(response => {
         const candidateForEventList: TCandidate[] = [];
 
-        for(let i = 0; i < response.data.content.length; i++){
-          candidateForEventList.push(response.data.content[i].candidate)
+        for (let i = 0; i < response.data.content.length; i++) {
+          candidateForEventList.push(response.data.content[i].candidate);
         }
 
         setCandidatesList(candidateForEventList);
         setCountRows(response.data.totalElements);
       });
-    }else{
+    } else {
       candidateService
         .getAllCandidates(params)
-        .then(({ data }) => {          
+        .then(({ data }) => {
           setCandidatesList(data.content);
           setCountRows(data.totalElements);
         })
@@ -61,7 +64,7 @@ const CandidatesList: React.FC = () => {
         });
     }
   };
-  
+
   useEffect(() => {
     fetchCandidatesList(itemsPerPage, page, searchParams);
   }, [page, itemsPerPage, searchParams, eventId]);
@@ -113,6 +116,8 @@ const CandidatesList: React.FC = () => {
             accessor: 'country',
             Filter: SelectColumnFilter,
             filter: 'includes',
+            startHide: true,
+            selectValues: countries,
           },
           {
             Header: 'City',
@@ -126,12 +131,12 @@ const CandidatesList: React.FC = () => {
           {
             Header: 'Main skill',
             accessor: 'mainSkill',
-            Filter: SelectColumnFilter,
-            filter: 'includes',
+            selectValues: technologies,
           },
           {
             Header: 'Other technologies',
             accessor: 'otherSkills',
+            selectValues: technologies,
           },
         ],
       },
@@ -160,6 +165,7 @@ const CandidatesList: React.FC = () => {
             accessor: 'englishLevel',
             Filter: SelectColumnFilter,
             filter: 'includes',
+            selectValues: englishLevels.map(value => value.backName),
           },
           {
             Header: 'CV',
@@ -169,8 +175,6 @@ const CandidatesList: React.FC = () => {
           {
             Header: 'Preferred time for interview',
             accessor: 'time',
-            Filter: SelectColumnFilter,
-            filter: 'includes',
           },
         ],
       },
