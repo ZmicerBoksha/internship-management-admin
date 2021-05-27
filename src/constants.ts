@@ -82,7 +82,7 @@ export const DELETE = 'DELETE';
 export const HR = 'HR';
 export const TS = 'TS';
 
-export const PREFIX = process.env.REACT_APP_BASE_API_URL;
+export const PREFIX = `${process.env.REACT_APP_BASE_API_URL}/`;
 
 export const EMAIL_PATTERN = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
 export const PHONE_PATTERN = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;
